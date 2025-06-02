@@ -18,13 +18,13 @@
             appearance: none; 
             -webkit-appearance: none; 
             -moz-appearance: none; 
-            color-scheme: dark; /* Hint for dark theme */
-            background-color: rgba(0, 0, 0, 0.3); 
-            border: 1px solid rgba(255, 255, 255, 0.15); 
-            color: #D1D5DB; /* Tailwind gray-300 */
+            color-scheme: dark; 
+            background-color: rgba(0, 0, 0, 0.35); /* Slightly more opaque */
+            border: 1px solid rgba(255, 255, 255, 0.12); /* Slightly less prominent border */
+            color: #D1D5DB; 
         }
         select { 
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%239CA3AF' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E"); /* Lighter arrow for dark bg */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%239CA3AF' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E"); 
             background-repeat: no-repeat; 
             background-position: right 0.75rem center; 
             background-size: 1.25em 1.25em; 
@@ -33,45 +33,45 @@
         input[type="date"]::-webkit-calendar-picker-indicator {
             opacity: 0.6; 
             cursor: pointer;
-            filter: invert(0.8) brightness(1.2); /* Make picker icon light */
+            filter: invert(0.8) brightness(1.2); 
         }
         input::placeholder {
-            color: #6B7280; /* Tailwind gray-500 for placeholders */
+            color: #6B7280; 
         }
         .uppercase-text { text-transform: uppercase; }
         
         .nav-button {
-            background-color: rgba(55, 65, 81, 0.6); /* Darker Gray bg (gray-700 with alpha) */
-            color: #E5E7EB; /* Tailwind gray-200 */
+            background-color: rgba(55, 65, 81, 0.65); 
+            color: #E5E7EB; 
             padding: 0.6rem 1.1rem;
             border-radius: 0.5rem; 
             font-weight: 500; 
-            transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-            border: 1px solid rgba(156, 163, 175, 0.3); /* Tailwind gray-400 border with alpha */
-            backdrop-filter: blur(3px); 
-            -webkit-backdrop-filter: blur(3px);
+            transition: background-color 0.2s ease-in-out, box-shadow 0.15s ease-in-out; /* Faster shadow transition */
+            border: 1px solid rgba(156, 163, 175, 0.25); 
+            backdrop-filter: blur(2px); /* Reduced blur */
+            -webkit-backdrop-filter: blur(2px);
         }
         .nav-button:hover { 
-            background-color: rgba(75, 85, 99, 0.7); /* Slightly lighter on hover */
+            background-color: rgba(75, 85, 99, 0.75); 
         }
         .nav-button:focus { 
             outline: none; 
-            box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.4); /* Gray focus ring */
+            box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.35); 
         }
 
         /* Glassmorphism Base Styles */
         .frosted-glass-pane {
-            background-color: rgba(40, 40, 40, 0.55); /* Darker glass base */
-            backdrop-filter: blur(12px) saturate(120%);
-            -webkit-backdrop-filter: blur(12px) saturate(120%);
-            border: 1px solid rgba(255, 255, 255, 0.1); /* Very subtle light border */
+            background-color: rgba(35, 35, 35, 0.6); /* Slightly darker, more opaque base */
+            backdrop-filter: blur(10px) saturate(110%); /* Reduced blur and saturation */
+            -webkit-backdrop-filter: blur(10px) saturate(110%);
+            border: 1px solid rgba(255, 255, 255, 0.08); /* Even more subtle border */
             border-radius: 0.75rem; 
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25); /* Darker shadow for depth */
+            box-shadow: 0 6px 24px 0 rgba(0, 0, 0, 0.2); /* Softer shadow */
         }
 
         /* Modal Styles */
         .modal {
-            transition: opacity 0.25s ease, transform 0.25s ease;
+            transition: opacity 0.2s ease, transform 0.2s ease; /* Faster transition */
             transform: scale(0.95);
         }
         .modal.opacity-100 { transform: scale(1); }
@@ -82,13 +82,13 @@
             margin-bottom: 1.25rem; font-size: 0.875rem; 
         }
         .modal-content th, .modal-content td {
-            border: none; border-bottom: 1px solid rgba(255, 255, 255, 0.15); 
-            padding: 0.75rem; text-align: left; color: #D1D5DB; /* Light gray text */
+            border: none; border-bottom: 1px solid rgba(255, 255, 255, 0.12); 
+            padding: 0.75rem; text-align: left; color: #D1D5DB; 
         }
         .modal-content th {
-            background-color: rgba(55, 65, 81, 0.3); /* Darker semi-transparent header */
+            background-color: rgba(55, 65, 81, 0.25); 
             color: #E5E7EB; font-weight: 500; 
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
         }
          .modal-content tr:first-child th:first-child { border-top-left-radius: 0.5rem; }
          .modal-content tr:first-child th:last-child { border-top-right-radius: 0.5rem; }
@@ -98,56 +98,56 @@
 
         .egate-section {
             margin-top: 1.5rem; padding-top: 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.15); 
+            border-top: 1px solid rgba(255, 255, 255, 0.12); 
         }
         .egate-terminal-title {
             font-size: 1rem; font-weight: 600; 
-            color: #A7F3D0; /* Light Emerald for titles */
+            color: #A7F3D0; 
             margin-bottom: 0.75rem; text-align: center;
         }
         .egate-machine {
             display: inline-flex; align-items: center; margin: 0.25rem; 
             padding: 0.375rem 0.6rem; 
-            border: 1px solid rgba(209, 213, 219, 0.25); 
+            border: 1px solid rgba(209, 213, 219, 0.2); 
             border-radius: 0.375rem; 
-            background-color: rgba(55, 65, 81, 0.4); /* Darker gray machine bg */
+            background-color: rgba(55, 65, 81, 0.35); 
             font-size: 0.7rem; white-space: nowrap; color: #D1D5DB; 
         }
         .business-egate { 
-            background-color: rgba(186, 150, 83, 0.3); /* Muted Gold bg */
-            border-color: rgba(186, 150, 83, 0.5); 
-            color: #FDE68A; /* Light Amber text */
+            background-color: rgba(186, 150, 83, 0.25); 
+            border-color: rgba(186, 150, 83, 0.4); 
+            color: #FDE68A; 
             font-weight: 500;
         }
         .input-label-tag {
             display: inline-block;
-            background-color: rgba(55, 65, 81, 0.5); /* Darker gray label bg */
-            color: #E5E7EB; /* Light gray text */
+            background-color: rgba(55, 65, 81, 0.45); 
+            color: #E5E7EB; 
             padding: 0.3rem 0.8rem; border-radius: 0.375rem; 
             font-size: 0.7rem; font-weight: 500; margin-bottom: 0.3rem; 
         }
         #groupMembersModalContent ul { list-style-type: none; padding: 0; }
         #groupMembersModalContent li {
             padding: 0.6rem 0.25rem; 
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
             font-size: 0.9rem; color: #E5E7EB; 
         }
         #groupMembersModalContent li:last-child { border-bottom: none; }
 
         .day-cell-base {
             border-radius: 0.6rem; 
-            transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
-            border-width: 1px; /* Thinner border for glass */
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15); /* Slightly stronger shadow for dark theme */
+            transition: transform 0.1s ease-out; /* Faster, transform only for hover */
+            border-width: 1px; 
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1); /* Simpler shadow */
         }
         .day-cell-base:hover {
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+            transform: translateY(-1px) scale(1.01); /* More subtle hover */
+            /* box-shadow removed from hover for performance, relying on transform */
         }
         .day-cell-number { font-size: 1.125rem; margin-bottom: 0.125rem; }
         .day-cell-group-name { font-size: 0.6rem; line-height: 1.1; letter-spacing: 0.025em; }
-        .ring-selected-group { ring-offset-color: rgba(40,40,40,0.5); } /* Dark offset for light ring on dark glass */
-        .ring-today { ring-offset-color: rgba(40,40,40,0.5); }
+        .ring-selected-group { ring-offset-color: rgba(35,35,35,0.6); } /* Darker offset */
+        .ring-today { ring-offset-color: rgba(35,35,35,0.6); }
 
     </style>
 </head>
@@ -164,7 +164,7 @@
         <div id="statusBanner" class="p-3.5 mb-6 rounded-md text-center font-semibold text-base hidden uppercase-text transition-all duration-300 text-sm">
         </div>
         <div id="monthlyStatsBanner" class="p-2.5 mb-6 rounded-md text-center font-medium text-xs hidden uppercase-text" 
-             style="background-color: rgba(0,0,0,0.2); color: #9CA3AF; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);">
+             style="background-color: rgba(0,0,0,0.25); color: #9CA3AF; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);">
         </div>
 
         <div class="grid md:grid-cols-2 gap-5 mb-6 items-end"> 
@@ -197,7 +197,7 @@
             </div>
             <div id="messageArea" class="mt-5 text-center text-rose-300 font-medium uppercase-text text-xs"></div>
 
-            <div id="legend" class="mt-6 pt-3 border-t border-gray-500/30 flex flex-wrap justify-center gap-x-4 gap-y-1.5 items-center text-[0.65rem] uppercase-text text-gray-300">
+            <div id="legend" class="mt-6 pt-3 border-t border-gray-500/25 flex flex-wrap justify-center gap-x-4 gap-y-1.5 items-center text-[0.65rem] uppercase-text text-gray-300">
             </div>
         </div>
     </div>
@@ -205,14 +205,13 @@
     <div class="text-center mt-3 mb-6">
         <button id="pmZonesButton" 
                 class="text-gray-200 font-medium py-2.5 px-5 rounded-md shadow-sm hover:shadow-md transition-all duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 uppercase-text text-xs"
-                style="background-color: rgba(17, 24, 39, 0.7); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.05);">
+                style="background-color: rgba(17, 24, 39, 0.65); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.05);">
             PM Zones & E-Gates
         </button>
     </div>
 
-    <div id="pmZonesModal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-black/80 opacity-0 pointer-events-none p-4">
-        <div class="modal-content frosted-glass-pane w-11/12 md:max-w-4xl lg:max-w-5xl mx-auto p-5 md:p-6 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-4 pb-3 border-b border-white/15">
+    <div id="pmZonesModal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-black/85 opacity-0 pointer-events-none p-4"> <div class="modal-content frosted-glass-pane w-11/12 md:max-w-4xl lg:max-w-5xl mx-auto p-5 md:p-6 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4 pb-3 border-b border-white/12">
                 <h3 class="text-lg font-semibold text-emerald-300 uppercase-text">Maintenance & E-Gate Info</h3>
                 <button id="closePmZonesModal" class="text-gray-400 hover:text-red-400 text-2xl font-bold">&times;</button>
             </div>
@@ -251,7 +250,7 @@
                 </tbody>
             </table>
 
-            <div class="egate-section border-white/15">
+            <div class="egate-section border-white/12">
                 <h4 class="text-base font-semibold text-emerald-300 uppercase-text mb-3">E-GATE TERMINALS</h4>
                 
                 <div class="egate-terminal-title uppercase-text !text-emerald-400">TERMINAL I</div>
@@ -277,9 +276,9 @@
         </div>
     </div>
 
-    <div id="groupMembersModal" class="modal fixed inset-0 z-[60] flex items-center justify-center bg-black/80 opacity-0 pointer-events-none p-4">
+    <div id="groupMembersModal" class="modal fixed inset-0 z-[60] flex items-center justify-center bg-black/85 opacity-0 pointer-events-none p-4">
         <div id="groupMembersModalContent" class="modal-content frosted-glass-pane w-full max-w-sm mx-auto p-5 max-h-[85vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-3 pb-2.5 border-b border-white/15">
+            <div class="flex justify-between items-center mb-3 pb-2.5 border-b border-white/12">
                 <h3 id="groupMembersModalTitle" class="text-base font-semibold text-emerald-300 uppercase-text">Group Members</h3>
                 <button id="closeGroupMembersModal" class="text-gray-400 hover:text-red-400 text-2xl font-bold">&times;</button>
             </div>
@@ -289,8 +288,7 @@
     </div>
 
     <footer class="w-full text-center py-6">
-        <p class="text-xs text-gray-500/70">
-            Made by Ben chikhe Anas
+        <p class="text-xs text-gray-500/60"> Made by Ben chikhe Anas
         </p>
     </footer>
 
@@ -322,12 +320,12 @@
             ];
             const groupAbbreviations = [ "M.KAOU", "Y.CHAR", "A.FRBS", "A.AMRSL", "M.BEL" ];
             
-            const groupColors = [
+            const groupColors = [ // Adjusted for better contrast on dark theme
                 { baseName: 'Saturn Gold', rgb: '186, 150, 83', textClass: 'text-gray-900', name: groupAbbreviations[0] },
-                { baseName: 'Deep Space Blue', rgb: '40, 50, 75', textClass: 'text-gray-100', name: groupAbbreviations[1] },
-                { baseName: 'Cosmic Dust', rgb: '160, 160, 150', textClass: 'text-gray-900', name: groupAbbreviations[2] },
-                { baseName: 'Nebula Purple', rgb: '80, 60, 90', textClass: 'text-gray-100', name: groupAbbreviations[3] },
-                { baseName: 'Red Giant', rgb: '140, 60, 50', textClass: 'text-gray-100', name: groupAbbreviations[4] }
+                { baseName: 'Deep Space Blue', rgb: '60, 80, 120', textClass: 'text-gray-100', name: groupAbbreviations[1] }, // Brighter blue
+                { baseName: 'Cosmic Dust', rgb: '170, 170, 160', textClass: 'text-gray-900', name: groupAbbreviations[2] }, // Brighter dust
+                { baseName: 'Nebula Purple', rgb: '100, 80, 110', textClass: 'text-gray-100', name: groupAbbreviations[3] }, // Brighter purple
+                { baseName: 'Red Giant', rgb: '160, 70, 60', textClass: 'text-gray-100', name: groupAbbreviations[4] } // Brighter red
             ];
 
             const groupMembersData = [
@@ -381,8 +379,8 @@
                     groupLegendItem.className = 'flex items-center gap-1.5';
                     const colorBox = document.createElement('div');
                     colorBox.className = `w-3 h-3 rounded-sm border`;
-                    colorBox.style.backgroundColor = `rgba(${colorInfo.rgb}, 0.7)`; // Slightly transparent for legend
-                    colorBox.style.borderColor = `rgba(${colorInfo.rgb}, 0.9)`;
+                    colorBox.style.backgroundColor = `rgba(${colorInfo.rgb}, 0.6)`; 
+                    colorBox.style.borderColor = `rgba(${colorInfo.rgb}, 0.8)`;
                     const groupNameSpan = document.createElement('span');
                     groupNameSpan.textContent = `${colorInfo.name}`; 
                     
@@ -465,10 +463,10 @@
 
                 statusBanner.innerHTML = statusText; 
                 statusBanner.classList.remove('hidden');
-                statusBanner.style.color = isTodayWorkDayForSelectedGroup ? '#A7F3D0' : '#9CA3AF'; // Emerald-200, Gray-400
-                statusBanner.style.backgroundColor = isTodayWorkDayForSelectedGroup ? 'rgba(16, 185, 129, 0.3)' : 'rgba(75, 85, 99, 0.3)'; // Emerald-600/alpha, Gray-600/alpha
-                statusBanner.style.backdropFilter = 'blur(4px)';
-                statusBanner.style.webkitBackdropFilter = 'blur(4px)';
+                statusBanner.style.color = isTodayWorkDayForSelectedGroup ? '#A7F3D0' : '#9CA3AF'; 
+                statusBanner.style.backgroundColor = isTodayWorkDayForSelectedGroup ? 'rgba(16, 185, 129, 0.25)' : 'rgba(75, 85, 99, 0.25)'; 
+                statusBanner.style.backdropFilter = 'blur(3px)';
+                statusBanner.style.webkitBackdropFilter = 'blur(3px)';
             }
 
             function generateSchedule() {
@@ -530,10 +528,10 @@
                                          flex flex-col justify-center items-center cursor-pointer 
                                          ${groupColor.textClass}`; 
                     
-                    dayCell.style.backgroundColor = `rgba(${groupColor.rgb}, 0.45)`; 
-                    dayCell.style.borderColor = `rgba(${groupColor.rgb}, 0.7)`; // Use the same RGB for border but with different alpha
-                    dayCell.style.backdropFilter = 'blur(6px)'; 
-                    dayCell.style.webkitBackdropFilter = 'blur(6px)';
+                    dayCell.style.backgroundColor = `rgba(${groupColor.rgb}, 0.55)`; // Increased opacity for day cells
+                    dayCell.style.borderColor = `rgba(${groupColor.rgb}, 0.75)`; 
+                    dayCell.style.backdropFilter = 'blur(4px)'; // Reduced blur for day cells
+                    dayCell.style.webkitBackdropFilter = 'blur(4px)';
                     
                     dayCell.addEventListener('click', () => showGroupMembers(actualWorkingGroupIndex, dayOfMonth, currentDisplayDate));
 
@@ -544,7 +542,7 @@
                     if (currentDateInCalendar.getTime() === todayUTCForHighlight.getTime()) {
                         dayCell.classList.remove('ring-red-400', 'ring-selected-group'); 
                         dayCell.classList.add('ring-2', 'ring-yellow-400', 'ring-offset-1', 'ring-today', '!font-bold'); 
-                        dayCell.style.backgroundColor = `rgba(${groupColor.rgb}, 0.65)`; 
+                        dayCell.style.backgroundColor = `rgba(${groupColor.rgb}, 0.7)`; // More opaque for today
                     }
 
                     const dayNumberDiv = document.createElement('div');
