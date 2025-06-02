@@ -71,18 +71,22 @@
             margin-bottom: 0.75rem;
             text-align: center;
         }
-        .egate-group {
-            margin-bottom: 1rem;
-            text-align: center;
-        }
+        /* Removed .egate-group as we'll use flex containers for all */
         .egate-machine {
-            display: inline-block; 
-            margin: 0.25rem 0.5rem;
-            padding: 0.5rem;
-            border: 1px solid #D1D5DB;
-            border-radius: 0.375rem;
+            display: inline-flex; /* Use inline-flex for icon and text alignment */
+            align-items: center;
+            margin: 0.125rem; /* Tailwind: m-0.5 */
+            padding: 0.25rem 0.5rem; /* Tailwind: p-1 px-2 */
+            border: 1px solid #D1D5DB; 
+            border-radius: 0.375rem; 
             background-color: #F9FAFB; 
-            font-size: 0.9rem;
+            font-size: 0.75rem; /* Tailwind: text-xs */
+            white-space: nowrap; /* Prevent text inside from wrapping */
+        }
+        .business-egate { 
+            background-color: #FEF3C7; 
+            border-color: #FBBF24; 
+            color: #78350F; 
         }
     </style>
 </head>
@@ -200,28 +204,23 @@
                 <h4 class="text-lg font-semibold text-teal-700 uppercase-text mb-4">E-GATE TERMINALS</h4>
                 
                 <div class="egate-terminal-title uppercase-text">TERMINAL I</div>
-                <div class="egate-group">
-                    <span class="egate-machine">🖥️ CMN3PFX001</span>
+                <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-2 mb-4"> <span class="egate-machine business-egate">🖥️🖥️ CMN3PFX001</span>
                 </div>
-                <div class="flex flex-wrap justify-center gap-4 mb-4">
-                    <span class="egate-machine">🖥️ CMN3PFX008</span>
-                    <span class="egate-machine">🖥️ CMN3PFX002</span>
-                    <span class="egate-machine">🖥️ CMN3PFX003</span>
+                <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-2 mb-4"> <span class="egate-machine">🖥️🖥️ CMN3PFX008</span>
+                    <span class="egate-machine">🖥️🖥️ CMN3PFX002</span>
+                    <span class="egate-machine">🖥️🖥️ CMN3PFX003</span>
                 </div>
 
                 <div class="egate-terminal-title uppercase-text">TERMINAL II</div>
-                <div class="egate-group">
-                    <span class="egate-machine">🖥️ CMN3PFX004</span>
+                <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-2 mb-4"> <span class="egate-machine business-egate">🖥️🖥️ CMN3PFX004</span>
                 </div>
-                 <div class="flex flex-wrap justify-center gap-4">
-                    <span class="egate-machine">🖥️ CMN3PFX006</span>
-                    <span class="egate-machine">🖥️ CMN3PFX005</span>
-                    <span class="egate-machine">🖥️ CMN3PFX007</span>
+                 <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-2"> <span class="egate-machine">🖥️🖥️ CMN3PFX006</span>
+                    <span class="egate-machine">🖥️🖥️ CMN3PFX005</span>
+                    <span class="egate-machine">🖥️🖥️ CMN3PFX007</span>
                 </div>
             </div>
         </div>
     </div>
-
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
