@@ -11,11 +11,10 @@
             appearance: none; 
             -webkit-appearance: none; 
             -moz-appearance: none; 
-            /* For light theme, ensure the date picker icon is visible if possible (browser dependent) */
             color-scheme: light; 
         }
         select { 
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E"); /* Adjusted arrow color for light theme */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
             background-repeat: no-repeat; 
             background-position: right 0.5rem center; 
             background-size: 1.5em 1.5em; 
@@ -23,15 +22,15 @@
         }
         .uppercase-text { text-transform: uppercase; }
         .nav-button {
-            background-color: #E5E7EB; /* gray-200 */
-            color: #374151; /* gray-700 */
+            background-color: #E5E7EB; 
+            color: #374151; 
             padding: 0.5rem 1rem;
             border-radius: 0.5rem; 
             font-weight: 600; 
             transition: background-color 0.15s ease-in-out;
         }
-        .nav-button:hover { background-color: #D1D5DB; /* gray-300 */ }
-        .nav-button:focus { outline: none; box-shadow: 0 0 0 2px #0D9488; /* ring-teal-600 */ }
+        .nav-button:hover { background-color: #D1D5DB; }
+        .nav-button:focus { outline: none; box-shadow: 0 0 0 2px #0D9488; }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800 flex items-center justify-center min-h-screen p-4 md:p-8">
@@ -121,9 +120,9 @@
                 "K.MOUAD GRP", "Y.CHARMOUH GRP", "A.FARBOSI GRP", 
                 "A.AMARSAL GRP", "M.BELKOUCHI GRP"
             ];
-            // Shorter names for calendar cells
+            // Shorter names for calendar cells - REMOVED "GRP" and further shortened
             const groupAbbreviations = [
-                "K.MOUAD", "Y.CHARM", "A.FARBOSI", "A.AMARSAL", "M.BELKOU"
+                "K.MOUAD", "Y.CHARM", "A.FARBOSI", "A.AMARSAL", "M.BELKOU" 
             ];
 
             const localStorageKeyDate = 'workRestSchedule_startDate';
@@ -143,7 +142,7 @@
             }
 
             function populateGroupSelect() {
-                groupNames.forEach((name, index) => { // Use full names for dropdown
+                groupNames.forEach((name, index) => { 
                     const option = document.createElement('option');
                     option.value = index;
                     option.textContent = name;
@@ -200,7 +199,7 @@
                 if (!cycleStartDate || groupSelect.value === "") return;
 
                 const currentSelectedGroupIndex = parseInt(groupSelect.value, 10);
-                const selectedGroupName = groupNames[currentSelectedGroupIndex]; // Use full name for banner
+                const selectedGroupName = groupNames[currentSelectedGroupIndex]; 
                 const today = new Date();
                 const todayUTC = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
                 const diffFromInputStartToTodayMs = todayUTC.getTime() - cycleStartDate.getTime();
@@ -265,7 +264,7 @@
                     const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
                     const workingGroupOffset = ((diffInDays % 5) + 5) % 5; 
                     const actualWorkingGroupIndex = (selectedGroupIndex + workingGroupOffset) % 5;
-                    const workingGroupNameAbbreviation = groupAbbreviations[actualWorkingGroupIndex]; // Use abbreviation
+                    const workingGroupNameInCell = groupAbbreviations[actualWorkingGroupIndex]; // Use abbreviation, no "GRP"
                     const isSelectedGroupWorkingThisDay = (actualWorkingGroupIndex === selectedGroupIndex);
 
                     const dayCell = document.createElement('div');
@@ -283,13 +282,13 @@
                     }
 
                     const dayNumberDiv = document.createElement('div');
-                    dayNumberDiv.className = 'font-bold text-lg md:text-xl mb-1'; // Added mb-1 for a bit of space
+                    dayNumberDiv.className = 'font-bold text-lg md:text-xl mb-1';
                     dayNumberDiv.textContent = dayOfMonth;
 
                     const statusDiv = document.createElement('div');
-                    // Adjusted font size for group name: text-xs by default, md:text-sm for medium screens
-                    statusDiv.className = 'text-[0.65rem] sm:text-xs md:text-sm font-medium uppercase-text leading-tight'; 
-                    statusDiv.textContent = workingGroupNameAbbreviation; // Display abbreviation
+                    // Adjusted font size for group name
+                    statusDiv.className = 'text-[0.6rem] sm:text-[0.65rem] md:text-xs font-medium uppercase-text leading-tight break-words'; 
+                    statusDiv.textContent = workingGroupNameInCell; // Display abbreviation without "GRP"
                     
                     dayCell.appendChild(dayNumberDiv);
                     dayCell.appendChild(statusDiv);
