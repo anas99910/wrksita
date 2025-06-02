@@ -120,9 +120,9 @@
                 "K.MOUAD GRP", "Y.CHARMOUH GRP", "A.FARBOSI GRP", 
                 "A.AMARSAL GRP", "M.BELKOUCHI GRP"
             ];
-            // Shorter names for calendar cells - REMOVED "GRP" and further shortened
+            // Shorter names for calendar cells - using user's latest suggestion
             const groupAbbreviations = [
-                "K.MOUAD", "Y.CHARM", "A.FARBOSI", "A.AMARSAL", "M.BELKOU" 
+                "M.KAOU", "Y.CHAR", "A.FRBS", "A.AMRSL", "M.BEL" 
             ];
 
             const localStorageKeyDate = 'workRestSchedule_startDate';
@@ -264,7 +264,7 @@
                     const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
                     const workingGroupOffset = ((diffInDays % 5) + 5) % 5; 
                     const actualWorkingGroupIndex = (selectedGroupIndex + workingGroupOffset) % 5;
-                    const workingGroupNameInCell = groupAbbreviations[actualWorkingGroupIndex]; // Use abbreviation, no "GRP"
+                    const workingGroupNameInCell = groupAbbreviations[actualWorkingGroupIndex]; 
                     const isSelectedGroupWorkingThisDay = (actualWorkingGroupIndex === selectedGroupIndex);
 
                     const dayCell = document.createElement('div');
@@ -286,9 +286,9 @@
                     dayNumberDiv.textContent = dayOfMonth;
 
                     const statusDiv = document.createElement('div');
-                    // Adjusted font size for group name
-                    statusDiv.className = 'text-[0.6rem] sm:text-[0.65rem] md:text-xs font-medium uppercase-text leading-tight break-words'; 
-                    statusDiv.textContent = workingGroupNameInCell; // Display abbreviation without "GRP"
+                    // Using a very small font size for the group abbreviations
+                    statusDiv.className = 'text-[0.55rem] sm:text-[0.6rem] md:text-[0.65rem] font-medium uppercase-text leading-tight break-words'; 
+                    statusDiv.textContent = workingGroupNameInCell; 
                     
                     dayCell.appendChild(dayNumberDiv);
                     dayCell.appendChild(statusDiv);
