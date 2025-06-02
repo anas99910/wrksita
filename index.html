@@ -7,46 +7,67 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
-        input[type="date"], select { appearance: none; -webkit-appearance: none; -moz-appearance: none; color-scheme: dark; }
-        select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%239CA3AF' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1.5em 1.5em; padding-right: 2.5rem; }
+        input[type="date"], select { 
+            appearance: none; 
+            -webkit-appearance: none; 
+            -moz-appearance: none; 
+            /* For light theme, ensure the date picker icon is visible if possible (browser dependent) */
+            color-scheme: light; 
+        }
+        select { 
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E"); /* Adjusted arrow color for light theme */
+            background-repeat: no-repeat; 
+            background-position: right 0.5rem center; 
+            background-size: 1.5em 1.5em; 
+            padding-right: 2.5rem; 
+        }
         .uppercase-text { text-transform: uppercase; }
         .nav-button {
-            background-color: #4A5568; color: #E2E8F0; padding: 0.5rem 1rem;
-            border-radius: 0.5rem; font-weight: 600; transition: background-color 0.15s ease-in-out;
+            background-color: #E5E7EB; /* gray-200 */
+            color: #374151; /* gray-700 */
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem; 
+            font-weight: 600; 
+            transition: background-color 0.15s ease-in-out;
         }
-        .nav-button:hover { background-color: #2D3748; }
-        .nav-button:focus { outline: none; box-shadow: 0 0 0 2px #4F46E5; }
+        .nav-button:hover { background-color: #D1D5DB; /* gray-300 */ }
+        .nav-button:focus { outline: none; box-shadow: 0 0 0 2px #0D9488; /* ring-teal-600 */ }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-200 flex items-center justify-center min-h-screen p-4 md:p-8">
+<body class="bg-gray-100 text-gray-800 flex items-center justify-center min-h-screen p-4 md:p-8">
 
-    <div class="container mx-auto max-w-4xl bg-slate-800 p-6 md:p-8 rounded-xl shadow-2xl">
-        <h1 class="text-3xl font-bold text-center text-indigo-400 mb-4 uppercase-text">Work & Rest Schedule</h1>
+    <div class="container mx-auto max-w-4xl bg-white p-6 md:p-8 rounded-xl shadow-2xl">
+        
+        <div id="liveClock" class="text-center text-sm text-gray-500 mb-6 font-medium">
+            Loading current time...
+        </div>
+
+        <h1 class="text-3xl font-bold text-center text-teal-700 mb-4 uppercase-text">Work & Rest Schedule</h1>
 
         <div id="statusBanner" class="p-4 mb-8 rounded-lg text-center font-bold text-lg hidden uppercase-text transition-all duration-300">
             </div>
 
         <div class="grid md:grid-cols-3 gap-6 mb-8 items-end">
             <div>
-                <label for="groupSelect" class="block text-sm font-medium text-slate-300 mb-1 uppercase-text">SELECT YOUR GROUP</label>
+                <label for="groupSelect" class="block text-sm font-medium text-gray-700 mb-1 uppercase-text">SELECT YOUR GROUP</label>
                 <select id="groupSelect" name="groupSelect"
-                        class="mt-1 block w-full rounded-lg border-slate-600 bg-slate-700 text-slate-100 
-                               shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 
+                        class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-gray-900 
+                               shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50 
                                p-3 text-sm">
                     </select>
             </div>
             <div>
-                <label for="startDate" class="block text-sm font-medium text-slate-300 mb-1 uppercase-text">YOUR GROUP'S START DATE</label>
+                <label for="startDate" class="block text-sm font-medium text-gray-700 mb-1 uppercase-text">YOUR GROUP'S START DATE</label>
                 <input type="date" id="startDate" name="startDate" 
-                       class="mt-1 block w-full rounded-lg border-slate-600 bg-slate-700 text-slate-100 
-                              shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 
-                              p-3 text-sm placeholder-slate-400">
+                       class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-gray-900 
+                              shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50 
+                              p-3 text-sm placeholder-gray-400">
             </div>
             <button id="generateButton" 
-                    class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold 
+                    class="bg-teal-600 hover:bg-teal-700 text-white font-semibold 
                            py-3 px-4 rounded-lg shadow-md hover:shadow-lg transition-all 
                            duration-150 ease-in-out focus:outline-none focus:ring-2 
-                           focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-800 
+                           focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-white 
                            h-[3.25rem] text-sm uppercase-text">
                 Generate Schedule
             </button>
@@ -55,20 +76,20 @@
         <div id="scheduleOutput" class="mt-8">
             <div class="flex items-center justify-between mb-6">
                 <button id="prevMonthButton" class="nav-button uppercase-text">&lt; PREV</button>
-                <h2 id="monthNameDisplay" class="text-2xl font-semibold text-slate-100 text-center uppercase-text mx-4"></h2>
+                <h2 id="monthNameDisplay" class="text-2xl font-semibold text-gray-800 text-center uppercase-text mx-4"></h2>
                 <button id="nextMonthButton" class="nav-button uppercase-text">NEXT &gt;</button>
             </div>
 
-            <div id="weekdayHeaders" class="grid grid-cols-7 gap-1 md:gap-2 mb-2 text-center font-semibold text-slate-400 text-xs md:text-sm uppercase-text">
+            <div id="weekdayHeaders" class="grid grid-cols-7 gap-1 md:gap-2 mb-2 text-center font-semibold text-gray-500 text-xs md:text-sm uppercase-text">
                 <div>SUN / L7AD</div><div>MON / TNIN</div><div>TUE / TLAT</div><div>WED / LARBE3</div><div>THU / KHMIS</div><div>FRI / JEM3A</div><div>SAT / SEBT</div>
             </div>
             <div id="calendarGrid" class="grid grid-cols-7 gap-1 md:gap-2">
                 </div>
-            <div id="messageArea" class="mt-6 text-center text-red-400 font-medium uppercase-text"></div>
+            <div id="messageArea" class="mt-6 text-center text-red-600 font-medium uppercase-text"></div>
 
-            <div id="legend" class="mt-8 pt-4 border-t border-slate-700 flex flex-col sm:flex-row sm:justify-center gap-4 sm:gap-6 items-center text-xs uppercase-text">
+            <div id="legend" class="mt-8 pt-4 border-t border-gray-200 flex flex-col sm:flex-row sm:justify-center gap-4 sm:gap-6 items-center text-xs uppercase-text">
                 <div class="flex items-center gap-2">
-                    <div class="w-4 h-4 rounded-full bg-yellow-400 ring-2 ring-yellow-600"></div>
+                    <div class="w-4 h-4 rounded-full bg-yellow-400 ring-2 ring-yellow-500"></div>
                     <span>TODAY</span>
                 </div>
                 <div class="flex items-center gap-2">
@@ -76,7 +97,7 @@
                     <span>YOUR GROUP'S WORKDAYS</span>
                 </div>
                 <div class="flex items-center gap-2">
-                    <div class="w-4 h-4 rounded-md bg-blue-600"></div>
+                    <div class="w-4 h-4 rounded-md bg-teal-100 border border-teal-300"></div>
                     <span>GROUP WORKING</span>
                 </div>
             </div>
@@ -85,6 +106,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            const liveClockElement = document.getElementById('liveClock');
             const groupSelect = document.getElementById('groupSelect');
             const startDateInput = document.getElementById('startDate');
             const generateButton = document.getElementById('generateButton');
@@ -106,6 +128,15 @@
             let currentDisplayDate;
             let selectedGroupIndex = 0; 
 
+            function updateLiveClock() {
+                const now = new Date();
+                const optionsTime = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+                const optionsDate = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                const timeString = now.toLocaleTimeString('en-US', optionsTime);
+                const dateString = now.toLocaleDateString('en-US', optionsDate);
+                liveClockElement.textContent = `${dateString} - ${timeString}`;
+            }
+
             function populateGroupSelect() {
                 groupNames.forEach((name, index) => {
                     const option = document.createElement('option');
@@ -116,6 +147,9 @@
             }
 
             function initializeApp() {
+                updateLiveClock(); // Initial clock update
+                setInterval(updateLiveClock, 1000); // Update clock every second
+
                 populateGroupSelect(); 
 
                 const savedStartDateString = localStorage.getItem(localStorageKeyDate);
@@ -173,11 +207,12 @@
                 }).toUpperCase();
 
                 statusBanner.textContent = `TODAY (${todayFormatted}) IS A ${isTodayWorkDayForSelectedGroup ? 'WORK' : 'REST'} DAY FOR ${selectedGroupName}`;
-                statusBanner.classList.remove('hidden', 'bg-blue-600', 'text-white', 'bg-slate-700', 'text-slate-300');
+                // Adjusted colors for light theme
+                statusBanner.classList.remove('hidden', 'bg-teal-500', 'text-white', 'bg-gray-200', 'text-gray-700');
                 if (isTodayWorkDayForSelectedGroup) {
-                    statusBanner.classList.add('bg-blue-600', 'text-white');
+                    statusBanner.classList.add('bg-teal-500', 'text-white'); // Teal for work
                 } else {
-                    statusBanner.classList.add('bg-slate-700', 'text-slate-300');
+                    statusBanner.classList.add('bg-gray-200', 'text-gray-700'); // Light gray for rest
                 }
             }
 
@@ -227,23 +262,21 @@
                     const workingGroupOffset = ((diffInDays % 5) + 5) % 5; 
                     const actualWorkingGroupIndex = (selectedGroupIndex + workingGroupOffset) % 5;
                     const workingGroupName = groupNames[actualWorkingGroupIndex];
-                    
                     const isSelectedGroupWorkingThisDay = (actualWorkingGroupIndex === selectedGroupIndex);
 
                     const dayCell = document.createElement('div');
+                    // Adjusted base styling for light theme
                     dayCell.className = `p-2 md:p-3 rounded-lg text-center shadow-md min-h-[6rem] md:min-h-[7rem] 
                                          flex flex-col justify-center items-center transition-all 
-                                         duration-150 ease-in-out bg-blue-600 text-white border border-blue-500 hover:bg-blue-500 relative`; 
+                                         duration-150 ease-in-out bg-teal-50 text-teal-800 border border-teal-200 hover:bg-teal-100 relative`; 
                     
                     if (isSelectedGroupWorkingThisDay) {
-                        dayCell.classList.add('ring-2', 'ring-red-500', 'ring-offset-2', 'ring-offset-slate-800');
+                        dayCell.classList.add('ring-2', 'ring-red-500', 'ring-offset-2', 'ring-offset-white'); // Offset to white
                     }
 
                     if (currentDateInCalendar.getTime() === todayUTCForHighlight.getTime()) {
-                        // Ensure today's highlight is distinct, even if it's also a selected group's workday.
-                        // Remove red ring if it exists to prioritize yellow for today.
                         dayCell.classList.remove('ring-red-500'); 
-                        dayCell.classList.add('ring-2', 'ring-yellow-400', 'ring-offset-2', 'ring-offset-slate-800');
+                        dayCell.classList.add('ring-2', 'ring-yellow-400', 'ring-offset-2', 'ring-offset-white'); // Offset to white
                     }
 
                     const dayNumberDiv = document.createElement('div');
