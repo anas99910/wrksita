@@ -31,11 +31,64 @@
         }
         .nav-button:hover { background-color: #D1D5DB; }
         .nav-button:focus { outline: none; box-shadow: 0 0 0 2px #0D9488; }
+
+        /* Modal Styles */
+        .modal {
+            transition: opacity 0.25s ease;
+        }
+        .modal-active {
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        .modal-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px; /* Space between tables */
+        }
+        .modal-content th, .modal-content td {
+            border: 1px solid #D1D5DB; /* gray-300 */
+            padding: 8px;
+            text-align: left;
+            font-size: 0.8rem;
+        }
+        .modal-content th {
+            background-color: #F3F4F6; /* gray-100 */
+            color: #1F2937; /* gray-800 */
+            font-weight: bold;
+        }
+        .modal-content td {
+            color: #374151; /* gray-700 */
+        }
+        .egate-section {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #E5E7EB; /* gray-200 */
+        }
+        .egate-terminal-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #115E59; /* teal-800 */
+            margin-bottom: 0.75rem;
+            text-align: center;
+        }
+        .egate-group {
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .egate-machine {
+            display: inline-block; 
+            margin: 0.25rem 0.5rem;
+            padding: 0.5rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 0.375rem;
+            background-color: #F9FAFB; 
+            font-size: 0.9rem;
+        }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800 flex items-center justify-center min-h-screen p-4 md:p-8">
+<body class="bg-gray-100 text-gray-800 flex flex-col items-center justify-center min-h-screen p-4 md:p-8">
 
-    <div class="container mx-auto max-w-4xl bg-white p-6 md:p-8 rounded-xl shadow-2xl">
+    <div class="container mx-auto max-w-4xl bg-white p-6 md:p-8 rounded-xl shadow-2xl mb-8">
         
         <div id="liveClock" class="text-center text-sm text-gray-500 mb-6 font-medium">
             Loading current time...
@@ -46,7 +99,7 @@
         <div id="statusBanner" class="p-4 mb-8 rounded-lg text-center font-bold text-lg hidden uppercase-text transition-all duration-300">
             </div>
 
-        <div class="grid md:grid-cols-3 gap-6 mb-8 items-end">
+        <div class="grid md:grid-cols-2 gap-6 mb-8 items-end"> 
             <div>
                 <label for="groupSelect" class="block text-sm font-medium text-gray-700 mb-1 uppercase-text">SELECT YOUR GROUP</label>
                 <select id="groupSelect" name="groupSelect"
@@ -62,15 +115,7 @@
                               shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50 
                               p-3 text-sm placeholder-gray-400">
             </div>
-            <button id="generateButton" 
-                    class="bg-teal-600 hover:bg-teal-700 text-white font-semibold 
-                           py-3 px-4 rounded-lg shadow-md hover:shadow-lg transition-all 
-                           duration-150 ease-in-out focus:outline-none focus:ring-2 
-                           focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-white 
-                           h-[3.25rem] text-sm uppercase-text">
-                Generate Schedule
-            </button>
-        </div>
+            </div>
 
         <div id="scheduleOutput" class="mt-8">
             <div class="flex items-center justify-between mb-6">
@@ -103,24 +148,101 @@
         </div>
     </div>
 
+    <div class="text-center mt-4 mb-8">
+        <button id="pmZonesButton" class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 uppercase-text">
+            PM ZONES & E-GATES
+        </button>
+    </div>
+
+    <div id="pmZonesModal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 opacity-0 pointer-events-none">
+        <div class="modal-content bg-white text-gray-800 w-11/12 md:max-w-4xl lg:max-w-6xl mx-auto p-6 rounded-xl shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-teal-700 uppercase-text">MAINTENANCE & E-GATE INFO</h3>
+                <button id="closePmZonesModal" class="text-gray-700 hover:text-red-600 text-2xl font-bold">&times;</button>
+            </div>
+            
+            <h4 class="text-lg font-semibold text-teal-700 uppercase-text mb-2">MAINTENANCE PREVENTIVE-CMN</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Technicien</th>
+                        <th>ENREGISTREMENT T1</th>
+                        <th>EMBARQUEMENT T1</th>
+                        <th>TRANSIT T1</th>
+                        <th>ENREGISTREMENT T2</th>
+                        <th>EMBARQUEMENT T2</th>
+                        <th>TRANSIT T2</th>
+                        <th>OPERATION LITIGE</th>
+                        <th>E-GATE (Maintenance)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Youssef CHARMOUH</td><td>1-2-3-4-5</td><td>E1-E2</td><td>1-2</td><td>1-2-3</td><td>A1</td><td></td><td></td><td>T1 ECO 1, T1 ECO 2</td></tr>
+                    <tr><td>Mehdi ASKARI</td><td>6-7-8-9-10</td><td></td><td>3-4</td><td>4-5-6</td><td>A2</td><td></td><td></td><td></td></tr>
+                    <tr><td>Soufiane BELFAKIR</td><td>11-12-13-14-15</td><td>E3</td><td>5-6</td><td>7-8-9</td><td>A3</td><td></td><td></td><td>T1 ECO 3</td></tr>
+                    <tr><td>Ahmed FARBOUSSI</td><td>16-17-18-19-20</td><td>E4</td><td>7-8</td><td>10-11-12</td><td>A4</td><td></td><td></td><td>T1 ECO 4</td></tr>
+                    <tr><td>Reda ALLOUCH</td><td>21-22-23-24-25</td><td>E5</td><td>9-10</td><td>13-14-15</td><td>A5</td><td></td><td></td><td>T1 ECO 5</td></tr>
+                    <tr><td>Seddik IDOUAKRIM</td><td>26-27-28-29-30</td><td>E6</td><td>11</td><td>16-17-18</td><td>A6</td><td></td><td></td><td>T1 BUS 1</td></tr>
+                    <tr><td>Ahmed AMARSAL</td><td>31-32-33-34-35</td><td>E7</td><td></td><td>19-20-21</td><td>A7</td><td></td><td>1-2</td><td>T1 BUS 2</td></tr>
+                    <tr><td>Mohamed MASKAOUI</td><td>36-37-38-39-40</td><td>E8</td><td></td><td>22-23-24</td><td>A8</td><td></td><td>3-4</td><td></td></tr>
+                    <tr><td>Ayoub SADIKI</td><td>41-42-43-44-45</td><td>F1</td><td></td><td>25-26-27</td><td>A9</td><td></td><td>5-6</td><td>T2 ECO 1, T2 ECO 2</td></tr>
+                    <tr><td>Mehdi BELKOUCHI</td><td>46-47-48-49-50</td><td>F2</td><td></td><td>28-29-30</td><td>A10</td><td></td><td>PC RAM 1-2</td><td>T2 ECO 3</td></tr>
+                    <tr><td>Ayoub CHAAOUBI</td><td>51-52-53-54-55</td><td>F3</td><td></td><td>31-32-33</td><td>B11</td><td></td><td>PC RAM 3-4</td><td>T2 ECO 4</td></tr>
+                    <tr><td>Zakaria BOURHRISS</td><td>56-57-58-59-60</td><td>F4</td><td></td><td>34-35-36</td><td>B12</td><td></td><td>SWISSPORT 1-2</td><td>T2 ECO 5</td></tr>
+                    <tr><td>Mouad KAOUTAR</td><td>61-62-63-64-65</td><td>F5</td><td></td><td>37-38-39-40</td><td>B13</td><td></td><td></td><td>T2 BUS 1</td></tr>
+                    <tr><td>Anas BENCHICHE</td><td>66-67-68-69-70</td><td>F6</td><td></td><td></td><td>D1</td><td></td><td>RAM SWISSPORT</td><td>T2 BUS 2</td></tr>
+                    <tr><td>Younes Ch</td><td>71-72-73-74-75-76-77</td><td>F7</td><td></td><td></td><td>D2-D3-D4-D5</td><td></td><td></td><td></td></tr>
+                    <tr><td>Kamal BOURROU</td><td>78-79-80-81-82-83-84</td><td>F8</td><td></td><td></td><td>D6-D7-D8-D9</td><td></td><td></td><td></td></tr>
+                </tbody>
+            </table>
+
+            <div class="egate-section">
+                <h4 class="text-lg font-semibold text-teal-700 uppercase-text mb-4">E-GATE TERMINALS</h4>
+                
+                <div class="egate-terminal-title uppercase-text">TERMINAL I</div>
+                <div class="egate-group">
+                    <span class="egate-machine">🖥️ CMN3PFX001</span>
+                </div>
+                <div class="flex flex-wrap justify-center gap-4 mb-4">
+                    <span class="egate-machine">🖥️ CMN3PFX008</span>
+                    <span class="egate-machine">🖥️ CMN3PFX002</span>
+                    <span class="egate-machine">🖥️ CMN3PFX003</span>
+                </div>
+
+                <div class="egate-terminal-title uppercase-text">TERMINAL II</div>
+                <div class="egate-group">
+                    <span class="egate-machine">🖥️ CMN3PFX004</span>
+                </div>
+                 <div class="flex flex-wrap justify-center gap-4">
+                    <span class="egate-machine">🖥️ CMN3PFX006</span>
+                    <span class="egate-machine">🖥️ CMN3PFX005</span>
+                    <span class="egate-machine">🖥️ CMN3PFX007</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const liveClockElement = document.getElementById('liveClock');
             const groupSelect = document.getElementById('groupSelect');
             const startDateInput = document.getElementById('startDate');
-            const generateButton = document.getElementById('generateButton');
+            // const generateButton = document.getElementById('generateButton'); // Button is removed
             const monthNameDisplay = document.getElementById('monthNameDisplay');
             const calendarGrid = document.getElementById('calendarGrid');
             const messageArea = document.getElementById('messageArea');
             const prevMonthButton = document.getElementById('prevMonthButton');
             const nextMonthButton = document.getElementById('nextMonthButton');
             const statusBanner = document.getElementById('statusBanner');
+            const pmZonesButton = document.getElementById('pmZonesButton');
+            const pmZonesModal = document.getElementById('pmZonesModal');
+            const closePmZonesModalButton = document.getElementById('closePmZonesModal');
             
-            const groupNames = [ // Full names for dropdown and banner
+            const groupNames = [ 
                 "K.MOUAD GRP", "Y.CHARMOUH GRP", "A.FARBOSI GRP", 
                 "A.AMARSAL GRP", "M.BELKOUCHI GRP"
             ];
-            // Shorter names for calendar cells - using user's latest suggestion
             const groupAbbreviations = [
                 "M.KAOU", "Y.CHAR", "A.FRBS", "A.AMRSL", "M.BEL" 
             ];
@@ -153,7 +275,6 @@
             function initializeApp() {
                 updateLiveClock(); 
                 setInterval(updateLiveClock, 1000); 
-
                 populateGroupSelect(); 
 
                 const savedStartDateString = localStorage.getItem(localStorageKeyDate);
@@ -286,7 +407,6 @@
                     dayNumberDiv.textContent = dayOfMonth;
 
                     const statusDiv = document.createElement('div');
-                    // Using a very small font size for the group abbreviations
                     statusDiv.className = 'text-[0.55rem] sm:text-[0.6rem] md:text-[0.65rem] font-medium uppercase-text leading-tight break-words'; 
                     statusDiv.textContent = workingGroupNameInCell; 
                     
@@ -319,11 +439,33 @@
                 }
             }
 
-            generateButton.addEventListener('click', handleInputsChange);
+            // Modal toggle functions
+            function openModal(modal) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.classList.add('opacity-100', 'modal-active');
+                document.body.classList.add('overflow-hidden'); 
+            }
+
+            function closeModal(modal) {
+                modal.classList.remove('opacity-100', 'modal-active');
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                document.body.classList.remove('overflow-hidden');
+            }
+
+            // Event Listeners
+            // generateButton.addEventListener('click', handleInputsChange); // Button is removed
             startDateInput.addEventListener('change', handleInputsChange);
             groupSelect.addEventListener('change', handleInputsChange); 
             prevMonthButton.addEventListener('click', () => changeMonth(-1));
             nextMonthButton.addEventListener('click', () => changeMonth(1));
+
+            pmZonesButton.addEventListener('click', () => openModal(pmZonesModal));
+            closePmZonesModalButton.addEventListener('click', () => closeModal(pmZonesModal));
+            pmZonesModal.addEventListener('click', (event) => {
+                if (event.target === pmZonesModal) { 
+                    closeModal(pmZonesModal);
+                }
+            });
 
             initializeApp(); 
         });
