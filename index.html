@@ -7,176 +7,236 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📅</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body { 
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
         input[type="date"], select { 
             appearance: none; 
             -webkit-appearance: none; 
             -moz-appearance: none; 
             color-scheme: light; 
+            background-color: #F9FAFB; /* Tailwind gray-50 */
+            border: 1px solid #D1D5DB; /* Tailwind gray-300 */
         }
         select { 
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
             background-repeat: no-repeat; 
-            background-position: right 0.5rem center; 
-            background-size: 1.5em 1.5em; 
-            padding-right: 2.5rem; 
+            background-position: right 0.75rem center; 
+            background-size: 1.25em 1.25em; 
+            padding-right: 2.75rem; 
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            opacity: 0.6;
+            cursor: pointer;
         }
         .uppercase-text { text-transform: uppercase; }
+        
         .nav-button {
-            background-color: #E5E7EB; 
-            color: #374151; 
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem; 
-            font-weight: 600; 
-            transition: background-color 0.15s ease-in-out;
+            background-color: #F3F4F6; /* Tailwind gray-100 */
+            color: #1F2937; /* Tailwind gray-800 */
+            padding: 0.6rem 1.1rem;
+            border-radius: 0.5rem; /* Softer rounding */
+            font-weight: 500; /* Medium weight */
+            transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            border: 1px solid #E5E7EB; /* Tailwind gray-200 */
         }
-        .nav-button:hover { background-color: #D1D5DB; }
-        .nav-button:focus { outline: none; box-shadow: 0 0 0 2px #0D9488; }
+        .nav-button:hover { 
+            background-color: #E5E7EB; /* Tailwind gray-200 */
+        }
+        .nav-button:focus { 
+            outline: none; 
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); /* Tailwind blue-500 focus ring, softer */
+        }
 
         /* Modal Styles */
         .modal {
-            transition: opacity 0.25s ease;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            transform: scale(0.95);
+        }
+        .modal.opacity-100 {
+            transform: scale(1);
         }
         .modal-active {
             overflow-x: hidden;
             overflow-y: auto;
         }
+        .modal-content { /* Applied to the inner content div of modals */
+            border-radius: 0.75rem; /* Larger radius for iOS feel */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* Softer, more diffused shadow */
+        }
         .modal-content table {
             width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px; 
+            border-collapse: separate; /* Allows for border-spacing */
+            border-spacing: 0;
+            margin-bottom: 1.25rem; 
+            font-size: 0.875rem; /* Slightly larger base font for table */
         }
         .modal-content th, .modal-content td {
-            border: 1px solid #D1D5DB; 
-            padding: 8px;
+            border: none;
+            border-bottom: 1px solid #E5E7EB; /* Tailwind gray-200, only bottom border */
+            padding: 0.75rem; /* Increased padding */
             text-align: left;
-            font-size: 0.8rem;
         }
         .modal-content th {
-            background-color: #F3F4F6; 
-            color: #1F2937; 
-            font-weight: bold;
+            background-color: #F9FAFB; /* Tailwind gray-50 */
+            color: #374151; /* Tailwind gray-700 */
+            font-weight: 500; /* Medium */
+            border-top: 1px solid #E5E7EB;
         }
-        .modal-content td {
-            color: #374151; 
-        }
+         .modal-content tr:first-child th:first-child { border-top-left-radius: 0.5rem; }
+         .modal-content tr:first-child th:last-child { border-top-right-radius: 0.5rem; }
+         .modal-content tr:last-child td:first-child { border-bottom-left-radius: 0.5rem; }
+         .modal-content tr:last-child td:last-child { border-bottom-right-radius: 0.5rem; }
+        .modal-content tr:last-child td { border-bottom: none; } /* No border for last row cells */
+
         .egate-section {
-            margin-top: 2rem;
-            padding-top: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
             border-top: 1px solid #E5E7EB; 
         }
         .egate-terminal-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #115E59; 
+            font-size: 1rem; /* Slightly smaller */
+            font-weight: 600; /* Semibold */
+            color: #065F46; /* Tailwind green-800 */
             margin-bottom: 0.75rem;
             text-align: center;
         }
         .egate-machine {
             display: inline-flex; 
             align-items: center;
-            margin: 0.125rem; 
-            padding: 0.25rem 0.5rem; 
-            border: 1px solid #D1D5DB; 
+            margin: 0.25rem; 
+            padding: 0.375rem 0.6rem; 
+            border: 1px solid #E5E7EB; /* Tailwind gray-200 */
             border-radius: 0.375rem; 
-            background-color: #F9FAFB; 
-            font-size: 0.75rem; 
+            background-color: #F9FAFB; /* Tailwind gray-50 */
+            font-size: 0.7rem; 
             white-space: nowrap; 
+            color: #4B5563; /* Tailwind gray-600 */
         }
         .business-egate { 
-            background-color: #FEF3C7; 
-            border-color: #FBBF24; 
-            color: #78350F; 
+            background-color: #FFFBEB; /* Tailwind yellow-50 */
+            border-color: #FDE68A; /* Tailwind yellow-200 */
+            color: #92400E; /* Tailwind yellow-700 */
+            font-weight: 500;
         }
         .input-label-tag {
             display: inline-block;
-            background-color: #E0F2F7; 
-            color: #0E7490; 
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px; 
-            font-size: 0.75rem; 
+            background-color: #EFF6FF; /* Tailwind blue-50 */
+            color: #1D4ED8; /* Tailwind blue-700 */
+            padding: 0.3rem 0.8rem;
+            border-radius: 0.375rem; /* Slightly less rounded */
+            font-size: 0.7rem; 
             font-weight: 500; 
-            margin-bottom: 0.25rem; 
+            margin-bottom: 0.3rem; 
         }
-        /* Styles for the new Group Members Modal */
+        /* Styles for the Group Members Modal */
         #groupMembersModalContent ul {
             list-style-type: none;
             padding: 0;
         }
         #groupMembersModalContent li {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #E5E7EB; /* Tailwind gray-200 */
+            padding: 0.6rem 0.25rem; /* Adjusted padding */
+            border-bottom: 1px solid #F3F4F6; /* Tailwind gray-100 for subtle separation */
             font-size: 0.9rem;
+            color: #374151; /* Tailwind gray-700 */
         }
         #groupMembersModalContent li:last-child {
             border-bottom: none;
         }
+
+        /* Calendar Day Cell Enhancements */
+        .day-cell-base {
+            border-radius: 0.5rem; /* Softer rounding */
+            box-shadow: 0 1px 3px 0 rgba(0,0,0,0.07), 0 1px 2px 0 rgba(0,0,0,0.03); /* Softer shadow */
+            transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+        }
+        .day-cell-base:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.08), 0 2px 4px 0 rgba(0,0,0,0.05);
+        }
+        .day-cell-number {
+            font-size: 1.125rem; /* Tailwind text-lg */
+            margin-bottom: 0.125rem; /* Tailwind mb-0.5 */
+        }
+        .day-cell-group-name {
+            font-size: 0.65rem; /* Smaller, more subtle */
+            line-height: 1.2;
+        }
+        .ring-selected-group {
+            ring-offset-color: #ffffff; /* White offset for better visibility on colored backgrounds */
+        }
+        .ring-today {
+             ring-offset-color: #ffffff;
+        }
+
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800 flex flex-col items-center justify-center min-h-screen p-4 md:p-8">
+<body class="bg-gray-50 text-gray-700 flex flex-col items-center min-h-screen p-4 md:p-6">
 
-    <div class="container mx-auto max-w-4xl bg-white p-6 md:p-8 rounded-xl shadow-2xl mb-8">
+    <div class="container mx-auto max-w-3xl bg-white p-5 md:p-8 rounded-lg shadow-xl mb-8">
         
-        <div id="liveClock" class="text-center text-sm text-gray-500 mb-6 font-medium">
+        <div id="liveClock" class="text-center text-xs text-gray-500 mb-5 font-medium">
             Loading current time...
         </div>
 
-        <h1 class="text-3xl font-bold text-center text-teal-700 mb-4 uppercase-text">Work & Rest Schedule For Cmn Groups</h1>
+        <h1 class="text-2xl font-semibold text-center text-teal-700 mb-6 uppercase-text tracking-wide">Work & Rest Schedule</h1>
 
-        <div id="statusBanner" class="p-4 mb-4 rounded-lg text-center font-bold text-lg hidden uppercase-text transition-all duration-300">
+        <div id="statusBanner" class="p-3.5 mb-6 rounded-md text-center font-semibold text-base hidden uppercase-text transition-all duration-300 text-sm">
         </div>
-        <div id="monthlyStatsBanner" class="p-3 mb-8 rounded-lg text-center font-semibold text-sm hidden bg-gray-100 text-gray-600 uppercase-text">
+        <div id="monthlyStatsBanner" class="p-2.5 mb-6 rounded-md text-center font-medium text-xs hidden bg-gray-100 text-gray-600 uppercase-text">
         </div>
 
-        <div class="grid md:grid-cols-2 gap-6 mb-8 items-start"> 
+        <div class="grid md:grid-cols-2 gap-5 mb-6 items-end"> 
             <div>
-                <label for="groupSelect" class="input-label-tag uppercase-text">SELECT YOUR GROUP</label>
+                <label for="groupSelect" class="input-label-tag uppercase-text">Select Group</label>
                 <select id="groupSelect" name="groupSelect"
-                        class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-gray-900 
-                               shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50 
-                               p-3 text-sm">
+                        class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 text-gray-800 
+                               shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-40 
+                               p-2.5 text-sm">
                 </select>
             </div>
             <div>
-                <label for="startDate" class="input-label-tag uppercase-text">YOUR GROUP'S START DATE</label>
+                <label for="startDate" class="input-label-tag uppercase-text">Group Start Date</label>
                 <input type="date" id="startDate" name="startDate" 
-                       class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-gray-900 
-                              shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50 
-                              p-3 text-sm placeholder-gray-400">
+                       class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 text-gray-800 
+                              shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-40 
+                              p-2.5 text-sm placeholder-gray-400">
             </div>
         </div>
 
-        <div id="scheduleOutput" class="mt-8">
-            <div class="flex items-center justify-between mb-6">
-                <button id="prevMonthButton" class="nav-button uppercase-text">&lt; PREV</button>
-                <h2 id="monthNameDisplay" class="text-2xl font-semibold text-gray-800 text-center uppercase-text mx-4"></h2>
-                <button id="nextMonthButton" class="nav-button uppercase-text">NEXT &gt;</button>
+        <div id="scheduleOutput" class="mt-6">
+            <div class="flex items-center justify-between mb-5">
+                <button id="prevMonthButton" class="nav-button uppercase-text text-xs">&lt; Prev</button>
+                <h2 id="monthNameDisplay" class="text-xl font-medium text-gray-700 text-center uppercase-text mx-3"></h2>
+                <button id="nextMonthButton" class="nav-button uppercase-text text-xs">Next &gt;</button>
             </div>
 
-            <div id="weekdayHeaders" class="grid grid-cols-7 gap-1 md:gap-2 mb-2 text-center font-semibold text-gray-500 text-xs md:text-sm uppercase-text">
-                <div>SUN / L7AD</div><div>MON / TNIN</div><div>TUE / TLAT</div><div>WED / LARBE3</div><div>THU / KHMIS</div><div>FRI / JEM3A</div><div>SAT / SEBT</div>
+            <div id="weekdayHeaders" class="grid grid-cols-7 gap-1 md:gap-1.5 mb-1.5 text-center font-medium text-gray-500 text-[0.6rem] md:text-xs uppercase-text">
+                <div>SUN</div><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div>
             </div>
-            <div id="calendarGrid" class="grid grid-cols-7 gap-1 md:gap-2">
+            <div id="calendarGrid" class="grid grid-cols-7 gap-1 md:gap-1.5">
             </div>
-            <div id="messageArea" class="mt-6 text-center text-red-600 font-medium uppercase-text"></div>
+            <div id="messageArea" class="mt-5 text-center text-red-500 font-medium uppercase-text text-xs"></div>
 
-            <div id="legend" class="mt-8 pt-4 border-t border-gray-200 flex flex-wrap justify-center gap-x-6 gap-y-2 items-center text-xs uppercase-text">
+            <div id="legend" class="mt-6 pt-3 border-t border-gray-200 flex flex-wrap justify-center gap-x-4 gap-y-1.5 items-center text-[0.65rem] uppercase-text">
             </div>
         </div>
     </div>
 
-    <div class="text-center mt-4 mb-8">
-        <button id="pmZonesButton" class="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 uppercase-text">
-            PM ZONES & E-GATES
+    <div class="text-center mt-3 mb-6">
+        <button id="pmZonesButton" class="bg-gray-700 hover:bg-gray-800 text-white font-medium py-2.5 px-5 rounded-md shadow-sm hover:shadow-md transition-all duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 uppercase-text text-xs">
+            PM Zones & E-Gates
         </button>
     </div>
 
     <!-- PM Zones Modal -->
-    <div id="pmZonesModal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 opacity-0 pointer-events-none">
-        <div class="modal-content bg-white text-gray-800 w-11/12 md:max-w-4xl lg:max-w-6xl mx-auto p-6 rounded-xl shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold text-teal-700 uppercase-text">MAINTENANCE & E-GATE INFO</h3>
-                <button id="closePmZonesModal" class="text-gray-700 hover:text-red-600 text-2xl font-bold">&times;</button>
+    <div id="pmZonesModal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 opacity-0 pointer-events-none">
+        <div class="modal-content bg-white text-gray-800 w-11/12 md:max-w-4xl lg:max-w-5xl mx-auto p-5 md:p-6 rounded-lg shadow-xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4 pb-3 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-teal-700 uppercase-text">Maintenance & E-Gate Info</h3>
+                <button id="closePmZonesModal" class="text-gray-500 hover:text-red-600 text-2xl font-bold">&times;</button>
             </div>
             
             <table>
@@ -214,37 +274,37 @@
             </table>
 
             <div class="egate-section">
-                <h4 class="text-lg font-semibold text-teal-700 uppercase-text mb-4">E-GATE TERMINALS</h4>
+                <h4 class="text-base font-semibold text-teal-700 uppercase-text mb-3">E-GATE TERMINALS</h4>
                 
                 <div class="egate-terminal-title uppercase-text">TERMINAL I</div>
-                <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-2 mb-4"> 
-                    <span class="egate-machine business-egate">🖥️🖥️ CMN3PFX001</span>
+                <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5 mb-3"> 
+                    <span class="egate-machine business-egate">🖥️ CMN3PFX001</span>
                 </div>
-                <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-2 mb-4"> 
-                    <span class="egate-machine">🖥️🖥️ CMN3PFX008</span>
-                    <span class="egate-machine">🖥️🖥️ CMN3PFX002</span>
-                    <span class="egate-machine">🖥️🖥️ CMN3PFX003</span>
+                <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5 mb-3"> 
+                    <span class="egate-machine">🖥️ CMN3PFX008</span>
+                    <span class="egate-machine">🖥️ CMN3PFX002</span>
+                    <span class="egate-machine">🖥️ CMN3PFX003</span>
                 </div>
 
                 <div class="egate-terminal-title uppercase-text">TERMINAL II</div>
-                <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-2 mb-4"> 
-                    <span class="egate-machine business-egate">🖥️🖥️ CMN3PFX004</span>
+                <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5 mb-3"> 
+                    <span class="egate-machine business-egate">🖥️ CMN3PFX004</span>
                 </div>
-                 <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-2"> 
-                    <span class="egate-machine">🖥️🖥️ CMN3PFX006</span>
-                    <span class="egate-machine">🖥️🖥️ CMN3PFX005</span>
-                    <span class="egate-machine">🖥️🖥️ CMN3PFX007</span>
+                 <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5"> 
+                    <span class="egate-machine">🖥️ CMN3PFX006</span>
+                    <span class="egate-machine">🖥️ CMN3PFX005</span>
+                    <span class="egate-machine">🖥️ CMN3PFX007</span>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Group Members Modal -->
-    <div id="groupMembersModal" class="modal fixed inset-0 z-[60] flex items-center justify-center bg-black bg-opacity-50 opacity-0 pointer-events-none">
-        <div id="groupMembersModalContent" class="bg-white text-gray-800 w-11/12 md:max-w-md mx-auto p-6 rounded-xl shadow-2xl max-h-[80vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-4">
-                <h3 id="groupMembersModalTitle" class="text-lg font-bold text-teal-700 uppercase-text">Group Members</h3>
-                <button id="closeGroupMembersModal" class="text-gray-700 hover:text-red-600 text-2xl font-bold">&times;</button>
+    <div id="groupMembersModal" class="modal fixed inset-0 z-[60] flex items-center justify-center bg-black bg-opacity-60 opacity-0 pointer-events-none p-4">
+        <div id="groupMembersModalContent" class="modal-content bg-white text-gray-800 w-full max-w-sm mx-auto p-5 rounded-lg shadow-xl max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-3 pb-2.5 border-b border-gray-200">
+                <h3 id="groupMembersModalTitle" class="text-base font-semibold text-teal-700 uppercase-text">Group Members</h3>
+                <button id="closeGroupMembersModal" class="text-gray-500 hover:text-red-600 text-2xl font-bold">&times;</button>
             </div>
             <ul id="groupMembersList" class="text-gray-700">
                 <!-- Member names will be populated here by JavaScript -->
@@ -253,8 +313,8 @@
     </div>
 
 
-    <footer class="w-full text-center py-8">
-        <p class="text-sm text-gray-500">
+    <footer class="w-full text-center py-6">
+        <p class="text-xs text-gray-400">
             Made by Ben chikhe Anas
         </p>
     </footer>
@@ -278,7 +338,6 @@
             const pmZonesModal = document.getElementById('pmZonesModal');
             const closePmZonesModalButton = document.getElementById('closePmZonesModal');
             
-            // New Modal for Group Members
             const groupMembersModal = document.getElementById('groupMembersModal');
             const groupMembersModalTitle = document.getElementById('groupMembersModalTitle');
             const groupMembersList = document.getElementById('groupMembersList');
@@ -292,48 +351,40 @@
             const groupAbbreviations = [
                 "M.KAOU", "Y.CHAR", "A.FRBS", "A.AMRSL", "M.BEL" 
             ];
+            
+            // Updated group colors for more noticeable and modern look
             const groupColors = [
-                { bg: 'bg-sky-50', text: 'text-sky-700', border: 'border-sky-200', name: groupAbbreviations[0] },
-                { bg: 'bg-green-50', text: 'text-green-700', border: 'border-green-200', name: groupAbbreviations[1] },
-                { bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200', name: groupAbbreviations[2] },
-                { bg: 'bg-violet-50', text: 'text-violet-700', border: 'border-violet-200', name: groupAbbreviations[3] },
-                { bg: 'bg-pink-50', text: 'text-pink-700', border: 'border-pink-200', name: groupAbbreviations[4] }
+                { bg: 'bg-sky-100', text: 'text-sky-700', border: 'border-sky-300', name: groupAbbreviations[0] },          // Sky Blue
+                { bg: 'bg-emerald-100', text: 'text-emerald-700', border: 'border-emerald-300', name: groupAbbreviations[1] }, // Emerald Green
+                { bg: 'bg-amber-100', text: 'text-amber-700', border: 'border-amber-300', name: groupAbbreviations[2] },    // Amber Orange
+                { bg: 'bg-purple-100', text: 'text-purple-700', border: 'border-purple-300', name: groupAbbreviations[3] }, // Purple
+                { bg: 'bg-rose-100', text: 'text-rose-700', border: 'border-rose-300', name: groupAbbreviations[4] }       // Rose Pink
             ];
 
-            // Data for group members
             const groupMembersData = [
-                ["Mouad KAOUTAR", "Anas BENCHICHE", "Younes Ch", "Kamal BOURROU"], // K.MOUAD GRP
-                ["Youssef CHARMOUH", "Mehdi ASKARI", "Soufiane BELFAKIR"],         // Y.CHARMOUH GRP
-                ["Ahmed FARBOUSSI", "Reda ALLOUCH", "Seddik IDOUAKRIM"],          // A.FARBOSI GRP
-                ["Ahmed AMARSAL", "Mohamed MASKAOUI", "Ayoub SADIKI"],            // A.AMARSAL GRP
-                ["Mehdi BELKOUCHI", "Ayoub CHAAOUBI", "Zakaria BOURHRISS"]        // M.BELKOUCHI GRP
+                ["Mouad KAOUTAR", "Anas BENCHICHE", "Younes Ch", "Kamal BOURROU"],
+                ["Youssef CHARMOUH", "Mehdi ASKARI", "Soufiane BELFAKIR"],        
+                ["Ahmed FARBOUSSI", "Reda ALLOUCH", "Seddik IDOUAKRIM"],         
+                ["Ahmed AMARSAL", "Mohamed MASKAOUI", "Ayoub SADIKI"],           
+                ["Mehdi BELKOUCHI", "Ayoub CHAAOUBI", "Zakaria BOURHRISS"]       
             ];
 
-
-            // LocalStorage Keys for persistence
             const localStorageKeyDate = 'workRestSchedule_startDate';
             const localStorageKeyGroup = 'workRestSchedule_selectedGroup';
 
-            // State Variables
             let cycleStartDate; 
             let currentDisplayDate; 
             let selectedGroupIndex = 0; 
 
-            /**
-             * Updates the live clock display.
-             */
             function updateLiveClock() {
                 const now = new Date();
-                const optionsTime = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
-                const optionsDate = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                const timeString = now.toLocaleTimeString('en-US', optionsTime);
+                const optionsTime = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }; // Using 24-hour format
+                const optionsDate = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+                const timeString = now.toLocaleTimeString('en-GB', optionsTime); // Great Britain locale for HH:MM:SS
                 const dateString = now.toLocaleDateString('en-US', optionsDate);
-                liveClockElement.textContent = `${dateString} - ${timeString}`;
+                liveClockElement.textContent = `${dateString}, ${timeString}`;
             }
 
-            /**
-             * Populates the group selection dropdown.
-             */
             function populateGroupSelect() {
                 groupNames.forEach((name, index) => { 
                     const option = document.createElement('option');
@@ -343,29 +394,26 @@
                 });
             }
 
-            /**
-             * Updates the legend.
-             */
             function updateLegend() {
                 legendContainer.innerHTML = ''; 
 
                 const todayLegend = document.createElement('div');
-                todayLegend.className = 'flex items-center gap-2';
-                todayLegend.innerHTML = `<div class="w-4 h-4 rounded-full bg-yellow-400 ring-2 ring-yellow-500"></div><span>TODAY</span>`;
+                todayLegend.className = 'flex items-center gap-1.5';
+                todayLegend.innerHTML = `<div class="w-3 h-3 rounded-full bg-yellow-400 ring-1 ring-yellow-500"></div><span>Today</span>`;
                 legendContainer.appendChild(todayLegend);
 
                 const selectedGroupWorkdayLegend = document.createElement('div');
-                selectedGroupWorkdayLegend.className = 'flex items-center gap-2';
-                selectedGroupWorkdayLegend.innerHTML = `<div class="w-4 h-4 rounded-full bg-transparent ring-2 ring-red-500"></div><span>YOUR GROUP'S WORKDAYS</span>`;
+                selectedGroupWorkdayLegend.className = 'flex items-center gap-1.5';
+                selectedGroupWorkdayLegend.innerHTML = `<div class="w-3 h-3 rounded-sm bg-transparent ring-2 ring-red-500"></div><span>Your Group</span>`;
                 legendContainer.appendChild(selectedGroupWorkdayLegend);
                 
-                groupColors.forEach((colorInfo) => { // Removed index as it's not used here
+                groupColors.forEach((colorInfo) => {
                     const groupLegendItem = document.createElement('div');
-                    groupLegendItem.className = 'flex items-center gap-2';
+                    groupLegendItem.className = 'flex items-center gap-1.5';
                     const colorBox = document.createElement('div');
-                    colorBox.className = `w-4 h-4 rounded-md ${colorInfo.bg} ${colorInfo.border}`;
+                    colorBox.className = `w-3 h-3 rounded-sm ${colorInfo.bg.replace('-100', '-200')} border ${colorInfo.border.replace('-300','-400')}`; // Darker shade for legend box
                     const groupNameSpan = document.createElement('span');
-                    groupNameSpan.textContent = `${colorInfo.name} WORKING`;
+                    groupNameSpan.textContent = `${colorInfo.name}`; // Simpler legend text
                     
                     groupLegendItem.appendChild(colorBox);
                     groupLegendItem.appendChild(groupNameSpan);
@@ -373,9 +421,6 @@
                 });
             }
 
-            /**
-             * Initializes the application.
-             */
             function initializeApp() {
                 updateLiveClock(); 
                 setInterval(updateLiveClock, 1000); 
@@ -414,22 +459,16 @@
                 generateSchedule(); 
             }
 
-            /**
-             * Parses a date string (YYYY-MM-DD) into a UTC Date object.
-             */
             function parseDateString(dateString) {
                 if (!dateString) return null;
                 const parts = dateString.split('-');
-                if (parts.length !== 3) return null; // Basic format check
+                if (parts.length !== 3) return null;
                 const [year, month, day] = parts.map(Number);
-                if (isNaN(year) || isNaN(month) || isNaN(day)) return null; // Check if parts are numbers
+                if (isNaN(year) || isNaN(month) || isNaN(day)) return null;
                 if (year < 1000 || year > 9999 || month < 1 || month > 12 || day < 1 || day > 31) return null; 
                 return new Date(Date.UTC(year, month - 1, day)); 
             }
             
-            /**
-             * Updates the status banner.
-             */
             function updateStatusBanner() {
                 if (!cycleStartDate || groupSelect.value === "") return; 
 
@@ -445,28 +484,25 @@
                 const isTodayWorkDayForSelectedGroup = (todayEffectiveDay === 0); 
 
                 const todayFormatted = today.toLocaleDateString('en-US', {
-                    month: 'long', day: 'numeric', year: 'numeric'
+                    month: 'long', day: 'numeric' // Simplified date format
                 }).toUpperCase();
                 
-                let statusText = `TODAY (${todayFormatted}) IS A ${isTodayWorkDayForSelectedGroup ? 'WORK' : 'REST'} DAY FOR ${selectedGroupName}`;
+                let statusText = `TODAY, ${todayFormatted}, IS A ${isTodayWorkDayForSelectedGroup ? 'WORK' : 'REST'} DAY FOR ${selectedGroupName.replace(' GRP', '')}`;
                 
                 if (!isTodayWorkDayForSelectedGroup) {
                     const daysUntilNextWorkday = 5 - todayEffectiveDay;
-                    statusText += ` &mdash; ${daysUntilNextWorkday} DAY${daysUntilNextWorkday > 1 ? 'S' : ''} UNTIL NEXT WORKDAY`;
+                    statusText += ` &mdash; ${daysUntilNextWorkday} DAY${daysUntilNextWorkday > 1 ? 'S' : ''} TO NEXT WORKDAY`;
                 }
 
                 statusBanner.innerHTML = statusText; 
-                statusBanner.classList.remove('hidden', 'bg-teal-500', 'text-white', 'bg-gray-200', 'text-gray-700');
+                statusBanner.classList.remove('hidden', 'bg-teal-100', 'text-teal-700', 'bg-gray-100', 'text-gray-600');
                 if (isTodayWorkDayForSelectedGroup) {
-                    statusBanner.classList.add('bg-teal-500', 'text-white'); 
+                    statusBanner.classList.add('bg-teal-100', 'text-teal-700'); 
                 } else {
-                    statusBanner.classList.add('bg-gray-200', 'text-gray-700'); 
+                    statusBanner.classList.add('bg-gray-100', 'text-gray-600'); 
                 }
             }
 
-            /**
-             * Generates and displays the calendar grid.
-             */
             function generateSchedule() {
                 messageArea.textContent = ''; 
                 calendarGrid.innerHTML = ''; 
@@ -504,6 +540,8 @@
 
                 for (let i = 0; i < firstDayOfWeek; i++) {
                     const emptyCell = document.createElement('div');
+                    // Add some basic styling to empty cells to maintain grid structure if needed
+                    emptyCell.className = "bg-gray-50 rounded-md"; // Example: light gray background
                     calendarGrid.appendChild(emptyCell);
                 }
 
@@ -525,27 +563,30 @@
                     const dayCell = document.createElement('div');
                     const groupColor = groupColors[actualWorkingGroupIndex]; 
                     
-                    dayCell.className = `p-2 md:p-3 rounded-lg text-center shadow-md min-h-[5.5rem] md:min-h-[6.5rem] 
-                                         flex flex-col justify-center items-center transition-all cursor-pointer 
-                                         duration-150 ease-in-out ${groupColor.bg} ${groupColor.text} ${groupColor.border} hover:brightness-95 relative`; 
+                    // Added day-cell-base for common styling from <style> block
+                    dayCell.className = `day-cell-base p-1.5 md:p-2 min-h-[4.5rem] md:min-h-[5.5rem]
+                                         flex flex-col justify-center items-center cursor-pointer 
+                                         ${groupColor.bg} ${groupColor.text} border ${groupColor.border}`; 
                     
                     dayCell.addEventListener('click', () => showGroupMembers(actualWorkingGroupIndex, dayOfMonth, currentDisplayDate));
 
                     if (isSelectedGroupWorkingThisDay) {
-                        dayCell.classList.add('ring-2', 'ring-red-500', 'ring-offset-2', 'ring-offset-white'); 
+                        dayCell.classList.add('ring-2', 'ring-red-500', 'ring-offset-1', 'ring-selected-group'); 
                     }
 
                     if (currentDateInCalendar.getTime() === todayUTCForHighlight.getTime()) {
-                        dayCell.classList.remove('ring-red-500'); 
-                        dayCell.classList.add('ring-2', 'ring-yellow-400', 'ring-offset-2', 'ring-offset-white'); 
+                        dayCell.classList.remove('ring-red-500', 'ring-selected-group'); 
+                        dayCell.classList.add('ring-2', 'ring-yellow-500', 'ring-offset-1', 'ring-today', 'font-semibold'); 
                     }
 
                     const dayNumberDiv = document.createElement('div');
-                    dayNumberDiv.className = 'font-bold text-lg md:text-xl mb-1';
+                    // Added day-cell-number for styling from <style> block
+                    dayNumberDiv.className = 'day-cell-number font-medium';
                     dayNumberDiv.textContent = dayOfMonth;
 
                     const statusDiv = document.createElement('div');
-                    statusDiv.className = 'text-[0.55rem] sm:text-[0.6rem] md:text-[0.65rem] font-medium uppercase-text leading-tight break-words'; 
+                     // Added day-cell-group-name for styling from <style> block
+                    statusDiv.className = 'day-cell-group-name font-medium uppercase-text tracking-tighter'; 
                     statusDiv.textContent = workingGroupNameInCell; 
                     
                     dayCell.appendChild(dayNumberDiv);
@@ -554,28 +595,21 @@
                 }
                 
                 const restdayCount = daysInMonth - workdayCount;
-                const selectedGroupNameForStats = groupNames[selectedGroupIndex]; // Use a different variable name to avoid conflict
-                monthlyStatsBanner.textContent = `${monthNameDisplay.textContent} STATS FOR ${selectedGroupNameForStats}: ${workdayCount} WORK DAYS, ${restdayCount} REST DAYS`;
+                const selectedGroupNameForStats = groupNames[selectedGroupIndex].replace(' GRP', '');
+                monthlyStatsBanner.textContent = `${monthNameDisplay.textContent} FOR ${selectedGroupNameForStats}: ${workdayCount} WORK, ${restdayCount} REST`;
                 monthlyStatsBanner.classList.remove('hidden');
             }
-
-            /**
-             * Shows the modal with members of the specified group.
-             * @param {number} groupIndex - Index of the group.
-             * @param {number} day - The day of the month.
-             * @param {Date} displayDate - The current month/year being displayed.
-             */
+            
             function showGroupMembers(groupIndex, day, displayDate) {
                 const members = groupMembersData[groupIndex];
-                const groupName = groupNames[groupIndex];
+                const groupName = groupNames[groupIndex].replace(' GRP', ''); // Cleaner name
                 const dateOfClickedDay = new Date(Date.UTC(displayDate.getUTCFullYear(), displayDate.getUTCMonth(), day));
                 const formattedDate = dateOfClickedDay.toLocaleDateString('en-US', {
-                    weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC'
+                    weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' // More concise date
                 });
 
-
-                groupMembersModalTitle.textContent = `MEMBERS OF ${groupName} - ${formattedDate.toUpperCase()}`;
-                groupMembersList.innerHTML = ''; // Clear previous list
+                groupMembersModalTitle.textContent = `${groupName} - ${formattedDate.toUpperCase()}`;
+                groupMembersList.innerHTML = ''; 
 
                 if (members && members.length > 0) {
                     members.forEach(member => {
@@ -591,9 +625,6 @@
                 openModal(groupMembersModal);
             }
             
-            /**
-             * Changes the displayed month.
-             */
             function changeMonth(offset) {
                 if (currentDisplayDate) { 
                     currentDisplayDate.setUTCMonth(currentDisplayDate.getUTCMonth() + offset);
@@ -602,9 +633,6 @@
                 }
             }
 
-            /**
-             * Handles changes in inputs.
-             */
             function handleInputsChange() {
                 const newSelectedGroupIndex = parseInt(groupSelect.value, 10);
                 const newCycleStartDate = parseDateString(startDateInput.value);
@@ -621,21 +649,15 @@
                 }
             }
 
-            /**
-             * Opens a modal.
-             */
             function openModal(modal) {
-                modal.classList.remove('opacity-0', 'pointer-events-none');
-                modal.classList.add('opacity-100', 'modal-active');
+                modal.classList.remove('opacity-0', 'pointer-events-none', 'transform', 'scale-95');
+                modal.classList.add('opacity-100', 'modal-active', 'transform', 'scale-100');
                 document.body.classList.add('overflow-hidden'); 
             }
 
-            /**
-             * Closes a modal.
-             */
             function closeModal(modal) {
-                modal.classList.remove('opacity-100', 'modal-active');
-                modal.classList.add('opacity-0', 'pointer-events-none');
+                modal.classList.remove('opacity-100', 'modal-active', 'transform', 'scale-100');
+                modal.classList.add('opacity-0', 'pointer-events-none', 'transform', 'scale-95');
                 document.body.classList.remove('overflow-hidden');
             }
 
@@ -645,7 +667,6 @@
             prevMonthButton.addEventListener('click', () => changeMonth(-1));
             nextMonthButton.addEventListener('click', () => changeMonth(1));
             
-            // PM Zones Modal Listeners
             pmZonesButton.addEventListener('click', () => openModal(pmZonesModal));
             closePmZonesModalButton.addEventListener('click', () => closeModal(pmZonesModal));
             pmZonesModal.addEventListener('click', (event) => {
@@ -654,7 +675,6 @@
                 }
             });
 
-            // Group Members Modal Listeners
             closeGroupMembersModalButton.addEventListener('click', () => closeModal(groupMembersModal));
             groupMembersModal.addEventListener('click', (event) => {
                 if (event.target === groupMembersModal) { 
@@ -668,4 +688,3 @@
 
 </body>
 </html>
-
