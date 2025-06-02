@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WORK & REST SCHEDULE FOR CMN GROUPS</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📅</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -243,7 +244,7 @@
             const prevMonthButton = document.getElementById('prevMonthButton');
             const nextMonthButton = document.getElementById('nextMonthButton');
             const statusBanner = document.getElementById('statusBanner');
-            const monthlyStatsBanner = document.getElementById('monthlyStatsBanner'); // New banner element
+            const monthlyStatsBanner = document.getElementById('monthlyStatsBanner'); 
             const pmZonesButton = document.getElementById('pmZonesButton');
             const pmZonesModal = document.getElementById('pmZonesModal');
             const closePmZonesModalButton = document.getElementById('closePmZonesModal');
@@ -382,7 +383,7 @@
                     statusText += ` &mdash; ${daysUntilNextWorkday} DAY${daysUntilNextWorkday > 1 ? 'S' : ''} UNTIL NEXT WORKDAY`;
                 }
 
-                statusBanner.innerHTML = statusText;
+                statusBanner.innerHTML = statusText; // Use innerHTML because of &mdash;
                 statusBanner.classList.remove('hidden', 'bg-teal-500', 'text-white', 'bg-gray-200', 'text-gray-700');
                 if (isTodayWorkDayForSelectedGroup) {
                     statusBanner.classList.add('bg-teal-500', 'text-white'); 
@@ -497,7 +498,6 @@
                 if (newCycleStartDate) {
                     selectedGroupIndex = newSelectedGroupIndex;
                     cycleStartDate = newCycleStartDate;
-                    // When inputs change, reset the calendar to the month of the start date for clarity
                     currentDisplayDate = new Date(Date.UTC(cycleStartDate.getUTCFullYear(), cycleStartDate.getUTCMonth(), 1));
                     generateSchedule(); 
                 } else if (startDateInput.value !== "") { 
