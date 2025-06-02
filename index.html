@@ -98,6 +98,19 @@
             font-weight: 500; 
             margin-bottom: 0.25rem; 
         }
+        /* Styles for the new Group Members Modal */
+        #groupMembersModalContent ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        #groupMembersModalContent li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #E5E7EB; /* Tailwind gray-200 */
+            font-size: 0.9rem;
+        }
+        #groupMembersModalContent li:last-child {
+            border-bottom: none;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800 flex flex-col items-center justify-center min-h-screen p-4 md:p-8">
@@ -111,9 +124,9 @@
         <h1 class="text-3xl font-bold text-center text-teal-700 mb-4 uppercase-text">Work & Rest Schedule For Cmn Groups</h1>
 
         <div id="statusBanner" class="p-4 mb-4 rounded-lg text-center font-bold text-lg hidden uppercase-text transition-all duration-300">
-            </div>
+        </div>
         <div id="monthlyStatsBanner" class="p-3 mb-8 rounded-lg text-center font-semibold text-sm hidden bg-gray-100 text-gray-600 uppercase-text">
-            </div>
+        </div>
 
         <div class="grid md:grid-cols-2 gap-6 mb-8 items-start"> 
             <div>
@@ -122,7 +135,7 @@
                         class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-gray-900 
                                shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50 
                                p-3 text-sm">
-                    </select>
+                </select>
             </div>
             <div>
                 <label for="startDate" class="input-label-tag uppercase-text">YOUR GROUP'S START DATE</label>
@@ -144,11 +157,11 @@
                 <div>SUN / L7AD</div><div>MON / TNIN</div><div>TUE / TLAT</div><div>WED / LARBE3</div><div>THU / KHMIS</div><div>FRI / JEM3A</div><div>SAT / SEBT</div>
             </div>
             <div id="calendarGrid" class="grid grid-cols-7 gap-1 md:gap-2">
-                </div>
+            </div>
             <div id="messageArea" class="mt-6 text-center text-red-600 font-medium uppercase-text"></div>
 
             <div id="legend" class="mt-8 pt-4 border-t border-gray-200 flex flex-wrap justify-center gap-x-6 gap-y-2 items-center text-xs uppercase-text">
-                </div>
+            </div>
         </div>
     </div>
 
@@ -158,6 +171,7 @@
         </button>
     </div>
 
+    <!-- PM Zones Modal -->
     <div id="pmZonesModal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 opacity-0 pointer-events-none">
         <div class="modal-content bg-white text-gray-800 w-11/12 md:max-w-4xl lg:max-w-6xl mx-auto p-6 rounded-xl shadow-2xl max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4">
@@ -225,6 +239,20 @@
         </div>
     </div>
 
+    <!-- Group Members Modal -->
+    <div id="groupMembersModal" class="modal fixed inset-0 z-[60] flex items-center justify-center bg-black bg-opacity-50 opacity-0 pointer-events-none">
+        <div id="groupMembersModalContent" class="bg-white text-gray-800 w-11/12 md:max-w-md mx-auto p-6 rounded-xl shadow-2xl max-h-[80vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="groupMembersModalTitle" class="text-lg font-bold text-teal-700 uppercase-text">Group Members</h3>
+                <button id="closeGroupMembersModal" class="text-gray-700 hover:text-red-600 text-2xl font-bold">&times;</button>
+            </div>
+            <ul id="groupMembersList" class="text-gray-700">
+                <!-- Member names will be populated here by JavaScript -->
+            </ul>
+        </div>
+    </div>
+
+
     <footer class="w-full text-center py-8">
         <p class="text-sm text-gray-500">
             Made by Ben chikhe Anas
@@ -234,6 +262,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // DOM Element References
             const liveClockElement = document.getElementById('liveClock');
             const groupSelect = document.getElementById('groupSelect');
             const startDateInput = document.getElementById('startDate');
@@ -249,6 +278,13 @@
             const pmZonesModal = document.getElementById('pmZonesModal');
             const closePmZonesModalButton = document.getElementById('closePmZonesModal');
             
+            // New Modal for Group Members
+            const groupMembersModal = document.getElementById('groupMembersModal');
+            const groupMembersModalTitle = document.getElementById('groupMembersModalTitle');
+            const groupMembersList = document.getElementById('groupMembersList');
+            const closeGroupMembersModalButton = document.getElementById('closeGroupMembersModal');
+
+            // Group Configuration Data
             const groupNames = [ 
                 "K.MOUAD GRP", "Y.CHARMOUH GRP", "A.FARBOSI GRP", 
                 "A.AMARSAL GRP", "M.BELKOUCHI GRP"
@@ -264,13 +300,28 @@
                 { bg: 'bg-pink-50', text: 'text-pink-700', border: 'border-pink-200', name: groupAbbreviations[4] }
             ];
 
+            // Data for group members
+            const groupMembersData = [
+                ["Mouad KAOUTAR", "Anas BENCHICHE", "Younes Ch", "Kamal BOURROU"], // K.MOUAD GRP
+                ["Youssef CHARMOUH", "Mehdi ASKARI", "Soufiane BELFAKIR"],         // Y.CHARMOUH GRP
+                ["Ahmed FARBOUSSI", "Reda ALLOUCH", "Seddik IDOUAKRIM"],          // A.FARBOSI GRP
+                ["Ahmed AMARSAL", "Mohamed MASKAOUI", "Ayoub SADIKI"],            // A.AMARSAL GRP
+                ["Mehdi BELKOUCHI", "Ayoub CHAAOUBI", "Zakaria BOURHRISS"]        // M.BELKOUCHI GRP
+            ];
+
+
+            // LocalStorage Keys for persistence
             const localStorageKeyDate = 'workRestSchedule_startDate';
             const localStorageKeyGroup = 'workRestSchedule_selectedGroup';
 
+            // State Variables
             let cycleStartDate; 
-            let currentDisplayDate;
+            let currentDisplayDate; 
             let selectedGroupIndex = 0; 
 
+            /**
+             * Updates the live clock display.
+             */
             function updateLiveClock() {
                 const now = new Date();
                 const optionsTime = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
@@ -280,6 +331,9 @@
                 liveClockElement.textContent = `${dateString} - ${timeString}`;
             }
 
+            /**
+             * Populates the group selection dropdown.
+             */
             function populateGroupSelect() {
                 groupNames.forEach((name, index) => { 
                     const option = document.createElement('option');
@@ -289,6 +343,9 @@
                 });
             }
 
+            /**
+             * Updates the legend.
+             */
             function updateLegend() {
                 legendContainer.innerHTML = ''; 
 
@@ -302,7 +359,7 @@
                 selectedGroupWorkdayLegend.innerHTML = `<div class="w-4 h-4 rounded-full bg-transparent ring-2 ring-red-500"></div><span>YOUR GROUP'S WORKDAYS</span>`;
                 legendContainer.appendChild(selectedGroupWorkdayLegend);
                 
-                groupColors.forEach((colorInfo, index) => {
+                groupColors.forEach((colorInfo) => { // Removed index as it's not used here
                     const groupLegendItem = document.createElement('div');
                     groupLegendItem.className = 'flex items-center gap-2';
                     const colorBox = document.createElement('div');
@@ -316,6 +373,9 @@
                 });
             }
 
+            /**
+             * Initializes the application.
+             */
             function initializeApp() {
                 updateLiveClock(); 
                 setInterval(updateLiveClock, 1000); 
@@ -337,11 +397,11 @@
                     initialDateString = savedStartDateString;
                 } else {
                     const now = new Date();
-                    initialDateString = now.toISOString().split('T')[0];
+                    initialDateString = now.toISOString().split('T')[0]; 
                 }
                 
                 startDateInput.value = initialDateString;
-                cycleStartDate = parseDateString(initialDateString);
+                cycleStartDate = parseDateString(initialDateString); 
                 
                 if (cycleStartDate) {
                     currentDisplayDate = new Date(Date.UTC(cycleStartDate.getUTCFullYear(), cycleStartDate.getUTCMonth(), 1));
@@ -349,29 +409,41 @@
                     const now = new Date();
                     currentDisplayDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), 1));
                     startDateInput.value = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
-                    cycleStartDate = parseDateString(startDateInput.value);
+                    cycleStartDate = parseDateString(startDateInput.value); 
                 }
-                generateSchedule();
+                generateSchedule(); 
             }
 
+            /**
+             * Parses a date string (YYYY-MM-DD) into a UTC Date object.
+             */
             function parseDateString(dateString) {
                 if (!dateString) return null;
-                const [year, month, day] = dateString.split('-').map(Number);
-                if (year < 1000 || year > 9999) return null; 
+                const parts = dateString.split('-');
+                if (parts.length !== 3) return null; // Basic format check
+                const [year, month, day] = parts.map(Number);
+                if (isNaN(year) || isNaN(month) || isNaN(day)) return null; // Check if parts are numbers
+                if (year < 1000 || year > 9999 || month < 1 || month > 12 || day < 1 || day > 31) return null; 
                 return new Date(Date.UTC(year, month - 1, day)); 
             }
-
+            
+            /**
+             * Updates the status banner.
+             */
             function updateStatusBanner() {
-                if (!cycleStartDate || groupSelect.value === "") return;
+                if (!cycleStartDate || groupSelect.value === "") return; 
 
                 const currentSelectedGroupIndex = parseInt(groupSelect.value, 10);
                 const selectedGroupName = groupNames[currentSelectedGroupIndex]; 
-                const today = new Date();
+                const today = new Date(); 
                 const todayUTC = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
+
                 const diffFromInputStartToTodayMs = todayUTC.getTime() - cycleStartDate.getTime();
                 const diffInDaysForToday = Math.floor(diffFromInputStartToTodayMs / (1000 * 60 * 60 * 24));
+                
                 const todayEffectiveDay = (diffInDaysForToday % 5 + 5) % 5; 
-                const isTodayWorkDayForSelectedGroup = (todayEffectiveDay === 0);
+                const isTodayWorkDayForSelectedGroup = (todayEffectiveDay === 0); 
+
                 const todayFormatted = today.toLocaleDateString('en-US', {
                     month: 'long', day: 'numeric', year: 'numeric'
                 }).toUpperCase();
@@ -383,7 +455,7 @@
                     statusText += ` &mdash; ${daysUntilNextWorkday} DAY${daysUntilNextWorkday > 1 ? 'S' : ''} UNTIL NEXT WORKDAY`;
                 }
 
-                statusBanner.innerHTML = statusText; // Use innerHTML because of &mdash;
+                statusBanner.innerHTML = statusText; 
                 statusBanner.classList.remove('hidden', 'bg-teal-500', 'text-white', 'bg-gray-200', 'text-gray-700');
                 if (isTodayWorkDayForSelectedGroup) {
                     statusBanner.classList.add('bg-teal-500', 'text-white'); 
@@ -392,18 +464,21 @@
                 }
             }
 
+            /**
+             * Generates and displays the calendar grid.
+             */
             function generateSchedule() {
                 messageArea.textContent = ''; 
                 calendarGrid.innerHTML = ''; 
-                monthNameDisplay.textContent = '';
-                monthlyStatsBanner.classList.add('hidden');
+                monthNameDisplay.textContent = ''; 
+                monthlyStatsBanner.classList.add('hidden'); 
 
                 selectedGroupIndex = parseInt(groupSelect.value, 10); 
                 const tempCycleStartDate = parseDateString(startDateInput.value); 
 
                 if (!tempCycleStartDate) {
                     messageArea.textContent = 'PLEASE SELECT A VALID START DATE.';
-                    statusBanner.classList.add('hidden');
+                    statusBanner.classList.add('hidden'); 
                     return;
                 }
                 cycleStartDate = tempCycleStartDate; 
@@ -414,7 +489,7 @@
                 if (!currentDisplayDate) { 
                      currentDisplayDate = new Date(Date.UTC(cycleStartDate.getUTCFullYear(), cycleStartDate.getUTCMonth(), 1));
                 }
-                updateStatusBanner();
+                updateStatusBanner(); 
 
                 const targetYear = currentDisplayDate.getUTCFullYear();
                 const targetMonth_0_indexed = currentDisplayDate.getUTCMonth();
@@ -423,9 +498,9 @@
                 }).toUpperCase();
 
                 const daysInMonth = new Date(Date.UTC(targetYear, targetMonth_0_indexed + 1, 0)).getUTCDate();
-                const firstDayOfWeek = new Date(Date.UTC(targetYear, targetMonth_0_indexed, 1)).getUTCDay();
+                const firstDayOfWeek = new Date(Date.UTC(targetYear, targetMonth_0_indexed, 1)).getUTCDay(); 
                 
-                let workdayCount = 0;
+                let workdayCount = 0; 
 
                 for (let i = 0; i < firstDayOfWeek; i++) {
                     const emptyCell = document.createElement('div');
@@ -439,7 +514,7 @@
                     const diffInMilliseconds = currentDateInCalendar.getTime() - cycleStartDate.getTime();
                     const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
                     const workingGroupOffset = ((diffInDays % 5) + 5) % 5; 
-                    const actualWorkingGroupIndex = (selectedGroupIndex + workingGroupOffset) % 5;
+                    const actualWorkingGroupIndex = (selectedGroupIndex + workingGroupOffset) % 5; 
                     const isSelectedGroupWorkingThisDay = (actualWorkingGroupIndex === selectedGroupIndex);
                     
                     if (isSelectedGroupWorkingThisDay) {
@@ -448,12 +523,14 @@
 
                     const workingGroupNameInCell = groupAbbreviations[actualWorkingGroupIndex]; 
                     const dayCell = document.createElement('div');
-                    const groupColor = groupColors[actualWorkingGroupIndex];
+                    const groupColor = groupColors[actualWorkingGroupIndex]; 
                     
                     dayCell.className = `p-2 md:p-3 rounded-lg text-center shadow-md min-h-[5.5rem] md:min-h-[6.5rem] 
-                                         flex flex-col justify-center items-center transition-all 
+                                         flex flex-col justify-center items-center transition-all cursor-pointer 
                                          duration-150 ease-in-out ${groupColor.bg} ${groupColor.text} ${groupColor.border} hover:brightness-95 relative`; 
                     
+                    dayCell.addEventListener('click', () => showGroupMembers(actualWorkingGroupIndex, dayOfMonth, currentDisplayDate));
+
                     if (isSelectedGroupWorkingThisDay) {
                         dayCell.classList.add('ring-2', 'ring-red-500', 'ring-offset-2', 'ring-offset-white'); 
                     }
@@ -477,20 +554,57 @@
                 }
                 
                 const restdayCount = daysInMonth - workdayCount;
-                const selectedGroupName = groupNames[selectedGroupIndex];
-                monthlyStatsBanner.textContent = `${monthNameDisplay.textContent} STATS FOR ${selectedGroupName}: ${workdayCount} WORK DAYS, ${restdayCount} REST DAYS`;
+                const selectedGroupNameForStats = groupNames[selectedGroupIndex]; // Use a different variable name to avoid conflict
+                monthlyStatsBanner.textContent = `${monthNameDisplay.textContent} STATS FOR ${selectedGroupNameForStats}: ${workdayCount} WORK DAYS, ${restdayCount} REST DAYS`;
                 monthlyStatsBanner.classList.remove('hidden');
+            }
 
+            /**
+             * Shows the modal with members of the specified group.
+             * @param {number} groupIndex - Index of the group.
+             * @param {number} day - The day of the month.
+             * @param {Date} displayDate - The current month/year being displayed.
+             */
+            function showGroupMembers(groupIndex, day, displayDate) {
+                const members = groupMembersData[groupIndex];
+                const groupName = groupNames[groupIndex];
+                const dateOfClickedDay = new Date(Date.UTC(displayDate.getUTCFullYear(), displayDate.getUTCMonth(), day));
+                const formattedDate = dateOfClickedDay.toLocaleDateString('en-US', {
+                    weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC'
+                });
+
+
+                groupMembersModalTitle.textContent = `MEMBERS OF ${groupName} - ${formattedDate.toUpperCase()}`;
+                groupMembersList.innerHTML = ''; // Clear previous list
+
+                if (members && members.length > 0) {
+                    members.forEach(member => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = member;
+                        groupMembersList.appendChild(listItem);
+                    });
+                } else {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = 'No members listed for this group.';
+                    groupMembersList.appendChild(listItem);
+                }
+                openModal(groupMembersModal);
             }
             
+            /**
+             * Changes the displayed month.
+             */
             function changeMonth(offset) {
-                if (currentDisplayDate) {
+                if (currentDisplayDate) { 
                     currentDisplayDate.setUTCMonth(currentDisplayDate.getUTCMonth() + offset);
                     currentDisplayDate.setUTCDate(1); 
                     generateSchedule();
                 }
             }
 
+            /**
+             * Handles changes in inputs.
+             */
             function handleInputsChange() {
                 const newSelectedGroupIndex = parseInt(groupSelect.value, 10);
                 const newCycleStartDate = parseDateString(startDateInput.value);
@@ -507,27 +621,44 @@
                 }
             }
 
+            /**
+             * Opens a modal.
+             */
             function openModal(modal) {
                 modal.classList.remove('opacity-0', 'pointer-events-none');
                 modal.classList.add('opacity-100', 'modal-active');
                 document.body.classList.add('overflow-hidden'); 
             }
 
+            /**
+             * Closes a modal.
+             */
             function closeModal(modal) {
                 modal.classList.remove('opacity-100', 'modal-active');
                 modal.classList.add('opacity-0', 'pointer-events-none');
                 document.body.classList.remove('overflow-hidden');
             }
 
+            // Event Listeners
             startDateInput.addEventListener('change', handleInputsChange);
             groupSelect.addEventListener('change', handleInputsChange); 
             prevMonthButton.addEventListener('click', () => changeMonth(-1));
             nextMonthButton.addEventListener('click', () => changeMonth(1));
+            
+            // PM Zones Modal Listeners
             pmZonesButton.addEventListener('click', () => openModal(pmZonesModal));
             closePmZonesModalButton.addEventListener('click', () => closeModal(pmZonesModal));
             pmZonesModal.addEventListener('click', (event) => {
                 if (event.target === pmZonesModal) { 
                     closeModal(pmZonesModal);
+                }
+            });
+
+            // Group Members Modal Listeners
+            closeGroupMembersModalButton.addEventListener('click', () => closeModal(groupMembersModal));
+            groupMembersModal.addEventListener('click', (event) => {
+                if (event.target === groupMembersModal) { 
+                    closeModal(groupMembersModal);
                 }
             });
 
@@ -537,3 +668,4 @@
 
 </body>
 </html>
+
