@@ -109,7 +109,9 @@
 
         <h1 class="text-3xl font-bold text-center text-teal-700 mb-4 uppercase-text">Work & Rest Schedule For Cmn Groups</h1>
 
-        <div id="statusBanner" class="p-4 mb-8 rounded-lg text-center font-bold text-lg hidden uppercase-text transition-all duration-300">
+        <div id="statusBanner" class="p-4 mb-4 rounded-lg text-center font-bold text-lg hidden uppercase-text transition-all duration-300">
+            </div>
+        <div id="monthlyStatsBanner" class="p-3 mb-8 rounded-lg text-center font-semibold text-sm hidden bg-gray-100 text-gray-600 uppercase-text">
             </div>
 
         <div class="grid md:grid-cols-2 gap-6 mb-8 items-start"> 
@@ -237,10 +239,11 @@
             const monthNameDisplay = document.getElementById('monthNameDisplay');
             const calendarGrid = document.getElementById('calendarGrid');
             const messageArea = document.getElementById('messageArea');
-            const legendContainer = document.getElementById('legend'); // Get legend container
+            const legendContainer = document.getElementById('legend');
             const prevMonthButton = document.getElementById('prevMonthButton');
             const nextMonthButton = document.getElementById('nextMonthButton');
             const statusBanner = document.getElementById('statusBanner');
+            const monthlyStatsBanner = document.getElementById('monthlyStatsBanner'); // New banner element
             const pmZonesButton = document.getElementById('pmZonesButton');
             const pmZonesModal = document.getElementById('pmZonesModal');
             const closePmZonesModalButton = document.getElementById('closePmZonesModal');
@@ -252,7 +255,7 @@
             const groupAbbreviations = [
                 "M.KAOU", "Y.CHAR", "A.FRBS", "A.AMRSL", "M.BEL" 
             ];
-            const groupColors = [ // Tailwind classes for background, text, and border
+            const groupColors = [
                 { bg: 'bg-sky-50', text: 'text-sky-700', border: 'border-sky-200', name: groupAbbreviations[0] },
                 { bg: 'bg-green-50', text: 'text-green-700', border: 'border-green-200', name: groupAbbreviations[1] },
                 { bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200', name: groupAbbreviations[2] },
@@ -286,21 +289,18 @@
             }
 
             function updateLegend() {
-                legendContainer.innerHTML = ''; // Clear previous legend items
+                legendContainer.innerHTML = ''; 
 
-                // Add "Today" legend item
                 const todayLegend = document.createElement('div');
                 todayLegend.className = 'flex items-center gap-2';
                 todayLegend.innerHTML = `<div class="w-4 h-4 rounded-full bg-yellow-400 ring-2 ring-yellow-500"></div><span>TODAY</span>`;
                 legendContainer.appendChild(todayLegend);
 
-                // Add "Your Group's Workdays" legend item
                 const selectedGroupWorkdayLegend = document.createElement('div');
                 selectedGroupWorkdayLegend.className = 'flex items-center gap-2';
                 selectedGroupWorkdayLegend.innerHTML = `<div class="w-4 h-4 rounded-full bg-transparent ring-2 ring-red-500"></div><span>YOUR GROUP'S WORKDAYS</span>`;
                 legendContainer.appendChild(selectedGroupWorkdayLegend);
                 
-                // Add legend items for each group color
                 groupColors.forEach((colorInfo, index) => {
                     const groupLegendItem = document.createElement('div');
                     groupLegendItem.className = 'flex items-center gap-2';
@@ -315,12 +315,11 @@
                 });
             }
 
-
             function initializeApp() {
                 updateLiveClock(); 
                 setInterval(updateLiveClock, 1000); 
                 populateGroupSelect(); 
-                updateLegend(); // Initialize legend
+                updateLegend();
 
                 const savedStartDateString = localStorage.getItem(localStorageKeyDate);
                 const savedGroupIndex = localStorage.getItem(localStorageKeyGroup);
@@ -375,8 +374,15 @@
                 const todayFormatted = today.toLocaleDateString('en-US', {
                     month: 'long', day: 'numeric', year: 'numeric'
                 }).toUpperCase();
+                
+                let statusText = `TODAY (${todayFormatted}) IS A ${isTodayWorkDayForSelectedGroup ? 'WORK' : 'REST'} DAY FOR ${selectedGroupName}`;
+                
+                if (!isTodayWorkDayForSelectedGroup) {
+                    const daysUntilNextWorkday = 5 - todayEffectiveDay;
+                    statusText += ` &mdash; ${daysUntilNextWorkday} DAY${daysUntilNextWorkday > 1 ? 'S' : ''} UNTIL NEXT WORKDAY`;
+                }
 
-                statusBanner.textContent = `TODAY (${todayFormatted}) IS A ${isTodayWorkDayForSelectedGroup ? 'WORK' : 'REST'} DAY FOR ${selectedGroupName}`;
+                statusBanner.innerHTML = statusText;
                 statusBanner.classList.remove('hidden', 'bg-teal-500', 'text-white', 'bg-gray-200', 'text-gray-700');
                 if (isTodayWorkDayForSelectedGroup) {
                     statusBanner.classList.add('bg-teal-500', 'text-white'); 
@@ -389,6 +395,7 @@
                 messageArea.textContent = ''; 
                 calendarGrid.innerHTML = ''; 
                 monthNameDisplay.textContent = '';
+                monthlyStatsBanner.classList.add('hidden');
 
                 selectedGroupIndex = parseInt(groupSelect.value, 10); 
                 const tempCycleStartDate = parseDateString(startDateInput.value); 
@@ -416,6 +423,8 @@
 
                 const daysInMonth = new Date(Date.UTC(targetYear, targetMonth_0_indexed + 1, 0)).getUTCDate();
                 const firstDayOfWeek = new Date(Date.UTC(targetYear, targetMonth_0_indexed, 1)).getUTCDay();
+                
+                let workdayCount = 0;
 
                 for (let i = 0; i < firstDayOfWeek; i++) {
                     const emptyCell = document.createElement('div');
@@ -430,9 +439,13 @@
                     const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
                     const workingGroupOffset = ((diffInDays % 5) + 5) % 5; 
                     const actualWorkingGroupIndex = (selectedGroupIndex + workingGroupOffset) % 5;
-                    const workingGroupNameInCell = groupAbbreviations[actualWorkingGroupIndex]; 
                     const isSelectedGroupWorkingThisDay = (actualWorkingGroupIndex === selectedGroupIndex);
+                    
+                    if (isSelectedGroupWorkingThisDay) {
+                        workdayCount++;
+                    }
 
+                    const workingGroupNameInCell = groupAbbreviations[actualWorkingGroupIndex]; 
                     const dayCell = document.createElement('div');
                     const groupColor = groupColors[actualWorkingGroupIndex];
                     
@@ -461,6 +474,12 @@
                     dayCell.appendChild(statusDiv);
                     calendarGrid.appendChild(dayCell);
                 }
+                
+                const restdayCount = daysInMonth - workdayCount;
+                const selectedGroupName = groupNames[selectedGroupIndex];
+                monthlyStatsBanner.textContent = `${monthNameDisplay.textContent} STATS FOR ${selectedGroupName}: ${workdayCount} WORK DAYS, ${restdayCount} REST DAYS`;
+                monthlyStatsBanner.classList.remove('hidden');
+
             }
             
             function changeMonth(offset) {
@@ -478,11 +497,13 @@
                 if (newCycleStartDate) {
                     selectedGroupIndex = newSelectedGroupIndex;
                     cycleStartDate = newCycleStartDate;
+                    // When inputs change, reset the calendar to the month of the start date for clarity
                     currentDisplayDate = new Date(Date.UTC(cycleStartDate.getUTCFullYear(), cycleStartDate.getUTCMonth(), 1));
                     generateSchedule(); 
                 } else if (startDateInput.value !== "") { 
                      messageArea.textContent = 'PLEASE SELECT A VALID START DATE.';
                      statusBanner.classList.add('hidden');
+                     monthlyStatsBanner.classList.add('hidden');
                 }
             }
 
