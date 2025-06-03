@@ -11,16 +11,22 @@
             font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            background: linear-gradient(160deg, #3A3A3A 0%, #202020 50%, #111111 100%); /* Dark Grey/Black Gradient */
+            background: linear-gradient(160deg, #3A3A3A 0%, #202020 50%, #111111 100%); 
             background-attachment: fixed;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        input, select, textarea, .selectable-text {
+            user-select: auto;
+            -webkit-user-select: auto;
         }
         input[type="date"], select { 
             appearance: none; 
             -webkit-appearance: none; 
             -moz-appearance: none; 
             color-scheme: dark; 
-            background-color: rgba(0, 0, 0, 0.35); /* Slightly more opaque */
-            border: 1px solid rgba(255, 255, 255, 0.12); /* Slightly less prominent border */
+            background-color: rgba(0, 0, 0, 0.35); 
+            border: 1px solid rgba(255, 255, 255, 0.12); 
             color: #D1D5DB; 
         }
         select { 
@@ -35,9 +41,7 @@
             cursor: pointer;
             filter: invert(0.8) brightness(1.2); 
         }
-        input::placeholder {
-            color: #6B7280; 
-        }
+        input::placeholder { color: #6B7280; }
         .uppercase-text { text-transform: uppercase; }
         
         .nav-button {
@@ -46,32 +50,24 @@
             padding: 0.6rem 1.1rem;
             border-radius: 0.5rem; 
             font-weight: 500; 
-            transition: background-color 0.2s ease-in-out, box-shadow 0.15s ease-in-out; /* Faster shadow transition */
+            transition: background-color 0.2s ease-in-out;
             border: 1px solid rgba(156, 163, 175, 0.25); 
-            backdrop-filter: blur(2px); /* Reduced blur */
+            backdrop-filter: blur(2px); 
             -webkit-backdrop-filter: blur(2px);
         }
-        .nav-button:hover { 
-            background-color: rgba(75, 85, 99, 0.75); 
-        }
-        .nav-button:focus { 
-            outline: none; 
-            box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.35); 
-        }
+        .nav-button:hover { background-color: rgba(75, 85, 99, 0.75); }
+        .nav-button:focus { outline: none; box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.35); }
 
-        /* Glassmorphism Base Styles */
         .frosted-glass-pane {
-            background-color: rgba(35, 35, 35, 0.6); /* Slightly darker, more opaque base */
-            backdrop-filter: blur(10px) saturate(110%); /* Reduced blur and saturation */
-            -webkit-backdrop-filter: blur(10px) saturate(110%);
-            border: 1px solid rgba(255, 255, 255, 0.08); /* Even more subtle border */
+            background-color: rgba(35, 35, 35, 0.6); 
+            backdrop-filter: blur(12px) saturate(110%);
+            -webkit-backdrop-filter: blur(12px) saturate(110%);
+            border: 1px solid rgba(255, 255, 255, 0.08); 
             border-radius: 0.75rem; 
-            box-shadow: 0 6px 24px 0 rgba(0, 0, 0, 0.2); /* Softer shadow */
+            box-shadow: 0 6px 24px 0 rgba(0, 0, 0, 0.2); 
         }
-
-        /* Modal Styles */
         .modal {
-            transition: opacity 0.2s ease, transform 0.2s ease; /* Faster transition */
+            transition: opacity 0.2s ease, transform 0.2s ease; 
             transform: scale(0.95);
         }
         .modal.opacity-100 { transform: scale(1); }
@@ -96,181 +92,188 @@
          .modal-content tr:last-child td:last-child { border-bottom-right-radius: 0.5rem; }
         .modal-content tr:last-child td { border-bottom: none; }
 
-        .egate-section {
-            margin-top: 1.5rem; padding-top: 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.12); 
-        }
-        .egate-terminal-title {
-            font-size: 1rem; font-weight: 600; 
-            color: #A7F3D0; 
-            margin-bottom: 0.75rem; text-align: center;
-        }
+        .egate-section { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.12); }
+        .egate-terminal-title { font-size: 1rem; font-weight: 600; color: #A7F3D0; margin-bottom: 0.75rem; text-align: center; }
         .egate-machine {
             display: inline-flex; align-items: center; margin: 0.25rem; 
-            padding: 0.375rem 0.6rem; 
-            border: 1px solid rgba(209, 213, 219, 0.2); 
-            border-radius: 0.375rem; 
-            background-color: rgba(55, 65, 81, 0.35); 
+            padding: 0.375rem 0.6rem; border: 1px solid rgba(209, 213, 219, 0.2); 
+            border-radius: 0.375rem; background-color: rgba(55, 65, 81, 0.35); 
             font-size: 0.7rem; white-space: nowrap; color: #D1D5DB; 
         }
-        .business-egate { 
-            background-color: rgba(186, 150, 83, 0.25); 
-            border-color: rgba(186, 150, 83, 0.4); 
-            color: #FDE68A; 
-            font-weight: 500;
-        }
+        .business-egate { background-color: rgba(186, 150, 83, 0.25); border-color: rgba(186, 150, 83, 0.4); color: #FDE68A; font-weight: 500; }
         .input-label-tag {
-            display: inline-block;
-            background-color: rgba(55, 65, 81, 0.45); 
-            color: #E5E7EB; 
-            padding: 0.3rem 0.8rem; border-radius: 0.375rem; 
+            display: inline-block; background-color: rgba(55, 65, 81, 0.45); 
+            color: #E5E7EB; padding: 0.3rem 0.8rem; border-radius: 0.375rem; 
             font-size: 0.7rem; font-weight: 500; margin-bottom: 0.3rem; 
         }
         #groupMembersModalContent ul { list-style-type: none; padding: 0; }
         #groupMembersModalContent li {
-            padding: 0.6rem 0.25rem; 
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
+            padding: 0.6rem 0.25rem; border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
             font-size: 0.9rem; color: #E5E7EB; 
         }
         #groupMembersModalContent li:last-child { border-bottom: none; }
 
         .day-cell-base {
-            border-radius: 0.6rem; 
-            transition: transform 0.1s ease-out; /* Faster, transform only for hover */
+            border-radius: 0.5rem; 
             border-width: 1px; 
-            box-shadow: 0 1px 4px rgba(0,0,0,0.1); /* Simpler shadow */
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1); 
+            position: relative; 
         }
-        .day-cell-base:hover {
-            transform: translateY(-1px) scale(1.01); /* More subtle hover */
-            /* box-shadow removed from hover for performance, relying on transform */
-        }
-        .day-cell-number { font-size: 1.125rem; margin-bottom: 0.125rem; }
-        .day-cell-group-name { font-size: 0.6rem; line-height: 1.1; letter-spacing: 0.025em; }
-        .ring-selected-group { ring-offset-color: rgba(35,35,35,0.6); } /* Darker offset */
+        .day-cell-number { font-size: 1rem; margin-bottom: 0.125rem; }
+        .day-cell-group-name { font-size: 0.55rem; line-height: 1.1; letter-spacing: 0.025em; }
+        .ring-selected-group { ring-offset-color: rgba(35,35,35,0.6); } 
         .ring-today { ring-offset-color: rgba(35,35,35,0.6); }
+        
+        .holiday-indicator {
+            position: absolute;
+            top: 3px; 
+            right: 4px; 
+            font-size: 0.7rem; 
+            line-height: 1;
+            opacity: 0.9;
+            color: #FFD700; /* Gold color for the star, for better visibility */
+            text-shadow: 0 0 2px rgba(0,0,0,0.5); /* Subtle shadow for depth */
+        }
 
+        @media (hover: hover) and (pointer: fine) {
+            .day-cell-base:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            }
+        }
+        @media (max-width: 767px) {
+            body { padding: 0.75rem; } 
+            .container { padding: 1rem; } 
+            h1 { font-size: 1.25rem; } 
+            #monthNameDisplay { font-size: 1.125rem; } 
+            .nav-button { padding: 0.5rem 0.75rem; font-size: 0.75rem; } 
+            #calendarGrid { gap: 0.2rem; } 
+            .day-cell-base { min-height: 3.75rem; } 
+            .frosted-glass-pane {
+                backdrop-filter: blur(8px) saturate(100%); 
+                -webkit-backdrop-filter: blur(8px) saturate(100%);
+            }
+            .holiday-indicator { font-size: 0.65rem; top:2px; right: 2px;}
+        }
     </style>
 </head>
-<body class="text-gray-200 flex flex-col items-center min-h-screen p-4 md:p-6">
+<body class="text-gray-200 flex flex-col items-center min-h-screen">
 
-    <div class="container frosted-glass-pane mx-auto max-w-3xl p-5 md:p-8 mb-8">
-        
-        <div id="liveClock" class="text-center text-xs text-gray-300 mb-5 font-medium">
-            Loading current time...
+    <div id="appContent" class="w-full flex flex-col items-center">
+        <div class="container frosted-glass-pane mx-auto max-w-3xl w-full p-5 md:p-8 mb-8">
+            <div id="liveClock" class="text-center text-xs text-gray-300 mb-5 font-medium">
+                Loading current time...
+            </div>
+
+            <h1 class="text-2xl font-semibold text-center text-gray-100 mb-6 uppercase-text tracking-wide" style="text-shadow: 0 1px 2px rgba(0,0,0,0.3);">Work & Rest Schedule</h1>
+
+            <div id="statusBanner" class="p-3.5 mb-6 rounded-md text-center font-semibold hidden uppercase-text transition-all duration-300 text-sm">
+            </div>
+            <div id="monthlyStatsBanner" class="p-2.5 mb-6 rounded-md text-center font-medium text-xs hidden uppercase-text" 
+                 style="background-color: rgba(0,0,0,0.25); color: #9CA3AF; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);">
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-5 mb-6 items-end"> 
+                <div>
+                    <label for="groupSelect" class="input-label-tag">Select Group</label>
+                    <select id="groupSelect" name="groupSelect"
+                            class="mt-1 block w-full rounded-md shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-600 focus:ring-opacity-30 
+                                   p-2.5 text-sm">
+                    </select>
+                </div>
+                <div>
+                    <label for="startDate" class="input-label-tag">Group Start Date</label>
+                    <input type="date" id="startDate" name="startDate" 
+                           class="mt-1 block w-full rounded-md shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-600 focus:ring-opacity-30
+                                  p-2.5 text-sm placeholder-gray-500">
+                </div>
+            </div>
+
+            <div id="scheduleOutput" class="mt-6">
+                <div class="flex items-center justify-between mb-5">
+                    <button id="prevMonthButton" class="nav-button uppercase-text">&lt; Prev</button>
+                    <h2 id="monthNameDisplay" class="text-xl font-medium text-gray-200 text-center uppercase-text mx-3"></h2>
+                    <button id="nextMonthButton" class="nav-button uppercase-text">Next &gt;</button>
+                </div>
+
+                <div id="weekdayHeaders" class="grid grid-cols-7 gap-1 md:gap-1.5 mb-1.5 text-center font-medium text-gray-400 text-[0.6rem] md:text-xs uppercase-text">
+                    <div>SUN</div><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div>
+                </div>
+                <div id="calendarGrid" class="grid grid-cols-7 gap-1 md:gap-1.5">
+                </div>
+                <div id="messageArea" class="mt-5 text-center text-rose-300 font-medium uppercase-text text-xs"></div>
+
+                <div id="legend" class="mt-6 pt-3 border-t border-gray-500/25 flex flex-wrap justify-center gap-x-4 gap-y-1.5 items-center text-[0.65rem] uppercase-text text-gray-300">
+                </div>
+            </div>
         </div>
 
-        <h1 class="text-2xl font-semibold text-center text-gray-100 mb-6 uppercase-text tracking-wide" style="text-shadow: 0 1px 2px rgba(0,0,0,0.3);">Work & Rest Schedule</h1>
-
-        <div id="statusBanner" class="p-3.5 mb-6 rounded-md text-center font-semibold text-base hidden uppercase-text transition-all duration-300 text-sm">
-        </div>
-        <div id="monthlyStatsBanner" class="p-2.5 mb-6 rounded-md text-center font-medium text-xs hidden uppercase-text" 
-             style="background-color: rgba(0,0,0,0.25); color: #9CA3AF; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);">
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-5 mb-6 items-end"> 
-            <div>
-                <label for="groupSelect" class="input-label-tag">Select Group</label>
-                <select id="groupSelect" name="groupSelect"
-                        class="mt-1 block w-full rounded-md shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-600 focus:ring-opacity-30 
-                               p-2.5 text-sm">
-                </select>
-            </div>
-            <div>
-                <label for="startDate" class="input-label-tag">Group Start Date</label>
-                <input type="date" id="startDate" name="startDate" 
-                       class="mt-1 block w-full rounded-md shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-600 focus:ring-opacity-30
-                              p-2.5 text-sm placeholder-gray-500">
-            </div>
-        </div>
-
-        <div id="scheduleOutput" class="mt-6">
-            <div class="flex items-center justify-between mb-5">
-                <button id="prevMonthButton" class="nav-button uppercase-text text-xs">&lt; Prev</button>
-                <h2 id="monthNameDisplay" class="text-xl font-medium text-gray-200 text-center uppercase-text mx-3"></h2>
-                <button id="nextMonthButton" class="nav-button uppercase-text text-xs">Next &gt;</button>
-            </div>
-
-            <div id="weekdayHeaders" class="grid grid-cols-7 gap-1 md:gap-1.5 mb-1.5 text-center font-medium text-gray-400 text-[0.6rem] md:text-xs uppercase-text">
-                <div>SUN</div><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div>
-            </div>
-            <div id="calendarGrid" class="grid grid-cols-7 gap-1 md:gap-1.5">
-            </div>
-            <div id="messageArea" class="mt-5 text-center text-rose-300 font-medium uppercase-text text-xs"></div>
-
-            <div id="legend" class="mt-6 pt-3 border-t border-gray-500/25 flex flex-wrap justify-center gap-x-4 gap-y-1.5 items-center text-[0.65rem] uppercase-text text-gray-300">
-            </div>
+        <div class="text-center mt-3 mb-6 space-y-3 md:space-y-0 md:space-x-3">
+            <button id="pmZonesButton" 
+                    class="text-gray-200 font-medium py-2.5 px-5 rounded-md shadow-sm hover:shadow-md transition-all duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 uppercase-text text-xs"
+                    style="background-color: rgba(17, 24, 39, 0.65); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.05);">
+                PM Zones & E-Gates
+            </button>
+            <button id="resetToLiveButton" 
+                    class="text-gray-200 font-medium py-2.5 px-5 rounded-md shadow-sm hover:shadow-md transition-all duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 uppercase-text text-xs"
+                    style="background-color: rgba(13, 148, 136, 0.4); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border: 1px solid rgba(20, 83, 45, 0.5);">
+                View Live Schedule
+            </button>
         </div>
     </div>
 
-    <div class="text-center mt-3 mb-6">
-        <button id="pmZonesButton" 
-                class="text-gray-200 font-medium py-2.5 px-5 rounded-md shadow-sm hover:shadow-md transition-all duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 uppercase-text text-xs"
-                style="background-color: rgba(17, 24, 39, 0.65); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.05);">
-            PM Zones & E-Gates
-        </button>
-    </div>
-
-    <div id="pmZonesModal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-black/85 opacity-0 pointer-events-none p-4"> <div class="modal-content frosted-glass-pane w-11/12 md:max-w-4xl lg:max-w-5xl mx-auto p-5 md:p-6 max-h-[90vh] overflow-y-auto">
+    <div id="pmZonesModal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-black/85 opacity-0 pointer-events-none p-4"> 
+        <div class="modal-content frosted-glass-pane w-11/12 md:max-w-4xl lg:max-w-5xl mx-auto p-5 md:p-6 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4 pb-3 border-b border-white/12">
-                <h3 class="text-lg font-semibold text-emerald-300 uppercase-text">Maintenance & E-Gate Info</h3>
+                <h3 class="text-lg font-semibold text-emerald-300 uppercase-text selectable-text">Maintenance & E-Gate Info</h3>
                 <button id="closePmZonesModal" class="text-gray-400 hover:text-red-400 text-2xl font-bold">&times;</button>
             </div>
-            
-            <table class="text-gray-300"> 
-                <thead>
-                    <tr>
-                        <th>Technicien</th>
-                        <th>ENREGISTREMENT T1</th>
-                        <th>EMBARQUEMENT T1</th>
-                        <th>TRANSIT T1</th>
-                        <th>ENREGISTREMENT T2</th>
-                        <th>EMBARQUEMENT T2</th>
-                        <th>TRANSIT T2</th>
-                        <th>OPERATION LITIGE</th>
-                        <th>E-GATE (Maintenance)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>Youssef CHARMOUH</td><td>1-2-3-4-5</td><td>E1-E2</td><td>1-2</td><td>1-2-3</td><td>A1</td><td></td><td></td><td>T1 ECO 1, T1 ECO 2</td></tr>
-                    <tr><td>Mehdi ASKARI</td><td>6-7-8-9-10</td><td></td><td>3-4</td><td>4-5-6</td><td>A2</td><td></td><td></td><td></td></tr>
-                    <tr><td>Soufiane BELFAKIR</td><td>11-12-13-14-15</td><td>E3</td><td>5-6</td><td>7-8-9</td><td>A3</td><td></td><td></td><td>T1 ECO 3</td></tr>
-                    <tr><td>Ahmed FARBOUSSI</td><td>16-17-18-19-20</td><td>E4</td><td>7-8</td><td>10-11-12</td><td>A4</td><td></td><td></td><td>T1 ECO 4</td></tr>
-                    <tr><td>Reda ALLOUCH</td><td>21-22-23-24-25</td><td>E5</td><td>9-10</td><td>13-14-15</td><td>A5</td><td></td><td></td><td>T1 ECO 5</td></tr>
-                    <tr><td>Seddik IDOUAKRIM</td><td>26-27-28-29-30</td><td>E6</td><td>11</td><td>16-17-18</td><td>A6</td><td></td><td></td><td>T1 BUS 1</td></tr>
-                    <tr><td>Ahmed AMARSAL</td><td>31-32-33-34-35</td><td>E7</td><td></td><td>19-20-21</td><td>A7</td><td></td><td>1-2</td><td>T1 BUS 2</td></tr>
-                    <tr><td>Mohamed MASKAOUI</td><td>36-37-38-39-40</td><td>E8</td><td></td><td>22-23-24</td><td>A8</td><td></td><td>3-4</td><td></td></tr>
-                    <tr><td>Ayoub SADIKI</td><td>41-42-43-44-45</td><td>F1</td><td></td><td>25-26-27</td><td>A9</td><td></td><td>5-6</td><td>T2 ECO 1, T2 ECO 2</td></tr>
-                    <tr><td>Mehdi BELKOUCHI</td><td>46-47-48-49-50</td><td>F2</td><td></td><td>28-29-30</td><td>A10</td><td></td><td>PC RAM 1-2</td><td>T2 ECO 3</td></tr>
-                    <tr><td>Ayoub CHAAOUBI</td><td>51-52-53-54-55</td><td>F3</td><td></td><td>31-32-33</td><td>B11</td><td></td><td>PC RAM 3-4</td><td>T2 ECO 4</td></tr>
-                    <tr><td>Zakaria BOURHRISS</td><td>56-57-58-59-60</td><td>F4</td><td></td><td>34-35-36</td><td>B12</td><td></td><td>SWISSPORT 1-2</td><td>T2 ECO 5</td></tr>
-                    <tr><td>Mouad KAOUTAR</td><td>61-62-63-64-65</td><td>F5</td><td></td><td>37-38-39-40</td><td>B13</td><td></td><td></td><td>T2 BUS 1</td></tr>
-                    <tr><td>Anas BENCHICHE</td><td>66-67-68-69-70</td><td>F6</td><td></td><td></td><td>D1</td><td></td><td>RAM SWISSPORT</td><td>T2 BUS 2</td></tr>
-                    <tr><td>Younes Ch</td><td>71-72-73-74-75-76-77</td><td>F7</td><td></td><td></td><td>D2-D3-D4-D5</td><td></td><td></td><td></td></tr>
-                    <tr><td>Kamal BOURROU</td><td>78-79-80-81-82-83-84</td><td>F8</td><td></td><td></td><td>D6-D7-D8-D9</td><td></td><td></td><td></td></tr>
-                </tbody>
-            </table>
-
-            <div class="egate-section border-white/12">
-                <h4 class="text-base font-semibold text-emerald-300 uppercase-text mb-3">E-GATE TERMINALS</h4>
-                
-                <div class="egate-terminal-title uppercase-text !text-emerald-400">TERMINAL I</div>
-                <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5 mb-3"> 
-                    <span class="egate-machine business-egate">🖥️ CMN3PFX001</span>
-                </div>
-                <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5 mb-3"> 
-                    <span class="egate-machine">🖥️ CMN3PFX008</span>
-                    <span class="egate-machine">🖥️ CMN3PFX002</span>
-                    <span class="egate-machine">🖥️ CMN3PFX003</span>
-                </div>
-
-                <div class="egate-terminal-title uppercase-text !text-emerald-400">TERMINAL II</div>
-                <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5 mb-3"> 
-                    <span class="egate-machine business-egate">🖥️ CMN3PFX004</span>
-                </div>
-                 <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5"> 
-                    <span class="egate-machine">🖥️ CMN3PFX006</span>
-                    <span class="egate-machine">🖥️ CMN3PFX005</span>
-                    <span class="egate-machine">🖥️ CMN3PFX007</span>
+            <div class="selectable-text">
+                <table class="text-gray-300"> 
+                    <thead>
+                        <tr>
+                            <th>Technicien</th><th>ENREGISTREMENT T1</th><th>EMBARQUEMENT T1</th><th>TRANSIT T1</th><th>ENREGISTREMENT T2</th><th>EMBARQUEMENT T2</th><th>TRANSIT T2</th><th>OPERATION LITIGE</th><th>E-GATE (Maintenance)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Youssef CHARMOUH</td><td>1-2-3-4-5</td><td>E1-E2</td><td>1-2</td><td>1-2-3</td><td>A1</td><td></td><td></td><td>T1 ECO 1, T1 ECO 2</td></tr>
+                        <tr><td>Mehdi ASKARI</td><td>6-7-8-9-10</td><td></td><td>3-4</td><td>4-5-6</td><td>A2</td><td></td><td></td><td></td></tr>
+                        <tr><td>Soufiane BELFAKIR</td><td>11-12-13-14-15</td><td>E3</td><td>5-6</td><td>7-8-9</td><td>A3</td><td></td><td></td><td>T1 ECO 3</td></tr>
+                        <tr><td>Ahmed FARBOUSSI</td><td>16-17-18-19-20</td><td>E4</td><td>7-8</td><td>10-11-12</td><td>A4</td><td></td><td></td><td>T1 ECO 4</td></tr>
+                        <tr><td>Reda ALLOUCH</td><td>21-22-23-24-25</td><td>E5</td><td>9-10</td><td>13-14-15</td><td>A5</td><td></td><td></td><td>T1 ECO 5</td></tr>
+                        <tr><td>Seddik IDOUAKRIM</td><td>26-27-28-29-30</td><td>E6</td><td>11</td><td>16-17-18</td><td>A6</td><td></td><td></td><td>T1 BUS 1</td></tr>
+                        <tr><td>Ahmed AMARSAL</td><td>31-32-33-34-35</td><td>E7</td><td></td><td>19-20-21</td><td>A7</td><td></td><td>1-2</td><td>T1 BUS 2</td></tr>
+                        <tr><td>Mohamed MASKAOUI</td><td>36-37-38-39-40</td><td>E8</td><td></td><td>22-23-24</td><td>A8</td><td></td><td>3-4</td><td></td></tr>
+                        <tr><td>Ayoub SADIKI</td><td>41-42-43-44-45</td><td>F1</td><td></td><td>25-26-27</td><td>A9</td><td></td><td>5-6</td><td>T2 ECO 1, T2 ECO 2</td></tr>
+                        <tr><td>Mehdi BELKOUCHI</td><td>46-47-48-49-50</td><td>F2</td><td></td><td>28-29-30</td><td>A10</td><td></td><td>PC RAM 1-2</td><td>T2 ECO 3</td></tr>
+                        <tr><td>Ayoub CHAAOUBI</td><td>51-52-53-54-55</td><td>F3</td><td></td><td>31-32-33</td><td>B11</td><td></td><td>PC RAM 3-4</td><td>T2 ECO 4</td></tr>
+                        <tr><td>Zakaria BOURHRISS</td><td>56-57-58-59-60</td><td>F4</td><td></td><td>34-35-36</td><td>B12</td><td></td><td>SWISSPORT 1-2</td><td>T2 ECO 5</td></tr>
+                        <tr><td>Mouad KAOUTAR</td><td>61-62-63-64-65</td><td>F5</td><td></td><td>37-38-39-40</td><td>B13</td><td></td><td></td><td>T2 BUS 1</td></tr>
+                        <tr><td>Anas BENCHICHE</td><td>66-67-68-69-70</td><td>F6</td><td></td><td></td><td>D1</td><td></td><td>RAM SWISSPORT</td><td>T2 BUS 2</td></tr>
+                        <tr><td>Younes Ch</td><td>71-72-73-74-75-76-77</td><td>F7</td><td></td><td></td><td>D2-D3-D4-D5</td><td></td><td></td><td></td></tr>
+                        <tr><td>Kamal BOURROU</td><td>78-79-80-81-82-83-84</td><td>F8</td><td></td><td></td><td>D6-D7-D8-D9</td><td></td><td></td><td></td></tr>
+                    </tbody>
+                </table>
+                <div class="egate-section border-white/12">
+                    <h4 class="text-base font-semibold text-emerald-300 uppercase-text mb-3">E-GATE TERMINALS</h4>
+                    <div class="egate-terminal-title uppercase-text !text-emerald-400">TERMINAL I</div>
+                    <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5 mb-3"> 
+                        <span class="egate-machine business-egate">🖥️ CMN3PFX001</span>
+                    </div>
+                    <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5 mb-3"> 
+                        <span class="egate-machine">🖥️ CMN3PFX008</span>
+                        <span class="egate-machine">🖥️ CMN3PFX002</span>
+                        <span class="egate-machine">🖥️ CMN3PFX003</span>
+                    </div>
+                    <div class="egate-terminal-title uppercase-text !text-emerald-400">TERMINAL II</div>
+                    <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5 mb-3"> 
+                        <span class="egate-machine business-egate">🖥️ CMN3PFX004</span>
+                    </div>
+                     <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5"> 
+                        <span class="egate-machine">🖥️ CMN3PFX006</span>
+                        <span class="egate-machine">🖥️ CMN3PFX005</span>
+                        <span class="egate-machine">🖥️ CMN3PFX007</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -282,18 +285,25 @@
                 <h3 id="groupMembersModalTitle" class="text-base font-semibold text-emerald-300 uppercase-text">Group Members</h3>
                 <button id="closeGroupMembersModal" class="text-gray-400 hover:text-red-400 text-2xl font-bold">&times;</button>
             </div>
-            <ul id="groupMembersList" class="text-gray-200">
-                </ul>
+            <ul id="groupMembersList" class="text-gray-200 selectable-text"></ul>
         </div>
     </div>
 
     <footer class="w-full text-center py-6">
-        <p class="text-xs text-gray-500/60"> Made by Ben chikhe Anas
-        </p>
+        <p class="text-xs text-gray-500/60"> Made by Ben chikhe Anas</p>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            const appContent = document.getElementById('appContent');
+            if (!appContent) {
+                 console.error("CRITICAL: Main application content wrapper (#appContent) not found!");
+                 document.body.innerHTML = '<div style="color: white; text-align: center; padding-top: 50px; font-size: 20px;" class="selectable-text">Application Error: Content wrapper missing. Please check HTML structure.</div>';
+                 return;
+            }
+            appContent.style.display = 'flex'; 
+            appContent.classList.add('flex-col', 'items-center', 'w-full');
+
             const liveClockElement = document.getElementById('liveClock');
             const groupSelect = document.getElementById('groupSelect');
             const startDateInput = document.getElementById('startDate');
@@ -308,6 +318,7 @@
             const pmZonesButton = document.getElementById('pmZonesButton');
             const pmZonesModal = document.getElementById('pmZonesModal');
             const closePmZonesModalButton = document.getElementById('closePmZonesModal');
+            const resetToLiveButton = document.getElementById('resetToLiveButton');
             
             const groupMembersModal = document.getElementById('groupMembersModal');
             const groupMembersModalTitle = document.getElementById('groupMembersModalTitle');
@@ -320,12 +331,12 @@
             ];
             const groupAbbreviations = [ "M.KAOU", "Y.CHAR", "A.FRBS", "A.AMRSL", "M.BEL" ];
             
-            const groupColors = [ // Adjusted for better contrast on dark theme
+            const groupColors = [
                 { baseName: 'Saturn Gold', rgb: '186, 150, 83', textClass: 'text-gray-900', name: groupAbbreviations[0] },
-                { baseName: 'Deep Space Blue', rgb: '60, 80, 120', textClass: 'text-gray-100', name: groupAbbreviations[1] }, // Brighter blue
-                { baseName: 'Cosmic Dust', rgb: '170, 170, 160', textClass: 'text-gray-900', name: groupAbbreviations[2] }, // Brighter dust
-                { baseName: 'Nebula Purple', rgb: '100, 80, 110', textClass: 'text-gray-100', name: groupAbbreviations[3] }, // Brighter purple
-                { baseName: 'Red Giant', rgb: '160, 70, 60', textClass: 'text-gray-100', name: groupAbbreviations[4] } // Brighter red
+                { baseName: 'Deep Space Blue', rgb: '60, 80, 120', textClass: 'text-gray-100', name: groupAbbreviations[1] },
+                { baseName: 'Cosmic Dust', rgb: '170, 170, 160', textClass: 'text-gray-900', name: groupAbbreviations[2] },
+                { baseName: 'Nebula Purple', rgb: '100, 80, 110', textClass: 'text-gray-100', name: groupAbbreviations[3] },
+                { baseName: 'Red Giant', rgb: '160, 70, 60', textClass: 'text-gray-100', name: groupAbbreviations[4] }
             ];
 
             const groupMembersData = [
@@ -336,23 +347,46 @@
                 ["Mehdi BELKOUCHI", "Ayoub CHAAOUBI", "Zakaria BOURHRISS"]       
             ];
 
+            // Moroccan Holidays Data
+            const moroccanHolidays = {
+                // Fixed National Holidays (MM-DD format)
+                "01-01": "New Year’s Day",
+                "01-11": "Independence Manifesto Day",
+                "01-14": "Amazigh New Year",
+                "05-01": "Labour Day",
+                "07-30": "Throne Day",
+                "08-14": "Oued Ed-Dahab Day",
+                "08-20": "Revolution Day",
+                "08-21": "Youth Day",
+                "11-06": "Green March Day",
+                "11-18": "Independence Day",
+                // Islamic Holidays for 2025 (YYYY-MM-DD format)
+                "2025-03-31": "Eid al-Fitr",
+                "2025-06-07": "Eid al-Adha", // Corrected from previous potential typo
+                "2025-06-27": "Islamic New Year",
+                "2025-09-05": "Prophet Muhammad’s Birthday"
+            };
+
             const localStorageKeyDate = 'workRestSchedule_startDate';
             const localStorageKeyGroup = 'workRestSchedule_selectedGroup';
 
             let cycleStartDate; 
             let currentDisplayDate; 
             let selectedGroupIndex = 0; 
+            const isMobile = window.innerWidth <= 767; 
 
-            function updateLiveClock() {
+            function updateLiveClock() { 
                 const now = new Date();
                 const optionsTime = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
                 const optionsDate = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
                 const timeString = now.toLocaleTimeString('en-GB', optionsTime); 
                 const dateString = now.toLocaleDateString('en-US', optionsDate);
-                liveClockElement.textContent = `${dateString}, ${timeString}`;
+                if (liveClockElement) liveClockElement.textContent = `${dateString}, ${timeString}`;
             }
 
-            function populateGroupSelect() {
+            function populateGroupSelect() { 
+                if (!groupSelect) return;
+                groupSelect.innerHTML = ''; 
                 groupNames.forEach((name, index) => { 
                     const option = document.createElement('option');
                     option.value = index;
@@ -361,19 +395,23 @@
                 });
             }
 
-            function updateLegend() {
+            function updateLegend() { 
+                if (!legendContainer) return;
                 legendContainer.innerHTML = ''; 
-
                 const todayLegend = document.createElement('div');
                 todayLegend.className = 'flex items-center gap-1.5';
                 todayLegend.innerHTML = `<div class="w-3 h-3 rounded-full bg-yellow-400 ring-1 ring-yellow-500/70"></div><span>Today</span>`;
                 legendContainer.appendChild(todayLegend);
-
                 const selectedGroupWorkdayLegend = document.createElement('div');
                 selectedGroupWorkdayLegend.className = 'flex items-center gap-1.5';
                 selectedGroupWorkdayLegend.innerHTML = `<div class="w-3 h-3 rounded-sm bg-transparent ring-2 ring-red-400"></div><span>Your Group</span>`;
                 legendContainer.appendChild(selectedGroupWorkdayLegend);
                 
+                const holidayLegendItem = document.createElement('div');
+                holidayLegendItem.className = 'flex items-center gap-1.5';
+                holidayLegendItem.innerHTML = `<span class="holiday-indicator-legend" style="color: #FFD700; text-shadow: 0 0 2px rgba(0,0,0,0.5);">⭐</span><span>Holiday</span>`;
+                legendContainer.appendChild(holidayLegendItem);
+
                 groupColors.forEach((colorInfo) => {
                     const groupLegendItem = document.createElement('div');
                     groupLegendItem.className = 'flex items-center gap-1.5';
@@ -383,52 +421,13 @@
                     colorBox.style.borderColor = `rgba(${colorInfo.rgb}, 0.8)`;
                     const groupNameSpan = document.createElement('span');
                     groupNameSpan.textContent = `${colorInfo.name}`; 
-                    
                     groupLegendItem.appendChild(colorBox);
                     groupLegendItem.appendChild(groupNameSpan);
                     legendContainer.appendChild(groupLegendItem);
                 });
             }
-
-            function initializeApp() {
-                updateLiveClock(); 
-                setInterval(updateLiveClock, 1000); 
-                populateGroupSelect(); 
-                updateLegend();
-
-                const savedStartDateString = localStorage.getItem(localStorageKeyDate);
-                const savedGroupIndex = localStorage.getItem(localStorageKeyGroup);
-                let initialDateString;
-
-                if (savedGroupIndex !== null) {
-                    selectedGroupIndex = parseInt(savedGroupIndex, 10);
-                    groupSelect.value = selectedGroupIndex;
-                } else {
-                    groupSelect.value = 0; 
-                }
-
-                if (savedStartDateString) {
-                    initialDateString = savedStartDateString;
-                } else {
-                    const now = new Date();
-                    initialDateString = now.toISOString().split('T')[0]; 
-                }
-                
-                startDateInput.value = initialDateString;
-                cycleStartDate = parseDateString(initialDateString); 
-                
-                if (cycleStartDate) {
-                    currentDisplayDate = new Date(Date.UTC(cycleStartDate.getUTCFullYear(), cycleStartDate.getUTCMonth(), 1));
-                } else { 
-                    const now = new Date();
-                    currentDisplayDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), 1));
-                    startDateInput.value = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
-                    cycleStartDate = parseDateString(startDateInput.value); 
-                }
-                generateSchedule(); 
-            }
-
-            function parseDateString(dateString) {
+            
+            function parseDateString(dateString) { 
                 if (!dateString) return null;
                 const parts = dateString.split('-');
                 if (parts.length !== 3) return null;
@@ -438,78 +437,84 @@
                 return new Date(Date.UTC(year, month - 1, day)); 
             }
             
-            function updateStatusBanner() {
-                if (!cycleStartDate || groupSelect.value === "") return; 
+            function getHolidayInfo(date, year) {
+                const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+                const day = date.getUTCDate().toString().padStart(2, '0');
+                const mmdd = `${month}-${day}`;
+                const yyyymmdd = `${year}-${mmdd}`;
 
+                if (moroccanHolidays[yyyymmdd]) { 
+                    return moroccanHolidays[yyyymmdd];
+                }
+                if (moroccanHolidays[mmdd]) { 
+                    return moroccanHolidays[mmdd];
+                }
+                return null; 
+            }
+
+            function updateStatusBanner() { 
+                if (!cycleStartDate || !groupSelect || groupSelect.value === "" || !statusBanner) return; 
                 const currentSelectedGroupIndex = parseInt(groupSelect.value, 10);
                 const selectedGroupName = groupNames[currentSelectedGroupIndex]; 
                 const today = new Date(); 
                 const todayUTC = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
-
                 const diffFromInputStartToTodayMs = todayUTC.getTime() - cycleStartDate.getTime();
                 const diffInDaysForToday = Math.floor(diffFromInputStartToTodayMs / (1000 * 60 * 60 * 24));
-                
                 const todayEffectiveDay = (diffInDaysForToday % 5 + 5) % 5; 
                 const isTodayWorkDayForSelectedGroup = (todayEffectiveDay === 0); 
-
                 const todayFormatted = today.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }).toUpperCase();
-                
                 let statusText = `TODAY, ${todayFormatted}, IS A ${isTodayWorkDayForSelectedGroup ? 'WORK' : 'REST'} DAY FOR ${selectedGroupName.replace(' GRP', '')}`;
-                
                 if (!isTodayWorkDayForSelectedGroup) {
                     const daysUntilNextWorkday = 5 - todayEffectiveDay;
                     statusText += ` &mdash; ${daysUntilNextWorkday} DAY${daysUntilNextWorkday > 1 ? 'S' : ''} TO NEXT WORKDAY`;
                 }
-
                 statusBanner.innerHTML = statusText; 
                 statusBanner.classList.remove('hidden');
                 statusBanner.style.color = isTodayWorkDayForSelectedGroup ? '#A7F3D0' : '#9CA3AF'; 
                 statusBanner.style.backgroundColor = isTodayWorkDayForSelectedGroup ? 'rgba(16, 185, 129, 0.25)' : 'rgba(75, 85, 99, 0.25)'; 
-                statusBanner.style.backdropFilter = 'blur(3px)';
-                statusBanner.style.webkitBackdropFilter = 'blur(3px)';
+                if (!isMobile) { 
+                    statusBanner.style.backdropFilter = 'blur(3px)';
+                    statusBanner.style.webkitBackdropFilter = 'blur(3px)';
+                } else { 
+                    statusBanner.style.backdropFilter = 'none';
+                    statusBanner.style.webkitBackdropFilter = 'none';
+                }
             }
 
-            function generateSchedule() {
-                messageArea.textContent = ''; 
-                calendarGrid.innerHTML = ''; 
-                monthNameDisplay.textContent = ''; 
-                monthlyStatsBanner.classList.add('hidden'); 
+            function generateSchedule() { 
+                if (messageArea) messageArea.textContent = ''; 
+                if (calendarGrid) calendarGrid.innerHTML = ''; 
+                if (monthNameDisplay) monthNameDisplay.textContent = ''; 
+                if (monthlyStatsBanner) monthlyStatsBanner.classList.add('hidden'); 
+                if (!groupSelect || !startDateInput) return;
 
                 selectedGroupIndex = parseInt(groupSelect.value, 10); 
                 const tempCycleStartDate = parseDateString(startDateInput.value); 
 
                 if (!tempCycleStartDate) {
-                    messageArea.textContent = 'PLEASE SELECT A VALID START DATE.';
-                    statusBanner.classList.add('hidden'); 
+                    if(messageArea) messageArea.textContent = 'PLEASE SELECT A VALID START DATE.';
+                    if(statusBanner) statusBanner.classList.add('hidden'); 
                     return;
                 }
                 cycleStartDate = tempCycleStartDate; 
-                
                 localStorage.setItem(localStorageKeyDate, startDateInput.value);
                 localStorage.setItem(localStorageKeyGroup, selectedGroupIndex.toString());
-
                 if (!currentDisplayDate) { 
                      currentDisplayDate = new Date(Date.UTC(cycleStartDate.getUTCFullYear(), cycleStartDate.getUTCMonth(), 1));
                 }
                 updateStatusBanner(); 
-
                 const targetYear = currentDisplayDate.getUTCFullYear();
                 const targetMonth_0_indexed = currentDisplayDate.getUTCMonth();
-                monthNameDisplay.textContent = currentDisplayDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }).toUpperCase();
-
+                if (monthNameDisplay) monthNameDisplay.textContent = currentDisplayDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }).toUpperCase();
                 const daysInMonth = new Date(Date.UTC(targetYear, targetMonth_0_indexed + 1, 0)).getUTCDate();
                 const firstDayOfWeek = new Date(Date.UTC(targetYear, targetMonth_0_indexed, 1)).getUTCDay(); 
-                
                 let workdayCount = 0; 
-
                 for (let i = 0; i < firstDayOfWeek; i++) {
                     const emptyCell = document.createElement('div');
                     emptyCell.className = "bg-transparent rounded-md"; 
-                    calendarGrid.appendChild(emptyCell);
+                    if (calendarGrid) calendarGrid.appendChild(emptyCell);
                 }
-
                 const todayUTCForHighlight = new Date(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
-
                 for (let dayOfMonth = 1; dayOfMonth <= daysInMonth; dayOfMonth++) {
                     const currentDateInCalendar = new Date(Date.UTC(targetYear, targetMonth_0_indexed, dayOfMonth));
                     const diffInMilliseconds = currentDateInCalendar.getTime() - cycleStartDate.getTime();
@@ -517,62 +522,68 @@
                     const workingGroupOffset = ((diffInDays % 5) + 5) % 5; 
                     const actualWorkingGroupIndex = (selectedGroupIndex + workingGroupOffset) % 5; 
                     const isSelectedGroupWorkingThisDay = (actualWorkingGroupIndex === selectedGroupIndex);
-                    
                     if (isSelectedGroupWorkingThisDay) { workdayCount++; }
-
                     const workingGroupNameInCell = groupAbbreviations[actualWorkingGroupIndex]; 
                     const dayCell = document.createElement('div');
                     const groupColor = groupColors[actualWorkingGroupIndex]; 
-                    
-                    dayCell.className = `day-cell-base p-1.5 md:p-2 min-h-[4.5rem] md:min-h-[5.5rem]
-                                         flex flex-col justify-center items-center cursor-pointer 
-                                         ${groupColor.textClass}`; 
-                    
-                    dayCell.style.backgroundColor = `rgba(${groupColor.rgb}, 0.55)`; // Increased opacity for day cells
+                    dayCell.className = `day-cell-base p-1.5 md:p-2 min-h-[4rem] md:min-h-[5.5rem] flex flex-col justify-center items-center cursor-pointer ${groupColor.textClass}`; 
+                    dayCell.style.backgroundColor = `rgba(${groupColor.rgb}, ${isMobile ? 0.8 : 0.55})`; 
                     dayCell.style.borderColor = `rgba(${groupColor.rgb}, 0.75)`; 
-                    dayCell.style.backdropFilter = 'blur(4px)'; // Reduced blur for day cells
-                    dayCell.style.webkitBackdropFilter = 'blur(4px)';
+                    if (!isMobile) {
+                        dayCell.style.backdropFilter = 'blur(4px)'; 
+                        dayCell.style.webkitBackdropFilter = 'blur(4px)';
+                    }
                     
-                    dayCell.addEventListener('click', () => showGroupMembers(actualWorkingGroupIndex, dayOfMonth, currentDisplayDate));
+                    const holidayName = getHolidayInfo(currentDateInCalendar, targetYear);
+                    if (holidayName) {
+                        dayCell.title = holidayName; 
+                        const holidayIcon = document.createElement('span');
+                        holidayIcon.className = 'holiday-indicator';
+                        holidayIcon.textContent = '⭐'; // Using star emoji
+                        dayCell.appendChild(holidayIcon);
+                    }
 
+                    dayCell.addEventListener('click', () => showGroupMembers(actualWorkingGroupIndex, dayOfMonth, currentDisplayDate, holidayName));
                     if (isSelectedGroupWorkingThisDay) {
                         dayCell.classList.add('ring-2', 'ring-red-400', 'ring-offset-1', 'ring-selected-group'); 
                     }
-
                     if (currentDateInCalendar.getTime() === todayUTCForHighlight.getTime()) {
                         dayCell.classList.remove('ring-red-400', 'ring-selected-group'); 
                         dayCell.classList.add('ring-2', 'ring-yellow-400', 'ring-offset-1', 'ring-today', '!font-bold'); 
-                        dayCell.style.backgroundColor = `rgba(${groupColor.rgb}, 0.7)`; // More opaque for today
+                        dayCell.style.backgroundColor = `rgba(${groupColor.rgb}, ${isMobile ? 0.9 : 0.7})`; 
                     }
-
                     const dayNumberDiv = document.createElement('div');
                     dayNumberDiv.className = 'day-cell-number font-medium';
                     dayNumberDiv.textContent = dayOfMonth;
-
                     const statusDiv = document.createElement('div');
                     statusDiv.className = 'day-cell-group-name font-medium uppercase-text tracking-tighter'; 
                     statusDiv.textContent = workingGroupNameInCell; 
-                    
                     dayCell.appendChild(dayNumberDiv);
                     dayCell.appendChild(statusDiv);
-                    calendarGrid.appendChild(dayCell);
+                    if (calendarGrid) calendarGrid.appendChild(dayCell);
                 }
-                
                 const restdayCount = daysInMonth - workdayCount;
                 const selectedGroupNameForStats = groupNames[selectedGroupIndex].replace(' GRP', '');
-                monthlyStatsBanner.textContent = `${monthNameDisplay.textContent} FOR ${selectedGroupNameForStats}: ${workdayCount} WORK, ${restdayCount} REST`;
-                monthlyStatsBanner.classList.remove('hidden');
+                if (monthlyStatsBanner && monthNameDisplay && monthNameDisplay.textContent) {
+                    monthlyStatsBanner.textContent = `${monthNameDisplay.textContent} FOR ${selectedGroupNameForStats}: ${workdayCount} WORK, ${restdayCount} REST`;
+                    monthlyStatsBanner.classList.remove('hidden');
+                }
             }
-            
-            function showGroupMembers(groupIndex, day, displayDate) {
+        
+            function showGroupMembers(groupIndex, day, displayDate, holidayName = null) { 
+                if (!groupMembersModalTitle || !groupMembersList) return;
                 const members = groupMembersData[groupIndex];
                 const groupName = groupNames[groupIndex].replace(' GRP', ''); 
                 const dateOfClickedDay = new Date(Date.UTC(displayDate.getUTCFullYear(), displayDate.getUTCMonth(), day));
                 const formattedDate = dateOfClickedDay.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' });
+                
+                let titleText = `${groupName} - ${formattedDate.toUpperCase()}`;
+                if (holidayName) {
+                    titleText += ` (Holiday: ${holidayName})`;
+                }
+                groupMembersModalTitle.textContent = titleText;
 
-                groupMembersModalTitle.textContent = `${groupName} - ${formattedDate.toUpperCase()}`;
                 groupMembersList.innerHTML = ''; 
-
                 if (members && members.length > 0) {
                     members.forEach(member => {
                         const listItem = document.createElement('li');
@@ -587,7 +598,7 @@
                 openModal(groupMembersModal);
             }
             
-            function changeMonth(offset) {
+            function changeMonth(offset) { 
                 if (currentDisplayDate) { 
                     currentDisplayDate.setUTCMonth(currentDisplayDate.getUTCMonth() + offset);
                     currentDisplayDate.setUTCDate(1); 
@@ -595,51 +606,126 @@
                 }
             }
 
-            function handleInputsChange() {
+            function handleInputsChange() { 
+                if (!groupSelect || !startDateInput) return;
                 const newSelectedGroupIndex = parseInt(groupSelect.value, 10);
                 const newCycleStartDate = parseDateString(startDateInput.value);
-
                 if (newCycleStartDate) {
                     selectedGroupIndex = newSelectedGroupIndex;
                     cycleStartDate = newCycleStartDate;
                     currentDisplayDate = new Date(Date.UTC(cycleStartDate.getUTCFullYear(), cycleStartDate.getUTCMonth(), 1));
                     generateSchedule(); 
                 } else if (startDateInput.value !== "") { 
-                     messageArea.textContent = 'PLEASE SELECT A VALID START DATE.';
-                     statusBanner.classList.add('hidden');
-                     monthlyStatsBanner.classList.add('hidden');
+                     if(messageArea) messageArea.textContent = 'PLEASE SELECT A VALID START DATE.';
+                     if(statusBanner) statusBanner.classList.add('hidden');
+                     if(monthlyStatsBanner) monthlyStatsBanner.classList.add('hidden');
                 }
             }
 
-            function openModal(modal) {
+            function openModal(modal) { 
+                if (!modal) { console.error("Modal element not found for openModal"); return; }
                 modal.classList.remove('opacity-0', 'pointer-events-none', 'transform', 'scale-95');
                 modal.classList.add('opacity-100', 'modal-active', 'transform', 'scale-100');
                 document.body.classList.add('overflow-hidden'); 
             }
 
-            function closeModal(modal) {
+            function closeModal(modal) { 
+                 if (!modal) { console.error("Modal element not found for closeModal"); return; }
                 modal.classList.remove('opacity-100', 'modal-active', 'transform', 'scale-100');
                 modal.classList.add('opacity-0', 'pointer-events-none', 'transform', 'scale-95');
                 document.body.classList.remove('overflow-hidden');
             }
-
-            startDateInput.addEventListener('change', handleInputsChange);
-            groupSelect.addEventListener('change', handleInputsChange); 
-            prevMonthButton.addEventListener('click', () => changeMonth(-1));
-            nextMonthButton.addEventListener('click', () => changeMonth(1));
             
-            pmZonesButton.addEventListener('click', () => openModal(pmZonesModal));
-            closePmZonesModalButton.addEventListener('click', () => closeModal(pmZonesModal));
-            pmZonesModal.addEventListener('click', (event) => {
-                if (event.target === pmZonesModal) { closeModal(pmZonesModal); }
-            });
+            function initializeApp() { 
+                updateLiveClock(); 
+                setInterval(updateLiveClock, 1000); 
+                populateGroupSelect(); 
+                updateLegend();
 
-            closeGroupMembersModalButton.addEventListener('click', () => closeModal(groupMembersModal));
-            groupMembersModal.addEventListener('click', (event) => {
-                if (event.target === groupMembersModal) { closeModal(groupMembersModal); }
-            });
+                const savedStartDateString = localStorage.getItem(localStorageKeyDate);
+                const savedGroupIndexString = localStorage.getItem(localStorageKeyGroup);
 
-            initializeApp(); 
+                if (savedStartDateString && savedGroupIndexString !== null) {
+                    console.log("Using saved preferences from localStorage.");
+                    selectedGroupIndex = parseInt(savedGroupIndexString, 10);
+                    if (groupSelect) groupSelect.value = selectedGroupIndex;
+                    
+                    if (startDateInput) startDateInput.value = savedStartDateString;
+                    cycleStartDate = parseDateString(savedStartDateString);
+
+                    if (cycleStartDate) {
+                        currentDisplayDate = new Date(Date.UTC(cycleStartDate.getUTCFullYear(), cycleStartDate.getUTCMonth(), 1));
+                    } else { 
+                        const now = new Date();
+                        currentDisplayDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), 1));
+                    }
+                } else {
+                    console.log("No saved preferences. Defaulting to live company schedule.");
+                    const REFERENCE_DATE = new Date(Date.UTC(2025, 5, 4)); // June 4, 2025 (M.KAOU starts)
+                    const REFERENCE_GROUP_INDEX = 0; // M.KAOU
+
+                    const today = new Date();
+                    const todayUTC = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
+
+                    const diffInMilliseconds = todayUTC.getTime() - REFERENCE_DATE.getTime();
+                    const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
+                    
+                    const dayInCycleForReferenceGroup = (diffInDays % 5 + 5) % 5;
+                    const groupWorkingTodayIndex = (REFERENCE_GROUP_INDEX + dayInCycleForReferenceGroup) % 5;
+
+                    selectedGroupIndex = groupWorkingTodayIndex;
+                    if (groupSelect) groupSelect.value = selectedGroupIndex;
+
+                    cycleStartDate = new Date(todayUTC); 
+                    if (startDateInput) startDateInput.value = todayUTC.toISOString().split('T')[0];
+                    
+                    currentDisplayDate = new Date(Date.UTC(todayUTC.getFullYear(), todayUTC.getMonth(), 1)); 
+                }
+                generateSchedule(); 
+            }
+            
+            initializeApp();
+
+            if (startDateInput) startDateInput.addEventListener('change', handleInputsChange);
+            else console.error("Error: startDateInput not found for event listener.");
+            
+            if (groupSelect) groupSelect.addEventListener('change', handleInputsChange);
+            else console.error("Error: groupSelect not found for event listener.");
+            
+            if (prevMonthButton) prevMonthButton.addEventListener('click', () => changeMonth(-1));
+            else console.error("Error: prevMonthButton not found for event listener.");
+
+            if (nextMonthButton) nextMonthButton.addEventListener('click', () => changeMonth(1));
+            else console.error("Error: nextMonthButton not found for event listener.");
+            
+            if (pmZonesButton) pmZonesButton.addEventListener('click', () => openModal(pmZonesModal));
+            else console.error("Error: pmZonesButton not found for event listener.");
+
+            if (closePmZonesModalButton) closePmZonesModalButton.addEventListener('click', () => closeModal(pmZonesModal));
+            else console.error("Error: closePmZonesModalButton not found for event listener.");
+
+            if (pmZonesModal) {
+                pmZonesModal.addEventListener('click', (event) => {
+                    if (event.target === pmZonesModal) { closeModal(pmZonesModal); }
+                });
+            } else console.error("Error: pmZonesModal not found for event listener.");
+
+            if (closeGroupMembersModalButton) closeGroupMembersModalButton.addEventListener('click', () => closeModal(groupMembersModal));
+            else console.error("Error: closeGroupMembersModalButton not found for event listener.");
+            
+            if (groupMembersModal) {
+                groupMembersModal.addEventListener('click', (event) => {
+                    if (event.target === groupMembersModal) { closeModal(groupMembersModal); }
+                });
+            } else console.error("Error: groupMembersModal not found for event listener.");
+
+            if (resetToLiveButton) {
+                resetToLiveButton.addEventListener('click', () => {
+                    localStorage.removeItem(localStorageKeyDate);
+                    localStorage.removeItem(localStorageKeyGroup);
+                    initializeApp(); 
+                });
+            } else { console.error("Error: resetToLiveButton not found for event listener."); }
         });
     </script>
 
