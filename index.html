@@ -225,16 +225,24 @@
             font-size: 0.9em; 
             opacity: 0.7;
         }
-        #monthlyStatsBannerInDashboard { /* Styling for the monthly stats when inside the dashboard */
+        #monthlyStatsBannerInDashboard { 
             padding: 0.5rem;
             margin-top: 0.75rem; 
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.75rem; /* text-xs */
-            color: #9CA3AF; /* Tailwind gray-400 */
-            background-color: rgba(0,0,0,0.15); /* Slightly darker transparent bg */
-            backdrop-filter: blur(1px); /* Very subtle blur */
+            font-size: 0.75rem; 
+            color: #9CA3AF; 
+            background-color: rgba(0,0,0,0.15); 
+            backdrop-filter: blur(1px); 
             -webkit-backdrop-filter: blur(1px);
-            border-radius: 0.375rem; /* Rounded corners */
+            border-radius: 0.375rem; 
+        }
+        .manual-calc-title {
+            color: #9CA3AF; 
+            font-size: 0.8rem; 
+            font-weight: 500; 
+            margin-top: 1.5rem; 
+            margin-bottom: 0.5rem; 
+            text-align: center;
         }
 
 
@@ -264,6 +272,7 @@
             #onDutyDashboard h3 { font-size: 1.1rem; } 
             #onDutyDashboard p, #onDutyDashboard li { font-size: 0.8rem; }
             #monthlyStatsBannerInDashboard { font-size: 0.65rem; padding: 0.4rem; }
+            .manual-calc-title { font-size: 0.75rem; margin-top: 1rem; }
         }
     </style>
 </head>
@@ -281,10 +290,9 @@
 
         <div class="container frosted-glass-pane mx-auto max-w-3xl w-full p-5 md:p-8 mb-8 mt-4">
             
-            <!-- This original monthlyStatsBanner is now effectively hidden and its content moved to the dashboard -->
-            <div id="monthlyStatsBanner" class="p-2.5 mb-6 rounded-md text-center font-medium text-xs hidden uppercase-text" 
-                 style="background-color: rgba(0,0,0,0.25); color: #9CA3AF; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);">
-            </div>
+            <!-- This original monthlyStatsBanner is effectively replaced by the one in the dashboard -->
+            <div id="monthlyStatsBanner" class="hidden"></div>
+
 
             <div id="scheduleOutput" class="mt-6">
                 <div class="flex items-center justify-between mb-5">
@@ -299,7 +307,10 @@
                 <div id="calendarGrid" class="grid grid-cols-7 gap-1 md:gap-1.5">
                 </div>
                 
-                <div class="grid md:grid-cols-2 gap-5 mt-6 mb-6 items-end"> 
+                <div class="manual-calc-title uppercase-text">
+                    <h4>Manual Calculation</h4>
+                </div>
+                <div class="grid md:grid-cols-2 gap-5 items-end"> 
                     <div>
                         <label for="groupSelect" class="input-label-tag">Select Group</label>
                         <select id="groupSelect" name="groupSelect"
@@ -459,7 +470,7 @@
             const legendContainer = document.getElementById('legend');
             const prevMonthButton = document.getElementById('prevMonthButton');
             const nextMonthButton = document.getElementById('nextMonthButton');
-            const monthlyStatsBanner = document.getElementById('monthlyStatsBanner'); 
+            // const monthlyStatsBanner = document.getElementById('monthlyStatsBanner'); // This element is no longer in the main HTML for display
             const pmZonesButton = document.getElementById('pmZonesButton');
             const pmZonesModal = document.getElementById('pmZonesModal');
             const closePmZonesModalButton = document.getElementById('closePmZonesModal');
@@ -621,7 +632,7 @@
                 if (messageArea) messageArea.textContent = ''; 
                 if (calendarGrid) calendarGrid.innerHTML = ''; 
                 if (monthNameDisplay) monthNameDisplay.textContent = ''; 
-                // if (monthlyStatsBanner) monthlyStatsBanner.classList.add('hidden'); // Managed by updateOnDutyDashboard
+                // monthlyStatsBanner content is now handled by updateOnDutyDashboard
                 if (!groupSelect || !startDateInput) return;
 
                 selectedGroupIndex = parseInt(groupSelect.value, 10); 
@@ -636,7 +647,7 @@
                 if (!currentDisplayDate) { 
                      currentDisplayDate = new Date(Date.UTC(cycleStartDate.getUTCFullYear(), cycleStartDate.getUTCMonth(), 1));
                 }
-                // updateStatusBanner(); // Removed
+                
                 const targetYear = currentDisplayDate.getUTCFullYear();
                 const targetMonth_0_indexed = currentDisplayDate.getUTCMonth();
                 if (monthNameDisplay) monthNameDisplay.textContent = currentDisplayDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }).toUpperCase();
@@ -733,15 +744,15 @@
                     dayCell.appendChild(statusDiv);
                     if (calendarGrid) calendarGrid.appendChild(dayCell);
                 }
-                const restdayCount = daysInMonth - workdayCount;
-                const selectedGroupNameForStats = groupNames[selectedGroupIndex].replace(' GRP', '');
                 
-                // Update the content of the original monthlyStatsBanner (which is hidden)
-                // The updateOnDutyDashboard function will read from this or recalculate.
-                if (monthlyStatsBanner && monthNameDisplay && monthNameDisplay.textContent) {
-                    monthlyStatsBanner.textContent = `${monthNameDisplay.textContent} FOR ${selectedGroupNameForStats}: ${workdayCount} WORK, ${restdayCount} REST`;
-                }
-                updateOnDutyDashboard(); // Update dashboard, which will now include these stats
+                const restdayCount = daysInMonth - workdayCount;
+                const statsData = {
+                    monthName: monthNameDisplay ? monthNameDisplay.textContent : "",
+                    groupName: groupNames[selectedGroupIndex].replace(' GRP', ''),
+                    workDays: workdayCount,
+                    restDays: restdayCount
+                };
+                updateOnDutyDashboard(statsData); 
             }
         
             function showGroupMembers(groupIndex, day, displayDate, holidayName = null, membersWithZones = []) { 
@@ -800,8 +811,10 @@
                     generateSchedule(); 
                 } else if (startDateInput.value !== "") { 
                      if(messageArea) messageArea.textContent = 'PLEASE SELECT A VALID START DATE.';
-                     // if(statusBanner) statusBanner.classList.add('hidden'); // StatusBanner removed
-                     if(monthlyStatsBanner) monthlyStatsBanner.classList.add('hidden');
+                     if(monthlyStatsBanner) { // Clear stats if inputs invalid
+                        const dashboardStats = document.getElementById('monthlyStatsBannerInDashboard');
+                        if(dashboardStats) dashboardStats.textContent = '';
+                     }
                 }
             }
 
@@ -819,7 +832,7 @@
                 document.body.classList.remove('overflow-hidden');
             }
 
-            function updateOnDutyDashboard() {
+            function updateOnDutyDashboard(statsDataForCalendarMonth = null) {
                 if (!onDutyDashboardElement) return;
 
                 const today = new Date();
@@ -874,29 +887,8 @@
                     dashboardHTML += `<p>No member data for this group.</p>`;
                 }
                 
-                // Update and append monthlyStatsBanner content to dashboardHTML
-                if (monthlyStatsBanner && monthNameDisplay && currentDisplayDate) { // Ensure currentDisplayDate is available
-                    const statsTargetYear = currentDisplayDate.getUTCFullYear();
-                    const statsTargetMonth_0_indexed = currentDisplayDate.getUTCMonth();
-                    let statsWorkdayCount = 0;
-                    const daysInCurrentDisplayMonth = new Date(Date.UTC(statsTargetYear, statsTargetMonth_0_indexed + 1, 0)).getUTCDate();
-
-                    for (let day = 1; day <= daysInCurrentDisplayMonth; day++) {
-                        const dateInCurrentMonth = new Date(Date.UTC(statsTargetYear, statsTargetMonth_0_indexed, day));
-                         // Use the group selected in the main calendar for these stats
-                        const diff = Math.floor((dateInCurrentMonth.getTime() - (cycleStartDate ? cycleStartDate.getTime() : todayUTC.getTime())) / (1000 * 60 * 60 * 24));
-                        const offset = ((diff % 5) + 5) % 5;
-                        const workingGrpIdx = (selectedGroupIndex + offset) % 5;
-                        if (workingGrpIdx === selectedGroupIndex) {
-                            statsWorkdayCount++;
-                        }
-                    }
-                    const statsRestdayCount = daysInCurrentDisplayMonth - statsWorkdayCount;
-                    const statsSelectedGroupName = groupNames[selectedGroupIndex].replace(' GRP', '');
-                    const monthNameForStats = currentDisplayDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }).toUpperCase();
-                    
-                    const statsText = `${monthNameForStats} FOR ${statsSelectedGroupName}: ${statsWorkdayCount} WORK, ${statsRestdayCount} REST`;
-                    dashboardHTML += `<div id="monthlyStatsBannerInDashboard" class="p-2.5 mt-4 rounded-md text-center font-medium text-xs uppercase-text" style="background-color: rgba(0,0,0,0.15); color: #9CA3AF; border-top: 1px solid rgba(255,255,255,0.08);">${statsText}</div>`;
+                if (statsDataForCalendarMonth && statsDataForCalendarMonth.monthName) {
+                     dashboardHTML += `<div id="monthlyStatsBannerInDashboard">${statsDataForCalendarMonth.monthName} FOR ${statsDataForCalendarMonth.groupName}: ${statsDataForCalendarMonth.workDays} WORK, ${statsDataForCalendarMonth.restDays} REST</div>`;
                 }
 
 
@@ -908,7 +900,7 @@
                 setInterval(updateLiveClock, 1000); 
                 populateGroupSelect(); 
                 updateLegend();
-                // updateOnDutyDashboard(); // Called after schedule is potentially set from localStorage
+                // updateOnDutyDashboard(); // Will be called by generateSchedule
 
                 const savedStartDateString = localStorage.getItem(localStorageKeyDate);
                 const savedGroupIndexString = localStorage.getItem(localStorageKeyGroup);
@@ -946,7 +938,7 @@
                     
                     currentDisplayDate = new Date(Date.UTC(todayUTC.getFullYear(), todayUTC.getMonth(), 1)); 
                 }
-                generateSchedule(); // This will call updateOnDutyDashboard at the end
+                generateSchedule(); 
             }
             
             initializeApp();
