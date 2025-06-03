@@ -44,19 +44,45 @@
         input::placeholder { color: #6B7280; }
         .uppercase-text { text-transform: uppercase; }
         
-        .nav-button {
+        .nav-button, .action-button { 
             background-color: rgba(55, 65, 81, 0.65); 
             color: #E5E7EB; 
             padding: 0.6rem 1.1rem;
             border-radius: 0.5rem; 
             font-weight: 500; 
-            transition: background-color 0.2s ease-in-out;
+            transition: background-color 0.2s ease-in-out, box-shadow 0.15s ease-in-out;
             border: 1px solid rgba(156, 163, 175, 0.25); 
             backdrop-filter: blur(2px); 
             -webkit-backdrop-filter: blur(2px);
+            text-transform: uppercase; 
+            font-size: 0.75rem; 
         }
-        .nav-button:hover { background-color: rgba(75, 85, 99, 0.75); }
-        .nav-button:focus { outline: none; box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.35); }
+        .nav-button:hover, .action-button:hover { background-color: rgba(75, 85, 99, 0.75); }
+        .nav-button:focus, .action-button:focus { outline: none; box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.35); }
+
+        #resetToLiveButton {
+             background-color: rgba(13, 148, 136, 0.4); 
+             border: 1px solid rgba(20, 83, 45, 0.5);
+        }
+        #resetToLiveButton:hover {
+            background-color: rgba(13, 148, 136, 0.55);
+        }
+         #resetToLiveButton:focus {
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.4);
+        }
+        #viewDispatchButtonInModal { /* Style for the button inside the modal */
+            background-color: rgba(75, 85, 99, 0.5); 
+            border-color: rgba(107, 114, 128, 0.4);
+            color: #D1D5DB;
+            padding: 0.5rem 1rem;
+            font-size: 0.7rem;
+            margin-top: 1rem;
+            width: 100%;
+        }
+        #viewDispatchButtonInModal:hover {
+            background-color: rgba(107, 114, 128, 0.6);
+        }
+
 
         .frosted-glass-pane {
             background-color: rgba(35, 35, 35, 0.6); 
@@ -161,7 +187,7 @@
             .container { padding: 1rem; } 
             h1 { font-size: 1.25rem; } 
             #monthNameDisplay { font-size: 1.125rem; } 
-            .nav-button { padding: 0.5rem 0.75rem; font-size: 0.75rem; } 
+            .nav-button, .action-button { padding: 0.5rem 0.75rem; font-size: 0.7rem; } 
             #calendarGrid { gap: 0.2rem; } 
             .day-cell-base { min-height: 3.75rem; } 
             .frosted-glass-pane {
@@ -207,9 +233,9 @@
 
             <div id="scheduleOutput" class="mt-6">
                 <div class="flex items-center justify-between mb-5">
-                    <button id="prevMonthButton" class="nav-button uppercase-text">&lt; Prev</button>
+                    <button id="prevMonthButton" class="nav-button">&lt; Prev</button>
                     <h2 id="monthNameDisplay" class="text-xl font-medium text-gray-200 text-center uppercase-text mx-3"></h2>
-                    <button id="nextMonthButton" class="nav-button uppercase-text">Next &gt;</button>
+                    <button id="nextMonthButton" class="nav-button">Next &gt;</button>
                 </div>
 
                 <div id="weekdayHeaders" class="grid grid-cols-7 gap-1 md:gap-1.5 mb-1.5 text-center font-medium text-gray-400 text-[0.6rem] md:text-xs uppercase-text">
@@ -224,15 +250,11 @@
             </div>
         </div>
 
-        <div class="text-center mt-3 mb-6 space-y-3 md:space-y-0 md:space-x-3">
-            <button id="pmZonesButton" 
-                    class="text-gray-200 font-medium py-2.5 px-5 rounded-md shadow-sm hover:shadow-md transition-all duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 uppercase-text text-xs"
-                    style="background-color: rgba(17, 24, 39, 0.65); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.05);">
+        <div class="text-center mt-3 mb-6 space-y-3 md:space-y-0 md:flex md:justify-center md:space-x-3">
+            <button id="pmZonesButton" class="action-button">
                 PM Zones & E-Gates
             </button>
-            <button id="resetToLiveButton" 
-                    class="text-gray-200 font-medium py-2.5 px-5 rounded-md shadow-sm hover:shadow-md transition-all duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 uppercase-text text-xs"
-                    style="background-color: rgba(13, 148, 136, 0.4); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border: 1px solid rgba(20, 83, 45, 0.5);">
+            <button id="resetToLiveButton" class="action-button">
                 View Live Schedule
             </button>
         </div>
@@ -245,8 +267,7 @@
                 <button id="closePmZonesModal" class="text-gray-400 hover:text-red-400 text-2xl font-bold">&times;</button>
             </div>
             <div class="selectable-text">
-                <!-- Zone Details Table -->
-                <div class="mb-6">
+                <div id="dispatchTableSection" class="mb-6">
                     <h4 class="text-md font-semibold text-emerald-200 uppercase-text mb-3 text-center">Dispatch Par Zones</h4>
                     <table class="zone-details-table w-full text-left">
                         <thead>
@@ -337,7 +358,8 @@
                 <h3 id="groupMembersModalTitle" class="text-base font-semibold text-emerald-300 uppercase-text">Group Members</h3>
                 <button id="closeGroupMembersModal" class="text-gray-400 hover:text-red-400 text-2xl font-bold">&times;</button>
             </div>
-            <ul id="groupMembersList" class="text-gray-200 selectable-text"></ul>
+            <ul id="groupMembersList" class="text-gray-200 selectable-text mb-3"></ul>
+            <button id="viewDispatchButtonInModal" class="action-button w-full">View Zone Dispatch Details</button>
         </div>
     </div>
 
@@ -376,6 +398,8 @@
             const groupMembersModalTitle = document.getElementById('groupMembersModalTitle');
             const groupMembersList = document.getElementById('groupMembersList');
             const closeGroupMembersModalButton = document.getElementById('closeGroupMembersModal');
+            const viewDispatchButtonInModal = document.getElementById('viewDispatchButtonInModal');
+
 
             const groupNames = [ 
                 "K.MOUAD GRP", "Y.CHARMOUH GRP", "A.FARBOSI GRP", 
@@ -410,7 +434,7 @@
 
             const BASE_ZONES = ['Zone A', 'Zone B', 'Zone C'];
             const OFFICE_ZONE = 'Office';
-            const ZONES = ['Zone A', 'Zone B', 'Zone C', 'Office']; // Ensure ZONES is defined
+            const ZONES = ['Zone A', 'Zone B', 'Zone C', 'Office']; 
             
             const GLOBAL_REFERENCE_DATE = new Date(Date.UTC(2025, 5, 3)); 
             const GLOBAL_REFERENCE_GROUP_INDEX = 4; 
@@ -540,8 +564,6 @@
                     const groupWorkingOnTempDate = (GLOBAL_REFERENCE_GROUP_INDEX + diffFromGlobalRef % 5 + 5) % 5;
 
                     if (groupWorkingOnTempDate === groupIndexOfTechnician) {
-                        // Check if the technician is part of this group on this day
-                        // This assumes groupMembersData[groupIndexOfTechnician] is the correct list for the technician
                         if (groupMembersData[groupIndexOfTechnician] && groupMembersData[groupIndexOfTechnician].includes(technicianName)) {
                             shiftCount++;
                         }
@@ -586,8 +608,6 @@
                 }
                 const todayUTCForHighlight = new Date(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
                 
-                // technicianShiftHistory should ideally be managed more globally if strict "no repeat from previous month's last day" is needed.
-                // For now, resetting it per month generation ensures deterministic display for THAT month.
                 technicianShiftHistory = {}; 
 
                 for (let dayOfMonth = 1; dayOfMonth <= daysInMonth; dayOfMonth++) {
@@ -623,7 +643,6 @@
                     const membersWithZones = [];
 
                     if (workingGroupMembers) {
-                        // Calculate N_g: This is the Nth time THIS GROUP (actualWorkingGroupIndex) has worked 
                         let groupNthShiftForZoneCalc = 0; 
                         const daysSinceGlobalRef = Math.floor((currentDateInCalendar.getTime() - GLOBAL_REFERENCE_DATE.getTime()) / (1000 * 60 * 60 * 24));
                         if (daysSinceGlobalRef >= 0) {
@@ -638,8 +657,8 @@
                             if (groupNthShiftForZoneCalc > 0) { 
                                 const technicianGlobalShiftCount = getTechnicianWorkShiftCount(memberName, actualWorkingGroupIndex, currentDateInCalendar);
                                 let lastZoneForThisTech = technicianShiftHistory[memberName] ? technicianShiftHistory[memberName].lastZone : null;
-
-                                let potentialZoneIndex = ( (technicianGlobalShiftCount - 1) + memberIndexInGroup + actualWorkingGroupIndex) % currentZonesToUse.length;
+                                const groupShiftBaseZoneIndex = ((groupNthShiftForZoneCalc -1) + actualWorkingGroupIndex) % currentZonesToUse.length;
+                                let potentialZoneIndex = (groupShiftBaseZoneIndex + memberIndexInGroup) % currentZonesToUse.length;
                                 assignedZone = currentZonesToUse[potentialZoneIndex];
                                 
                                 if (lastZoneForThisTech && assignedZone === lastZoneForThisTech) {
@@ -816,6 +835,23 @@
             
             if (pmZonesButton) pmZonesButton.addEventListener('click', () => openModal(pmZonesModal));
             else console.error("Error: pmZonesButton not found for event listener.");
+
+            if (viewDispatchButtonInModal) { // Listener for the button INSIDE the group members modal
+                 viewDispatchButtonInModal.addEventListener('click', () => {
+                    closeModal(groupMembersModal); // Close current modal first
+                    openModal(pmZonesModal); // Open the PM Zones modal
+                    // Ensure modal is rendered before trying to scroll
+                    setTimeout(() => {
+                        const dispatchSection = document.getElementById('dispatchTableSection');
+                        if (dispatchSection) {
+                            dispatchSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        } else {
+                            console.error("Error: dispatchTableSection not found for scrolling.");
+                        }
+                    }, 100); 
+                });
+            } else { console.error("Error: viewDispatchButtonInModal not found for event listener.");}
+
 
             if (closePmZonesModalButton) closePmZonesModalButton.addEventListener('click', () => closeModal(pmZonesModal));
             else console.error("Error: closePmZonesModalButton not found for event listener.");
