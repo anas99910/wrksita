@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WORK & REST SCHEDULE FOR CMN GROUPS</title>
+    <title>SITA PLANNING</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📅</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -177,40 +177,41 @@
         }
         /* Dashboard Panel Styles */
         #onDutyDashboard {
-            margin-bottom: 1.5rem; 
-            padding: 1rem 1.5rem; /* Adjusted padding */
-            color: #D1D5DB; /* Tailwind gray-300 for base text */
+            margin-bottom: 1rem; 
+            padding: 1rem 1.5rem; 
+            color: #D1D5DB; 
             text-align: center; 
         }
         #onDutyDashboard h3 {
-            font-size: 1.125rem; /* text-lg */
-            font-weight: 500; /* medium */
-            margin-bottom: 0.75rem; /* mb-3 */
-            color: #A7F3D0; /* Light Emerald */
-            letter-spacing: 0.025em; 
+            font-size: 1.125rem; 
+            font-weight: 500; 
+            margin-bottom: 0.5rem; 
+            color: #A7F3D0; 
+             letter-spacing: 0.025em; 
         }
         #onDutyDashboard p {
-            font-size: 0.875rem; /* text-sm */
+            font-size: 0.875rem; 
             margin-bottom: 0.35rem; 
-            color: #9CA3AF; /* Tailwind gray-400 for secondary text */
+            color: #9CA3AF; 
         }
-        #onDutyDashboard strong { /* For the group name and zone names */
-            font-weight: 500; /* medium */
-            color: #E5E7EB; /* Tailwind gray-200 */
+        #onDutyDashboard strong { 
+            font-weight: 500; 
+            color: #E5E7EB; 
         }
-        #onDutyDashboard .working-group-label { /* Specific for "Working Group:" label */
+        #onDutyDashboard .working-group-label { 
             color: #9CA3AF;
-            font-weight: 400; /* normal */
+            font-weight: 400; 
         }
         #onDutyDashboard ul {
             list-style-type: none;
             padding-left: 0; 
             margin-top: 0.5rem; 
+            margin-bottom: 0.75rem; 
         }
         #onDutyDashboard li {
-            font-size: 0.875rem; /* text-sm */
+            font-size: 0.875rem; 
             padding: 0.15rem 0; 
-            color: #D1D5DB; /* Tailwind gray-300 */
+            color: #D1D5DB; 
         }
         #onDutyDashboard .holiday-text { 
             color: #FCD34D; 
@@ -221,8 +222,19 @@
         .dashboard-icon {
             display: inline-block;
             margin-right: 0.3rem;
-            font-size: 0.9em; /* Relative to parent's font size */
+            font-size: 0.9em; 
             opacity: 0.7;
+        }
+        #monthlyStatsBannerInDashboard { /* Styling for the monthly stats when inside the dashboard */
+            padding: 0.5rem;
+            margin-top: 0.75rem; 
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.75rem; /* text-xs */
+            color: #9CA3AF; /* Tailwind gray-400 */
+            background-color: rgba(0,0,0,0.15); /* Slightly darker transparent bg */
+            backdrop-filter: blur(1px); /* Very subtle blur */
+            -webkit-backdrop-filter: blur(1px);
+            border-radius: 0.375rem; /* Rounded corners */
         }
 
 
@@ -249,43 +261,29 @@
             .holiday-indicator { font-size: 0.65rem; top:2px; right: 2px;}
             .zone-details-table th, .zone-details-table td { font-size: 0.7rem; padding: 0.3rem; }
             #onDutyDashboard { padding: 1rem; margin-top:0.5rem; } 
-            #onDutyDashboard h3 { font-size: 1.1rem; } /* Slightly larger for mobile title */
+            #onDutyDashboard h3 { font-size: 1.1rem; } 
             #onDutyDashboard p, #onDutyDashboard li { font-size: 0.8rem; }
+            #monthlyStatsBannerInDashboard { font-size: 0.65rem; padding: 0.4rem; }
         }
     </style>
 </head>
 <body class="text-gray-200 flex flex-col items-center min-h-screen">
 
     <div id="appContent" class="w-full flex flex-col items-center">
-        <h1 class="main-title text-3xl font-semibold text-center text-gray-100 mt-6 mb-2 uppercase-text tracking-wide" style="text-shadow: 0 1px 2px rgba(0,0,0,0.3);">Work & Rest Schedule</h1>
+        <h1 class="main-title text-3xl font-semibold text-center text-gray-100 mt-6 mb-2 uppercase-text tracking-wide" style="text-shadow: 0 1px 2px rgba(0,0,0,0.3);">SITA PLANNING</h1>
         <div id="liveClock" class="live-clock-main text-center text-sm text-gray-300 mb-6 font-medium">
             Loading current time...
         </div>
 
         <div id="onDutyDashboard" class="frosted-glass-pane mx-auto max-w-3xl w-full">
-            <!-- Content will be populated by JavaScript -->
+            <!-- Content will be populated by JavaScript, including the monthly stats banner -->
         </div>
 
         <div class="container frosted-glass-pane mx-auto max-w-3xl w-full p-5 md:p-8 mb-8 mt-4">
-            <!-- Removed statusBanner div -->
+            
+            <!-- This original monthlyStatsBanner is now effectively hidden and its content moved to the dashboard -->
             <div id="monthlyStatsBanner" class="p-2.5 mb-6 rounded-md text-center font-medium text-xs hidden uppercase-text" 
                  style="background-color: rgba(0,0,0,0.25); color: #9CA3AF; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);">
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-5 mb-6 items-end"> 
-                <div>
-                    <label for="groupSelect" class="input-label-tag">Select Group</label>
-                    <select id="groupSelect" name="groupSelect"
-                            class="mt-1 block w-full rounded-md shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-600 focus:ring-opacity-30 
-                                   p-2.5 text-sm">
-                    </select>
-                </div>
-                <div>
-                    <label for="startDate" class="input-label-tag">Group Start Date</label>
-                    <input type="date" id="startDate" name="startDate" 
-                           class="mt-1 block w-full rounded-md shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-600 focus:ring-opacity-30
-                                  p-2.5 text-sm placeholder-gray-500">
-                </div>
             </div>
 
             <div id="scheduleOutput" class="mt-6">
@@ -300,6 +298,23 @@
                 </div>
                 <div id="calendarGrid" class="grid grid-cols-7 gap-1 md:gap-1.5">
                 </div>
+                
+                <div class="grid md:grid-cols-2 gap-5 mt-6 mb-6 items-end"> 
+                    <div>
+                        <label for="groupSelect" class="input-label-tag">Select Group</label>
+                        <select id="groupSelect" name="groupSelect"
+                                class="mt-1 block w-full rounded-md shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-600 focus:ring-opacity-30 
+                                       p-2.5 text-sm">
+                        </select>
+                    </div>
+                    <div>
+                        <label for="startDate" class="input-label-tag">Group Start Date</label>
+                        <input type="date" id="startDate" name="startDate" 
+                               class="mt-1 block w-full rounded-md shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-600 focus:ring-opacity-30
+                                      p-2.5 text-sm placeholder-gray-500">
+                    </div>
+                </div>
+
                 <div id="messageArea" class="mt-5 text-center text-rose-300 font-medium uppercase-text text-xs"></div>
 
                 <div id="legend" class="mt-6 pt-3 border-t border-gray-500/25 flex flex-wrap justify-center gap-x-4 gap-y-1.5 items-center text-[0.65rem] uppercase-text text-gray-300">
@@ -444,7 +459,6 @@
             const legendContainer = document.getElementById('legend');
             const prevMonthButton = document.getElementById('prevMonthButton');
             const nextMonthButton = document.getElementById('nextMonthButton');
-            // const statusBanner = document.getElementById('statusBanner'); // Removed
             const monthlyStatsBanner = document.getElementById('monthlyStatsBanner'); 
             const pmZonesButton = document.getElementById('pmZonesButton');
             const pmZonesModal = document.getElementById('pmZonesModal');
@@ -607,7 +621,7 @@
                 if (messageArea) messageArea.textContent = ''; 
                 if (calendarGrid) calendarGrid.innerHTML = ''; 
                 if (monthNameDisplay) monthNameDisplay.textContent = ''; 
-                if (monthlyStatsBanner) monthlyStatsBanner.classList.add('hidden'); 
+                // if (monthlyStatsBanner) monthlyStatsBanner.classList.add('hidden'); // Managed by updateOnDutyDashboard
                 if (!groupSelect || !startDateInput) return;
 
                 selectedGroupIndex = parseInt(groupSelect.value, 10); 
@@ -615,7 +629,6 @@
 
                 if (!tempCycleStartDate) {
                     if(messageArea) messageArea.textContent = 'PLEASE SELECT A VALID START DATE.';
-                    // if(statusBanner) statusBanner.classList.add('hidden'); // StatusBanner removed
                     return;
                 }
                 cycleStartDate = tempCycleStartDate; 
@@ -623,7 +636,7 @@
                 if (!currentDisplayDate) { 
                      currentDisplayDate = new Date(Date.UTC(cycleStartDate.getUTCFullYear(), cycleStartDate.getUTCMonth(), 1));
                 }
-                // updateStatusBanner(); // StatusBanner removed
+                // updateStatusBanner(); // Removed
                 const targetYear = currentDisplayDate.getUTCFullYear();
                 const targetMonth_0_indexed = currentDisplayDate.getUTCMonth();
                 if (monthNameDisplay) monthNameDisplay.textContent = currentDisplayDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }).toUpperCase();
@@ -722,10 +735,13 @@
                 }
                 const restdayCount = daysInMonth - workdayCount;
                 const selectedGroupNameForStats = groupNames[selectedGroupIndex].replace(' GRP', '');
+                
+                // Update the content of the original monthlyStatsBanner (which is hidden)
+                // The updateOnDutyDashboard function will read from this or recalculate.
                 if (monthlyStatsBanner && monthNameDisplay && monthNameDisplay.textContent) {
                     monthlyStatsBanner.textContent = `${monthNameDisplay.textContent} FOR ${selectedGroupNameForStats}: ${workdayCount} WORK, ${restdayCount} REST`;
-                    monthlyStatsBanner.classList.remove('hidden');
                 }
+                updateOnDutyDashboard(); // Update dashboard, which will now include these stats
             }
         
             function showGroupMembers(groupIndex, day, displayDate, holidayName = null, membersWithZones = []) { 
@@ -818,7 +834,7 @@
                 const members = groupMembersData[groupWorkingTodayIndex];
                 const currentZonesToUse = (members && members.length === 4) ? ZONES : BASE_ZONES;
                 
-                let dashboardHTML = `<h3><span class="dashboard-icon">👥</span>On Duty Today</h3>`; // Added group icon
+                let dashboardHTML = `<h3><span class="dashboard-icon">👥</span>On Duty Today</h3>`; 
                 dashboardHTML += `<p><strong class="working-group-label">Working Group:</strong> <strong>${groupName.replace(' GRP', '')}</strong></p>`;
 
                 const holidayToday = getHolidayInfo(todayUTC, todayUTC.getUTCFullYear());
@@ -857,6 +873,33 @@
                 } else {
                     dashboardHTML += `<p>No member data for this group.</p>`;
                 }
+                
+                // Update and append monthlyStatsBanner content to dashboardHTML
+                if (monthlyStatsBanner && monthNameDisplay && currentDisplayDate) { // Ensure currentDisplayDate is available
+                    const statsTargetYear = currentDisplayDate.getUTCFullYear();
+                    const statsTargetMonth_0_indexed = currentDisplayDate.getUTCMonth();
+                    let statsWorkdayCount = 0;
+                    const daysInCurrentDisplayMonth = new Date(Date.UTC(statsTargetYear, statsTargetMonth_0_indexed + 1, 0)).getUTCDate();
+
+                    for (let day = 1; day <= daysInCurrentDisplayMonth; day++) {
+                        const dateInCurrentMonth = new Date(Date.UTC(statsTargetYear, statsTargetMonth_0_indexed, day));
+                         // Use the group selected in the main calendar for these stats
+                        const diff = Math.floor((dateInCurrentMonth.getTime() - (cycleStartDate ? cycleStartDate.getTime() : todayUTC.getTime())) / (1000 * 60 * 60 * 24));
+                        const offset = ((diff % 5) + 5) % 5;
+                        const workingGrpIdx = (selectedGroupIndex + offset) % 5;
+                        if (workingGrpIdx === selectedGroupIndex) {
+                            statsWorkdayCount++;
+                        }
+                    }
+                    const statsRestdayCount = daysInCurrentDisplayMonth - statsWorkdayCount;
+                    const statsSelectedGroupName = groupNames[selectedGroupIndex].replace(' GRP', '');
+                    const monthNameForStats = currentDisplayDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }).toUpperCase();
+                    
+                    const statsText = `${monthNameForStats} FOR ${statsSelectedGroupName}: ${statsWorkdayCount} WORK, ${statsRestdayCount} REST`;
+                    dashboardHTML += `<div id="monthlyStatsBannerInDashboard" class="p-2.5 mt-4 rounded-md text-center font-medium text-xs uppercase-text" style="background-color: rgba(0,0,0,0.15); color: #9CA3AF; border-top: 1px solid rgba(255,255,255,0.08);">${statsText}</div>`;
+                }
+
+
                 onDutyDashboardElement.innerHTML = dashboardHTML;
             }
             
@@ -865,7 +908,7 @@
                 setInterval(updateLiveClock, 1000); 
                 populateGroupSelect(); 
                 updateLegend();
-                updateOnDutyDashboard(); 
+                // updateOnDutyDashboard(); // Called after schedule is potentially set from localStorage
 
                 const savedStartDateString = localStorage.getItem(localStorageKeyDate);
                 const savedGroupIndexString = localStorage.getItem(localStorageKeyGroup);
@@ -903,7 +946,7 @@
                     
                     currentDisplayDate = new Date(Date.UTC(todayUTC.getFullYear(), todayUTC.getMonth(), 1)); 
                 }
-                generateSchedule(); 
+                generateSchedule(); // This will call updateOnDutyDashboard at the end
             }
             
             initializeApp();
@@ -962,7 +1005,7 @@
                     localStorage.removeItem(localStorageKeyDate);
                     localStorage.removeItem(localStorageKeyGroup);
                     initializeApp(); 
-                    updateOnDutyDashboard(); 
+                    // updateOnDutyDashboard(); // Already called by initializeApp -> generateSchedule -> updateOnDutyDashboard
                 });
             } else { console.error("Error: resetToLiveButton not found for event listener."); }
         });
