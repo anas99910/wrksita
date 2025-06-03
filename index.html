@@ -178,44 +178,51 @@
         /* Dashboard Panel Styles */
         #onDutyDashboard {
             margin-bottom: 1.5rem; 
-            padding: 1.25rem 1.5rem; 
-            color: #E5E7EB; 
+            padding: 1rem 1.5rem; /* Adjusted padding */
+            color: #D1D5DB; /* Tailwind gray-300 for base text */
             text-align: center; 
         }
         #onDutyDashboard h3 {
-            font-size: 1.25rem; 
-            font-weight: 600; 
-            margin-bottom: 0.5rem; 
-            color: #A7F3D0; 
-             letter-spacing: 0.05em; 
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 500; /* medium */
+            margin-bottom: 0.75rem; /* mb-3 */
+            color: #A7F3D0; /* Light Emerald */
+            letter-spacing: 0.025em; 
         }
         #onDutyDashboard p {
-            font-size: 0.9rem; 
+            font-size: 0.875rem; /* text-sm */
             margin-bottom: 0.35rem; 
-            color: #D1D5DB; 
+            color: #9CA3AF; /* Tailwind gray-400 for secondary text */
         }
-        #onDutyDashboard strong {
-            font-weight: 600; 
-            color: #F9FAFB; 
+        #onDutyDashboard strong { /* For the group name and zone names */
+            font-weight: 500; /* medium */
+            color: #E5E7EB; /* Tailwind gray-200 */
+        }
+        #onDutyDashboard .working-group-label { /* Specific for "Working Group:" label */
+            color: #9CA3AF;
+            font-weight: 400; /* normal */
         }
         #onDutyDashboard ul {
             list-style-type: none;
             padding-left: 0; 
-            margin-top: 0.75rem; 
+            margin-top: 0.5rem; 
         }
         #onDutyDashboard li {
-            font-size: 0.9rem;
-            padding: 0.2rem 0; 
-            color: #D1D5DB;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
-        }
-        #onDutyDashboard li:last-child {
-            border-bottom: none;
+            font-size: 0.875rem; /* text-sm */
+            padding: 0.15rem 0; 
+            color: #D1D5DB; /* Tailwind gray-300 */
         }
         #onDutyDashboard .holiday-text { 
             color: #FCD34D; 
             font-weight: 500;
             margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+        .dashboard-icon {
+            display: inline-block;
+            margin-right: 0.3rem;
+            font-size: 0.9em; /* Relative to parent's font size */
+            opacity: 0.7;
         }
 
 
@@ -242,8 +249,8 @@
             .holiday-indicator { font-size: 0.65rem; top:2px; right: 2px;}
             .zone-details-table th, .zone-details-table td { font-size: 0.7rem; padding: 0.3rem; }
             #onDutyDashboard { padding: 1rem; margin-top:0.5rem; } 
-            #onDutyDashboard h3 { font-size: 1.125rem; }
-            #onDutyDashboard p, #onDutyDashboard li { font-size: 0.85rem; }
+            #onDutyDashboard h3 { font-size: 1.1rem; } /* Slightly larger for mobile title */
+            #onDutyDashboard p, #onDutyDashboard li { font-size: 0.8rem; }
         }
     </style>
 </head>
@@ -811,12 +818,12 @@
                 const members = groupMembersData[groupWorkingTodayIndex];
                 const currentZonesToUse = (members && members.length === 4) ? ZONES : BASE_ZONES;
                 
-                let dashboardHTML = `<h3>On Duty Today</h3>`; 
-                dashboardHTML += `<p><strong>Working Group:</strong> ${groupName.replace(' GRP', '')}</p>`;
+                let dashboardHTML = `<h3><span class="dashboard-icon">👥</span>On Duty Today</h3>`; // Added group icon
+                dashboardHTML += `<p><strong class="working-group-label">Working Group:</strong> <strong>${groupName.replace(' GRP', '')}</strong></p>`;
 
                 const holidayToday = getHolidayInfo(todayUTC, todayUTC.getUTCFullYear());
                 if (holidayToday) {
-                    dashboardHTML += `<p class="holiday-text">⭐ Today is a Holiday: ${holidayToday}</p>`;
+                    dashboardHTML += `<p class="holiday-text"><span class="dashboard-icon">⭐</span>Today is a Holiday: ${holidayToday}</p>`;
                 }
 
                 if (members) {
