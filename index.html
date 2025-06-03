@@ -92,6 +92,21 @@
          .modal-content tr:last-child td:last-child { border-bottom-right-radius: 0.5rem; }
         .modal-content tr:last-child td { border-bottom: none; }
 
+        .zone-details-table { margin-top: 1.5rem; }
+        .zone-details-table th, .zone-details-table td {
+            padding: 0.5rem;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .zone-details-table th {
+            background-color: rgba(75, 85, 99, 0.4); 
+            color: #F3F4F6; 
+        }
+        .zone-details-table .zone-a-bg { background-color: rgba(16, 185, 129, 0.2); color: #A7F3D0; } 
+        .zone-details-table .zone-b-bg { background-color: rgba(59, 130, 246, 0.2); color: #BFDBFE; } 
+        .zone-details-table .zone-c-bg { background-color: rgba(245, 158, 11, 0.2); color: #FDE68A; } 
+
+
         .egate-section { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.12); }
         .egate-terminal-title { font-size: 1rem; font-weight: 600; color: #A7F3D0; margin-bottom: 0.75rem; text-align: center; }
         .egate-machine {
@@ -131,8 +146,8 @@
             font-size: 0.7rem; 
             line-height: 1;
             opacity: 0.9;
-            color: #FFD700; /* Gold color for the star, for better visibility */
-            text-shadow: 0 0 2px rgba(0,0,0,0.5); /* Subtle shadow for depth */
+            color: #FFD700; 
+            text-shadow: 0 0 2px rgba(0,0,0,0.5); 
         }
 
         @media (hover: hover) and (pointer: fine) {
@@ -154,6 +169,7 @@
                 -webkit-backdrop-filter: blur(8px) saturate(100%);
             }
             .holiday-indicator { font-size: 0.65rem; top:2px; right: 2px;}
+            .zone-details-table th, .zone-details-table td { font-size: 0.7rem; padding: 0.3rem; }
         }
     </style>
 </head>
@@ -229,6 +245,42 @@
                 <button id="closePmZonesModal" class="text-gray-400 hover:text-red-400 text-2xl font-bold">&times;</button>
             </div>
             <div class="selectable-text">
+                <!-- Zone Details Table -->
+                <div class="mb-6">
+                    <h4 class="text-md font-semibold text-emerald-200 uppercase-text mb-3 text-center">Dispatch Par Zones</h4>
+                    <table class="zone-details-table w-full text-left">
+                        <thead>
+                            <tr>
+                                <th class="w-1/6">Zone</th>
+                                <th class="w-1/3">Détail 1</th>
+                                <th class="w-1/3">Détail 2</th>
+                                <th class="w-1/6">Détail 3</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="zone-a-bg font-semibold">Zone A</td>
+                                <td>Enregistrement T1</td>
+                                <td>Egate T1</td>
+                                <td>Transit T1</td>
+                            </tr>
+                            <tr>
+                                <td class="zone-b-bg font-semibold">Zone B</td>
+                                <td>Enregistrement T2</td>
+                                <td>Egate T2, BRS</td>
+                                <td>Embarquement Dom, Transit T2, Litige Bagage, Arabia</td>
+                            </tr>
+                            <tr>
+                                <td class="zone-c-bg font-semibold">Zone C</td>
+                                <td>Embarquement A, B, E, F</td>
+                                <td></td> 
+                                <td>RAM Opm, SWP Opm, SV Opm</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h4 class="text-md font-semibold text-emerald-200 uppercase-text mb-3 text-center pt-4 border-t border-white/10">Techniciens & Maintenance</h4>
                 <table class="text-gray-300"> 
                     <thead>
                         <tr>
@@ -340,32 +392,28 @@
             ];
 
             const groupMembersData = [
-                ["Mouad KAOUTAR", "Anas BENCHICHE", "Younes Ch", "Kamal BOURROU"],
+                ["Mouad KAOUTAR", "Anas BENCHICHE", "Younes Ch", "Kamal BOURROU"], 
                 ["Youssef CHARMOUH", "Mehdi ASKARI", "Soufiane BELFAKIR"],        
                 ["Ahmed FARBOUSSI", "Reda ALLOUCH", "Seddik IDOUAKRIM"],         
                 ["Ahmed AMARSAL", "Mohamed MASKAOUI", "Ayoub SADIKI"],           
                 ["Mehdi BELKOUCHI", "Ayoub CHAAOUBI", "Zakaria BOURHRISS"]       
             ];
 
-            // Moroccan Holidays Data
             const moroccanHolidays = {
-                // Fixed National Holidays (MM-DD format)
-                "01-01": "New Year’s Day",
-                "01-11": "Independence Manifesto Day",
-                "01-14": "Amazigh New Year",
-                "05-01": "Labour Day",
-                "07-30": "Throne Day",
-                "08-14": "Oued Ed-Dahab Day",
-                "08-20": "Revolution Day",
-                "08-21": "Youth Day",
-                "11-06": "Green March Day",
+                "01-01": "New Year’s Day", "01-11": "Independence Manifesto Day", "01-14": "Amazigh New Year",
+                "05-01": "Labour Day", "07-30": "Throne Day", "08-14": "Oued Ed-Dahab Day",
+                "08-20": "Revolution Day", "08-21": "Youth Day", "11-06": "Green March Day",
                 "11-18": "Independence Day",
-                // Islamic Holidays for 2025 (YYYY-MM-DD format)
-                "2025-03-31": "Eid al-Fitr",
-                "2025-06-07": "Eid al-Adha", // Corrected from previous potential typo
-                "2025-06-27": "Islamic New Year",
-                "2025-09-05": "Prophet Muhammad’s Birthday"
+                "2025-03-31": "Eid al-Fitr", "2025-06-07": "Eid al-Adha", 
+                "2025-06-27": "Islamic New Year", "2025-09-05": "Prophet Muhammad’s Birthday"
             };
+
+            const BASE_ZONES = ['Zone A', 'Zone B', 'Zone C'];
+            const OFFICE_ZONE = 'Office';
+            const ZONES = ['Zone A', 'Zone B', 'Zone C', 'Office']; // Ensure ZONES is defined
+            
+            const GLOBAL_REFERENCE_DATE = new Date(Date.UTC(2025, 5, 3)); 
+            const GLOBAL_REFERENCE_GROUP_INDEX = 4; 
 
             const localStorageKeyDate = 'workRestSchedule_startDate';
             const localStorageKeyGroup = 'workRestSchedule_selectedGroup';
@@ -374,6 +422,8 @@
             let currentDisplayDate; 
             let selectedGroupIndex = 0; 
             const isMobile = window.innerWidth <= 767; 
+            let technicianShiftHistory = {}; 
+
 
             function updateLiveClock() { 
                 const now = new Date();
@@ -480,6 +530,27 @@
                     statusBanner.style.webkitBackdropFilter = 'none';
                 }
             }
+            
+             function getTechnicianWorkShiftCount(technicianName, groupIndexOfTechnician, upToDate) {
+                let shiftCount = 0;
+                let tempDate = new Date(GLOBAL_REFERENCE_DATE.getTime());
+
+                while(tempDate.getTime() <= upToDate.getTime()) {
+                    const diffFromGlobalRef = Math.floor((tempDate.getTime() - GLOBAL_REFERENCE_DATE.getTime()) / (1000 * 60 * 60 * 24));
+                    const groupWorkingOnTempDate = (GLOBAL_REFERENCE_GROUP_INDEX + diffFromGlobalRef % 5 + 5) % 5;
+
+                    if (groupWorkingOnTempDate === groupIndexOfTechnician) {
+                        // Check if the technician is part of this group on this day
+                        // This assumes groupMembersData[groupIndexOfTechnician] is the correct list for the technician
+                        if (groupMembersData[groupIndexOfTechnician] && groupMembersData[groupIndexOfTechnician].includes(technicianName)) {
+                            shiftCount++;
+                        }
+                    }
+                    tempDate.setUTCDate(tempDate.getUTCDate() + 1);
+                }
+                return shiftCount;
+            }
+
 
             function generateSchedule() { 
                 if (messageArea) messageArea.textContent = ''; 
@@ -497,8 +568,7 @@
                     return;
                 }
                 cycleStartDate = tempCycleStartDate; 
-                localStorage.setItem(localStorageKeyDate, startDateInput.value);
-                localStorage.setItem(localStorageKeyGroup, selectedGroupIndex.toString());
+                
                 if (!currentDisplayDate) { 
                      currentDisplayDate = new Date(Date.UTC(cycleStartDate.getUTCFullYear(), cycleStartDate.getUTCMonth(), 1));
                 }
@@ -515,6 +585,11 @@
                     if (calendarGrid) calendarGrid.appendChild(emptyCell);
                 }
                 const todayUTCForHighlight = new Date(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
+                
+                // technicianShiftHistory should ideally be managed more globally if strict "no repeat from previous month's last day" is needed.
+                // For now, resetting it per month generation ensures deterministic display for THAT month.
+                technicianShiftHistory = {}; 
+
                 for (let dayOfMonth = 1; dayOfMonth <= daysInMonth; dayOfMonth++) {
                     const currentDateInCalendar = new Date(Date.UTC(targetYear, targetMonth_0_indexed, dayOfMonth));
                     const diffInMilliseconds = currentDateInCalendar.getTime() - cycleStartDate.getTime();
@@ -539,11 +614,46 @@
                         dayCell.title = holidayName; 
                         const holidayIcon = document.createElement('span');
                         holidayIcon.className = 'holiday-indicator';
-                        holidayIcon.textContent = '⭐'; // Using star emoji
+                        holidayIcon.textContent = '⭐'; 
                         dayCell.appendChild(holidayIcon);
                     }
+                    
+                    const workingGroupMembers = groupMembersData[actualWorkingGroupIndex];
+                    const currentZonesToUse = (workingGroupMembers && workingGroupMembers.length === 4) ? ZONES : BASE_ZONES;
+                    const membersWithZones = [];
 
-                    dayCell.addEventListener('click', () => showGroupMembers(actualWorkingGroupIndex, dayOfMonth, currentDisplayDate, holidayName));
+                    if (workingGroupMembers) {
+                        // Calculate N_g: This is the Nth time THIS GROUP (actualWorkingGroupIndex) has worked 
+                        let groupNthShiftForZoneCalc = 0; 
+                        const daysSinceGlobalRef = Math.floor((currentDateInCalendar.getTime() - GLOBAL_REFERENCE_DATE.getTime()) / (1000 * 60 * 60 * 24));
+                        if (daysSinceGlobalRef >= 0) {
+                            const groupOffsetFromGlobalRefStart = (actualWorkingGroupIndex - GLOBAL_REFERENCE_GROUP_INDEX + 5) % 5;
+                            if (daysSinceGlobalRef >= groupOffsetFromGlobalRefStart) {
+                                groupNthShiftForZoneCalc = Math.floor((daysSinceGlobalRef - groupOffsetFromGlobalRefStart) / 5) + 1;
+                            }
+                        }
+
+                        workingGroupMembers.forEach((memberName, memberIndexInGroup) => {
+                            let assignedZone = "N/A";
+                            if (groupNthShiftForZoneCalc > 0) { 
+                                const technicianGlobalShiftCount = getTechnicianWorkShiftCount(memberName, actualWorkingGroupIndex, currentDateInCalendar);
+                                let lastZoneForThisTech = technicianShiftHistory[memberName] ? technicianShiftHistory[memberName].lastZone : null;
+
+                                let potentialZoneIndex = ( (technicianGlobalShiftCount - 1) + memberIndexInGroup + actualWorkingGroupIndex) % currentZonesToUse.length;
+                                assignedZone = currentZonesToUse[potentialZoneIndex];
+                                
+                                if (lastZoneForThisTech && assignedZone === lastZoneForThisTech) {
+                                    potentialZoneIndex = (potentialZoneIndex + 1) % currentZonesToUse.length;
+                                    assignedZone = currentZonesToUse[potentialZoneIndex];
+                                }
+                                technicianShiftHistory[memberName] = { lastZone: assignedZone };
+                            }
+                            membersWithZones.push({ name: memberName, zone: assignedZone });
+                        });
+                    }
+
+
+                    dayCell.addEventListener('click', () => showGroupMembers(actualWorkingGroupIndex, dayOfMonth, currentDisplayDate, holidayName, membersWithZones));
                     if (isSelectedGroupWorkingThisDay) {
                         dayCell.classList.add('ring-2', 'ring-red-400', 'ring-offset-1', 'ring-selected-group'); 
                     }
@@ -570,9 +680,8 @@
                 }
             }
         
-            function showGroupMembers(groupIndex, day, displayDate, holidayName = null) { 
+            function showGroupMembers(groupIndex, day, displayDate, holidayName = null, membersWithZones = []) { 
                 if (!groupMembersModalTitle || !groupMembersList) return;
-                const members = groupMembersData[groupIndex];
                 const groupName = groupNames[groupIndex].replace(' GRP', ''); 
                 const dateOfClickedDay = new Date(Date.UTC(displayDate.getUTCFullYear(), displayDate.getUTCMonth(), day));
                 const formattedDate = dateOfClickedDay.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' });
@@ -584,10 +693,16 @@
                 groupMembersModalTitle.textContent = titleText;
 
                 groupMembersList.innerHTML = ''; 
-                if (members && members.length > 0) {
-                    members.forEach(member => {
+                if (membersWithZones.length > 0) {
+                    membersWithZones.forEach(memberInfo => {
                         const listItem = document.createElement('li');
-                        listItem.textContent = member;
+                        listItem.textContent = `${memberInfo.name} - ${memberInfo.zone}`;
+                        groupMembersList.appendChild(listItem);
+                    });
+                } else if (groupMembersData[groupIndex] && groupMembersData[groupIndex].length > 0) {
+                    groupMembersData[groupIndex].forEach(member => { 
+                        const listItem = document.createElement('li');
+                        listItem.textContent = `${member} (Zone N/A)`;
                         groupMembersList.appendChild(listItem);
                     });
                 } else {
@@ -614,6 +729,10 @@
                     selectedGroupIndex = newSelectedGroupIndex;
                     cycleStartDate = newCycleStartDate;
                     currentDisplayDate = new Date(Date.UTC(cycleStartDate.getUTCFullYear(), cycleStartDate.getUTCMonth(), 1));
+                    
+                    localStorage.setItem(localStorageKeyDate, startDateInput.value);
+                    localStorage.setItem(localStorageKeyGroup, newSelectedGroupIndex.toString());
+                    
                     generateSchedule(); 
                 } else if (startDateInput.value !== "") { 
                      if(messageArea) messageArea.textContent = 'PLEASE SELECT A VALID START DATE.';
@@ -661,17 +780,14 @@
                     }
                 } else {
                     console.log("No saved preferences. Defaulting to live company schedule.");
-                    const REFERENCE_DATE = new Date(Date.UTC(2025, 5, 4)); // June 4, 2025 (M.KAOU starts)
-                    const REFERENCE_GROUP_INDEX = 0; // M.KAOU
-
                     const today = new Date();
                     const todayUTC = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
 
-                    const diffInMilliseconds = todayUTC.getTime() - REFERENCE_DATE.getTime();
+                    const diffInMilliseconds = todayUTC.getTime() - GLOBAL_REFERENCE_DATE.getTime();
                     const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
                     
                     const dayInCycleForReferenceGroup = (diffInDays % 5 + 5) % 5;
-                    const groupWorkingTodayIndex = (REFERENCE_GROUP_INDEX + dayInCycleForReferenceGroup) % 5;
+                    const groupWorkingTodayIndex = (GLOBAL_REFERENCE_GROUP_INDEX + dayInCycleForReferenceGroup) % 5;
 
                     selectedGroupIndex = groupWorkingTodayIndex;
                     if (groupSelect) groupSelect.value = selectedGroupIndex;
