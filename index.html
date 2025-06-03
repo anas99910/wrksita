@@ -20,7 +20,7 @@
             user-select: auto;
             -webkit-user-select: auto;
         }
-        input[type="date"], select { 
+        input[type="date"], input[type="month"], select { 
             appearance: none; 
             -webkit-appearance: none; 
             -moz-appearance: none; 
@@ -36,7 +36,8 @@
             background-size: 1.25em 1.25em; 
             padding-right: 2.75rem; 
         }
-        input[type="date"]::-webkit-calendar-picker-indicator {
+        input[type="date"]::-webkit-calendar-picker-indicator,
+        input[type="month"]::-webkit-calendar-picker-indicator {
             opacity: 0.6; 
             cursor: pointer;
             filter: invert(0.8) brightness(1.2); 
@@ -60,7 +61,7 @@
         .nav-button:hover, .action-button:hover { background-color: rgba(75, 85, 99, 0.75); }
         .nav-button:focus, .action-button:focus { outline: none; box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.35); }
 
-        #resetToLiveButton {
+        #resetToLiveButton { /* This ID is for "JUMP TO THE PRESENT" */
              background-color: rgba(13, 148, 136, 0.4); 
              border: 1px solid rgba(20, 83, 45, 0.5);
         }
@@ -236,13 +237,30 @@
             -webkit-backdrop-filter: blur(1px);
             border-radius: 0.375rem; 
         }
-        .manual-calc-title {
+        .section-title { 
             color: #9CA3AF; 
             font-size: 0.8rem; 
             font-weight: 500; 
             margin-top: 1.5rem; 
             margin-bottom: 0.5rem; 
             text-align: center;
+        }
+        .controls-section { /* Container for a title and its controls */
+            margin-bottom: 1.5rem; /* Space between Quick Search and Manual Calc */
+        }
+        .controls-row { /* For aligning input and button(s) in a row */
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+            align-items: flex-end; /* Align items to bottom for consistent button height */
+            gap: 0.5rem;
+            justify-content: center; /* Center the row content */
+        }
+         .controls-row input[type="month"], .controls-row select {
+            flex-grow: 1; /* Allow input to take available space */
+            min-width: 150px; /* Minimum width for inputs */
+        }
+        .controls-row button {
+            flex-shrink: 0; /* Prevent buttons from shrinking */
         }
 
 
@@ -259,7 +277,13 @@
             .live-clock-main { font-size: 0.75rem; margin-bottom: 1rem; } 
 
             #monthNameDisplay { font-size: 1.125rem; } 
-            .nav-button, .action-button { padding: 0.5rem 0.75rem; font-size: 0.7rem; } 
+            .nav-button, .action-button { padding: 0.5rem 0.75rem; font-size: 0.7rem; width: 100%;} /* Full width buttons on mobile */
+            .controls-row {
+                flex-direction: column;
+            }
+            .controls-row input[type="month"], .controls-row select, .controls-row button {
+                width: 100%;
+            }
             #calendarGrid { gap: 0.2rem; } 
             .day-cell-base { min-height: 3.75rem; } 
             .frosted-glass-pane {
@@ -272,7 +296,7 @@
             #onDutyDashboard h3 { font-size: 1.1rem; } 
             #onDutyDashboard p, #onDutyDashboard li { font-size: 0.8rem; }
             #monthlyStatsBannerInDashboard { font-size: 0.65rem; padding: 0.4rem; }
-            .manual-calc-title { font-size: 0.75rem; margin-top: 1rem; }
+            .section-title { font-size: 0.75rem; margin-top: 1rem; }
         }
     </style>
 </head>
@@ -290,41 +314,60 @@
 
         <div class="container frosted-glass-pane mx-auto max-w-3xl w-full p-5 md:p-8 mb-8 mt-4">
             
-            <!-- This original monthlyStatsBanner is effectively replaced by the one in the dashboard -->
             <div id="monthlyStatsBanner" class="hidden"></div>
 
 
             <div id="scheduleOutput" class="mt-6">
-                <div class="flex items-center justify-between mb-5">
+                <div class="flex items-center justify-between mb-2"> 
                     <button id="prevMonthButton" class="nav-button">&lt; Prev</button>
                     <h2 id="monthNameDisplay" class="text-xl font-medium text-gray-200 text-center uppercase-text mx-3"></h2>
                     <button id="nextMonthButton" class="nav-button">Next &gt;</button>
                 </div>
-
+                
                 <div id="weekdayHeaders" class="grid grid-cols-7 gap-1 md:gap-1.5 mb-1.5 text-center font-medium text-gray-400 text-[0.6rem] md:text-xs uppercase-text">
                     <div>SUN</div><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div>
                 </div>
                 <div id="calendarGrid" class="grid grid-cols-7 gap-1 md:gap-1.5">
                 </div>
-                
-                <div class="manual-calc-title uppercase-text">
-                    <h4>Manual Calculation</h4>
-                </div>
-                <div class="grid md:grid-cols-2 gap-5 items-end"> 
-                    <div>
-                        <label for="groupSelect" class="input-label-tag">Select Group</label>
-                        <select id="groupSelect" name="groupSelect"
-                                class="mt-1 block w-full rounded-md shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-600 focus:ring-opacity-30 
-                                       p-2.5 text-sm">
-                        </select>
+
+                <!-- Controls Below Calendar -->
+                <div class="mt-6 space-y-4">
+                    <div class="controls-section">
+                        <div class="section-title uppercase-text">
+                            <h4>QUICK SEARCH</h4>
+                        </div>
+                        <div class="controls-row">
+                            <input type="month" id="monthYearJumpInput" class="rounded-md p-2.5 text-sm" aria-label="Select month and year">
+                            <button id="jumpToDateButton" class="action-button">Go</button>
+                            <button id="resetToLiveButton" class="action-button"> 
+                                JUMP TO THE PRESENT
+                            </button>
+                        </div>
                     </div>
-                    <div>
-                        <label for="startDate" class="input-label-tag">Group Start Date</label>
-                        <input type="date" id="startDate" name="startDate" 
-                               class="mt-1 block w-full rounded-md shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-600 focus:ring-opacity-30
-                                      p-2.5 text-sm placeholder-gray-500">
+
+                    <div class="controls-section">
+                        <div class="section-title uppercase-text">
+                            <h4>MANUAL CALCULATION</h4>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-5 items-end"> 
+                            <div>
+                                <label for="groupSelect" class="input-label-tag">Select Group</label>
+                                <select id="groupSelect" name="groupSelect"
+                                        class="mt-1 block w-full rounded-md shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-600 focus:ring-opacity-30 
+                                               p-2.5 text-sm">
+                                </select>
+                            </div>
+                            <div>
+                                <label for="startDate" class="input-label-tag">Group Start Date</label>
+                                <input type="date" id="startDate" name="startDate" 
+                                       class="mt-1 block w-full rounded-md shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-600 focus:ring-opacity-30
+                                              p-2.5 text-sm placeholder-gray-500">
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <!-- End of Controls -->
+
 
                 <div id="messageArea" class="mt-5 text-center text-rose-300 font-medium uppercase-text text-xs"></div>
 
@@ -333,12 +376,9 @@
             </div>
         </div>
 
-        <div class="text-center mt-3 mb-6 space-y-3 md:space-y-0 md:flex md:justify-center md:space-x-3">
+        <div class="text-center mt-3 mb-6"> 
             <button id="pmZonesButton" class="action-button">
                 PM Zones & E-Gates
-            </button>
-            <button id="resetToLiveButton" class="action-button">
-                JUMP TO THE PRESENT
             </button>
         </div>
     </div>
@@ -470,12 +510,14 @@
             const legendContainer = document.getElementById('legend');
             const prevMonthButton = document.getElementById('prevMonthButton');
             const nextMonthButton = document.getElementById('nextMonthButton');
-            // const monthlyStatsBanner = document.getElementById('monthlyStatsBanner'); // This element is no longer in the main HTML for display
+            const monthlyStatsBannerOriginal = document.getElementById('monthlyStatsBanner'); 
             const pmZonesButton = document.getElementById('pmZonesButton');
             const pmZonesModal = document.getElementById('pmZonesModal');
             const closePmZonesModalButton = document.getElementById('closePmZonesModal');
             const resetToLiveButton = document.getElementById('resetToLiveButton');
             const onDutyDashboardElement = document.getElementById('onDutyDashboard'); 
+            const monthYearJumpInput = document.getElementById('monthYearJumpInput');
+            const jumpToDateButton = document.getElementById('jumpToDateButton');
             
             const groupMembersModal = document.getElementById('groupMembersModal');
             const groupMembersModalTitle = document.getElementById('groupMembersModalTitle');
@@ -632,7 +674,7 @@
                 if (messageArea) messageArea.textContent = ''; 
                 if (calendarGrid) calendarGrid.innerHTML = ''; 
                 if (monthNameDisplay) monthNameDisplay.textContent = ''; 
-                // monthlyStatsBanner content is now handled by updateOnDutyDashboard
+                
                 if (!groupSelect || !startDateInput) return;
 
                 selectedGroupIndex = parseInt(groupSelect.value, 10); 
@@ -640,6 +682,10 @@
 
                 if (!tempCycleStartDate) {
                     if(messageArea) messageArea.textContent = 'PLEASE SELECT A VALID START DATE.';
+                    if (onDutyDashboardElement) { 
+                        const statsElement = onDutyDashboardElement.querySelector('#monthlyStatsBannerInDashboard');
+                        if (statsElement) statsElement.innerHTML = ''; 
+                    }
                     return;
                 }
                 cycleStartDate = tempCycleStartDate; 
@@ -811,10 +857,10 @@
                     generateSchedule(); 
                 } else if (startDateInput.value !== "") { 
                      if(messageArea) messageArea.textContent = 'PLEASE SELECT A VALID START DATE.';
-                     if(monthlyStatsBanner) { // Clear stats if inputs invalid
-                        const dashboardStats = document.getElementById('monthlyStatsBannerInDashboard');
-                        if(dashboardStats) dashboardStats.textContent = '';
-                     }
+                     if (onDutyDashboardElement) { 
+                        const statsElement = onDutyDashboardElement.querySelector('#monthlyStatsBannerInDashboard');
+                        if (statsElement) statsElement.innerHTML = '';
+                    }
                 }
             }
 
@@ -900,7 +946,7 @@
                 setInterval(updateLiveClock, 1000); 
                 populateGroupSelect(); 
                 updateLegend();
-                // updateOnDutyDashboard(); // Will be called by generateSchedule
+                // updateOnDutyDashboard(); // Called by generateSchedule
 
                 const savedStartDateString = localStorage.getItem(localStorageKeyDate);
                 const savedGroupIndexString = localStorage.getItem(localStorageKeyGroup);
@@ -955,6 +1001,29 @@
             if (nextMonthButton) nextMonthButton.addEventListener('click', () => changeMonth(1));
             else console.error("Error: nextMonthButton not found for event listener.");
             
+            if (jumpToDateButton && monthYearJumpInput) {
+                jumpToDateButton.addEventListener('click', () => {
+                    const monthYearValue = monthYearJumpInput.value; 
+                    if (monthYearValue) {
+                        const [yearStr, monthStr] = monthYearValue.split('-');
+                        const year = parseInt(yearStr);
+                        const month_0_indexed = parseInt(monthStr) - 1;
+
+                        if (!isNaN(year) && !isNaN(month_0_indexed) && month_0_indexed >= 0 && month_0_indexed <= 11) {
+                            currentDisplayDate = new Date(Date.UTC(year, month_0_indexed, 1));
+                            generateSchedule();
+                            if(messageArea) messageArea.textContent = '';
+                        } else {
+                            if(messageArea) messageArea.textContent = 'Invalid month/year selected.';
+                        }
+                    } else {
+                         if(messageArea) messageArea.textContent = 'Please select a month and year.';
+                    }
+                });
+            } else {
+                console.error("Error: Jump to date elements not found.");
+            }
+
             if (pmZonesButton) pmZonesButton.addEventListener('click', () => openModal(pmZonesModal));
             else console.error("Error: pmZonesButton not found for event listener.");
 
