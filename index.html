@@ -70,7 +70,7 @@
          #resetToLiveButton:focus {
             box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.4);
         }
-        #viewDispatchButtonInModal { /* Style for the button inside the modal */
+        #viewDispatchButtonInModal { 
             background-color: rgba(75, 85, 99, 0.5); 
             border-color: rgba(107, 114, 128, 0.4);
             color: #D1D5DB;
@@ -175,6 +175,39 @@
             color: #FFD700; 
             text-shadow: 0 0 2px rgba(0,0,0,0.5); 
         }
+        /* Dashboard Panel Styles */
+        #onDutyDashboard {
+            margin-bottom: 1.5rem; 
+            padding: 1rem 1.5rem; 
+            color: #E5E7EB; 
+        }
+        #onDutyDashboard h3 {
+            font-size: 1.125rem; 
+            font-weight: 600; 
+            margin-bottom: 0.75rem; 
+            text-align: center;
+            color: #A7F3D0; 
+        }
+        #onDutyDashboard p {
+            font-size: 0.875rem; 
+            margin-bottom: 0.25rem; 
+            color: #D1D5DB; 
+        }
+        #onDutyDashboard strong {
+            font-weight: 500; 
+            color: #F9FAFB; 
+        }
+        #onDutyDashboard ul {
+            list-style-type: none;
+            padding-left: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        #onDutyDashboard li {
+            font-size: 0.875rem;
+            padding: 0.125rem 0;
+            color: #D1D5DB;
+        }
+
 
         @media (hover: hover) and (pointer: fine) {
             .day-cell-base:hover {
@@ -185,7 +218,9 @@
         @media (max-width: 767px) {
             body { padding: 0.75rem; } 
             .container { padding: 1rem; } 
-            h1 { font-size: 1.25rem; } 
+            .main-title { font-size: 1.5rem; margin-bottom: 0.5rem;} /* Adjusted main title for mobile */
+            .live-clock-main { font-size: 0.75rem; margin-bottom: 1rem; } /* Adjusted clock for mobile */
+
             #monthNameDisplay { font-size: 1.125rem; } 
             .nav-button, .action-button { padding: 0.5rem 0.75rem; font-size: 0.7rem; } 
             #calendarGrid { gap: 0.2rem; } 
@@ -196,25 +231,35 @@
             }
             .holiday-indicator { font-size: 0.65rem; top:2px; right: 2px;}
             .zone-details-table th, .zone-details-table td { font-size: 0.7rem; padding: 0.3rem; }
+            #onDutyDashboard { padding: 0.75rem 1rem; margin-top:0.5rem; } /* Adjusted dashboard margin */
+            #onDutyDashboard h3 { font-size: 1rem; }
+            #onDutyDashboard p, #onDutyDashboard li { font-size: 0.8rem; }
         }
     </style>
 </head>
 <body class="text-gray-200 flex flex-col items-center min-h-screen">
 
     <div id="appContent" class="w-full flex flex-col items-center">
-        <div class="container frosted-glass-pane mx-auto max-w-3xl w-full p-5 md:p-8 mb-8">
-            <div id="liveClock" class="text-center text-xs text-gray-300 mb-5 font-medium">
-                Loading current time...
-            </div>
+        <!-- Main Title and Live Clock - Moved to the top -->
+        <h1 class="main-title text-3xl font-semibold text-center text-gray-100 mt-6 mb-2 uppercase-text tracking-wide" style="text-shadow: 0 1px 2px rgba(0,0,0,0.3);">Work & Rest Schedule</h1>
+        <div id="liveClock" class="live-clock-main text-center text-sm text-gray-300 mb-6 font-medium">
+            Loading current time...
+        </div>
 
-            <h1 class="text-2xl font-semibold text-center text-gray-100 mb-6 uppercase-text tracking-wide" style="text-shadow: 0 1px 2px rgba(0,0,0,0.3);">Work & Rest Schedule</h1>
+        <!-- "On Duty Now" Dashboard Panel -->
+        <div id="onDutyDashboard" class="frosted-glass-pane mx-auto max-w-3xl w-full">
+            <!-- Content will be populated by JavaScript -->
+        </div>
 
+        <div class="container frosted-glass-pane mx-auto max-w-3xl w-full p-5 md:p-8 mb-8 mt-4">
+            <!-- Status and Monthly Stats Banners -->
             <div id="statusBanner" class="p-3.5 mb-6 rounded-md text-center font-semibold hidden uppercase-text transition-all duration-300 text-sm">
             </div>
             <div id="monthlyStatsBanner" class="p-2.5 mb-6 rounded-md text-center font-medium text-xs hidden uppercase-text" 
                  style="background-color: rgba(0,0,0,0.25); color: #9CA3AF; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);">
             </div>
 
+            <!-- Input Controls -->
             <div class="grid md:grid-cols-2 gap-5 mb-6 items-end"> 
                 <div>
                     <label for="groupSelect" class="input-label-tag">Select Group</label>
@@ -231,6 +276,7 @@
                 </div>
             </div>
 
+            <!-- Calendar Display -->
             <div id="scheduleOutput" class="mt-6">
                 <div class="flex items-center justify-between mb-5">
                     <button id="prevMonthButton" class="nav-button">&lt; Prev</button>
@@ -250,6 +296,7 @@
             </div>
         </div>
 
+        <!-- Action Buttons -->
         <div class="text-center mt-3 mb-6 space-y-3 md:space-y-0 md:flex md:justify-center md:space-x-3">
             <button id="pmZonesButton" class="action-button">
                 PM Zones & E-Gates
@@ -260,6 +307,7 @@
         </div>
     </div>
 
+    <!-- Modals -->
     <div id="pmZonesModal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-black/85 opacity-0 pointer-events-none p-4"> 
         <div class="modal-content frosted-glass-pane w-11/12 md:max-w-4xl lg:max-w-5xl mx-auto p-5 md:p-6 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4 pb-3 border-b border-white/12">
@@ -393,6 +441,7 @@
             const pmZonesModal = document.getElementById('pmZonesModal');
             const closePmZonesModalButton = document.getElementById('closePmZonesModal');
             const resetToLiveButton = document.getElementById('resetToLiveButton');
+            const onDutyDashboardElement = document.getElementById('onDutyDashboard'); 
             
             const groupMembersModal = document.getElementById('groupMembersModal');
             const groupMembersModalTitle = document.getElementById('groupMembersModalTitle');
@@ -773,12 +822,71 @@
                 modal.classList.add('opacity-0', 'pointer-events-none', 'transform', 'scale-95');
                 document.body.classList.remove('overflow-hidden');
             }
+
+            function updateOnDutyDashboard() {
+                if (!onDutyDashboardElement) return;
+
+                const today = new Date();
+                const todayUTC = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
+                // const todayFormatted = today.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+                const diffInMilliseconds = todayUTC.getTime() - GLOBAL_REFERENCE_DATE.getTime();
+                const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
+                const dayInCycleForReferenceGroup = (diffInDays % 5 + 5) % 5;
+                const groupWorkingTodayIndex = (GLOBAL_REFERENCE_GROUP_INDEX + dayInCycleForReferenceGroup) % 5;
+                
+                const groupName = groupNames[groupWorkingTodayIndex];
+                const members = groupMembersData[groupWorkingTodayIndex];
+                const currentZonesToUse = (members && members.length === 4) ? ZONES : BASE_ZONES;
+                
+                let dashboardHTML = `<h3>On Duty Today</h3>`; // Removed date from title
+                dashboardHTML += `<p><strong>Working Group:</strong> ${groupName.replace(' GRP', '')}</p>`;
+
+                const holidayToday = getHolidayInfo(todayUTC, todayUTC.getUTCFullYear());
+                if (holidayToday) {
+                    dashboardHTML += `<p class="text-yellow-400 font-semibold">⭐ Today is a Holiday: ${holidayToday}</p>`;
+                }
+
+                if (members) {
+                    dashboardHTML += `<ul>`;
+                    let groupNthShiftForZoneCalc = 0;
+                    const daysSinceGlobalRef = Math.floor((todayUTC.getTime() - GLOBAL_REFERENCE_DATE.getTime()) / (1000 * 60 * 60 * 24));
+                    if (daysSinceGlobalRef >= 0) {
+                        const groupOffsetFromGlobalRefStart = (groupWorkingTodayIndex - GLOBAL_REFERENCE_GROUP_INDEX + 5) % 5;
+                        if (daysSinceGlobalRef >= groupOffsetFromGlobalRefStart) {
+                            groupNthShiftForZoneCalc = Math.floor((daysSinceGlobalRef - groupOffsetFromGlobalRefStart) / 5) + 1;
+                        }
+                    }
+                    let tempTechnicianShiftHistoryForDashboard = {}; // Local history for this calculation
+                    members.forEach((memberName, memberIndexInGroup) => {
+                        let assignedZone = "N/A";
+                         if (groupNthShiftForZoneCalc > 0) {
+                            const technicianGlobalShiftCount = getTechnicianWorkShiftCount(memberName, groupWorkingTodayIndex, todayUTC);
+                            let lastZoneForThisTech = tempTechnicianShiftHistoryForDashboard[memberName] ? tempTechnicianShiftHistoryForDashboard[memberName].lastZone : null;
+                            const groupShiftBaseZoneIndex = ((groupNthShiftForZoneCalc - 1) + groupWorkingTodayIndex) % currentZonesToUse.length;
+                            let potentialZoneIndex = (groupShiftBaseZoneIndex + memberIndexInGroup) % currentZonesToUse.length;
+                            assignedZone = currentZonesToUse[potentialZoneIndex];
+                            if (lastZoneForThisTech && assignedZone === lastZoneForThisTech) {
+                                potentialZoneIndex = (potentialZoneIndex + 1) % currentZonesToUse.length;
+                                assignedZone = currentZonesToUse[potentialZoneIndex];
+                            }
+                            tempTechnicianShiftHistoryForDashboard[memberName] = { lastZone: assignedZone };
+                        }
+                        dashboardHTML += `<li>${memberName} - <strong>${assignedZone}</strong></li>`;
+                    });
+                    dashboardHTML += `</ul>`;
+                } else {
+                    dashboardHTML += `<p>No member data for this group.</p>`;
+                }
+                onDutyDashboardElement.innerHTML = dashboardHTML;
+            }
             
             function initializeApp() { 
                 updateLiveClock(); 
                 setInterval(updateLiveClock, 1000); 
                 populateGroupSelect(); 
                 updateLegend();
+                updateOnDutyDashboard(); 
 
                 const savedStartDateString = localStorage.getItem(localStorageKeyDate);
                 const savedGroupIndexString = localStorage.getItem(localStorageKeyGroup);
@@ -836,11 +944,10 @@
             if (pmZonesButton) pmZonesButton.addEventListener('click', () => openModal(pmZonesModal));
             else console.error("Error: pmZonesButton not found for event listener.");
 
-            if (viewDispatchButtonInModal) { // Listener for the button INSIDE the group members modal
+            if (viewDispatchButtonInModal) { 
                  viewDispatchButtonInModal.addEventListener('click', () => {
-                    closeModal(groupMembersModal); // Close current modal first
-                    openModal(pmZonesModal); // Open the PM Zones modal
-                    // Ensure modal is rendered before trying to scroll
+                    closeModal(groupMembersModal); 
+                    openModal(pmZonesModal); 
                     setTimeout(() => {
                         const dispatchSection = document.getElementById('dispatchTableSection');
                         if (dispatchSection) {
@@ -876,6 +983,7 @@
                     localStorage.removeItem(localStorageKeyDate);
                     localStorage.removeItem(localStorageKeyGroup);
                     initializeApp(); 
+                    updateOnDutyDashboard(); 
                 });
             } else { console.error("Error: resetToLiveButton not found for event listener."); }
         });
