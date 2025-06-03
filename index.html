@@ -178,34 +178,44 @@
         /* Dashboard Panel Styles */
         #onDutyDashboard {
             margin-bottom: 1.5rem; 
-            padding: 1rem 1.5rem; 
+            padding: 1.25rem 1.5rem; /* Increased padding */
             color: #E5E7EB; 
+            text-align: center; /* Center all content within the dashboard */
         }
         #onDutyDashboard h3 {
-            font-size: 1.125rem; 
+            font-size: 1.25rem; /* text-xl, more prominent */
             font-weight: 600; 
-            margin-bottom: 0.75rem; 
-            text-align: center;
+            margin-bottom: 0.5rem; /* Reduced margin */
             color: #A7F3D0; 
+             letter-spacing: 0.05em; /* Slight letter spacing */
         }
         #onDutyDashboard p {
-            font-size: 0.875rem; 
-            margin-bottom: 0.25rem; 
+            font-size: 0.9rem; /* Slightly larger base text */
+            margin-bottom: 0.35rem; 
             color: #D1D5DB; 
         }
         #onDutyDashboard strong {
-            font-weight: 500; 
+            font-weight: 600; /* Bolder for emphasis */
             color: #F9FAFB; 
         }
         #onDutyDashboard ul {
             list-style-type: none;
-            padding-left: 0.5rem;
-            margin-top: 0.5rem;
+            padding-left: 0; /* Remove padding for centered list items */
+            margin-top: 0.75rem; /* Increased top margin */
         }
         #onDutyDashboard li {
-            font-size: 0.875rem;
-            padding: 0.125rem 0;
+            font-size: 0.9rem;
+            padding: 0.2rem 0; /* Slightly more padding */
             color: #D1D5DB;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Subtle separator */
+        }
+        #onDutyDashboard li:last-child {
+            border-bottom: none;
+        }
+        #onDutyDashboard .holiday-text { /* Specific style for holiday text in dashboard */
+            color: #FCD34D; /* Tailwind amber-300 */
+            font-weight: 500;
+            margin-top: 0.5rem;
         }
 
 
@@ -218,8 +228,8 @@
         @media (max-width: 767px) {
             body { padding: 0.75rem; } 
             .container { padding: 1rem; } 
-            .main-title { font-size: 1.5rem; margin-bottom: 0.5rem;} /* Adjusted main title for mobile */
-            .live-clock-main { font-size: 0.75rem; margin-bottom: 1rem; } /* Adjusted clock for mobile */
+            .main-title { font-size: 1.5rem; margin-bottom: 0.5rem;} 
+            .live-clock-main { font-size: 0.75rem; margin-bottom: 1rem; } 
 
             #monthNameDisplay { font-size: 1.125rem; } 
             .nav-button, .action-button { padding: 0.5rem 0.75rem; font-size: 0.7rem; } 
@@ -231,35 +241,31 @@
             }
             .holiday-indicator { font-size: 0.65rem; top:2px; right: 2px;}
             .zone-details-table th, .zone-details-table td { font-size: 0.7rem; padding: 0.3rem; }
-            #onDutyDashboard { padding: 0.75rem 1rem; margin-top:0.5rem; } /* Adjusted dashboard margin */
-            #onDutyDashboard h3 { font-size: 1rem; }
-            #onDutyDashboard p, #onDutyDashboard li { font-size: 0.8rem; }
+            #onDutyDashboard { padding: 1rem; margin-top:0.5rem; } 
+            #onDutyDashboard h3 { font-size: 1.125rem; }
+            #onDutyDashboard p, #onDutyDashboard li { font-size: 0.85rem; }
         }
     </style>
 </head>
 <body class="text-gray-200 flex flex-col items-center min-h-screen">
 
     <div id="appContent" class="w-full flex flex-col items-center">
-        <!-- Main Title and Live Clock - Moved to the top -->
         <h1 class="main-title text-3xl font-semibold text-center text-gray-100 mt-6 mb-2 uppercase-text tracking-wide" style="text-shadow: 0 1px 2px rgba(0,0,0,0.3);">Work & Rest Schedule</h1>
         <div id="liveClock" class="live-clock-main text-center text-sm text-gray-300 mb-6 font-medium">
             Loading current time...
         </div>
 
-        <!-- "On Duty Now" Dashboard Panel -->
         <div id="onDutyDashboard" class="frosted-glass-pane mx-auto max-w-3xl w-full">
             <!-- Content will be populated by JavaScript -->
         </div>
 
         <div class="container frosted-glass-pane mx-auto max-w-3xl w-full p-5 md:p-8 mb-8 mt-4">
-            <!-- Status and Monthly Stats Banners -->
             <div id="statusBanner" class="p-3.5 mb-6 rounded-md text-center font-semibold hidden uppercase-text transition-all duration-300 text-sm">
             </div>
             <div id="monthlyStatsBanner" class="p-2.5 mb-6 rounded-md text-center font-medium text-xs hidden uppercase-text" 
                  style="background-color: rgba(0,0,0,0.25); color: #9CA3AF; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);">
             </div>
 
-            <!-- Input Controls -->
             <div class="grid md:grid-cols-2 gap-5 mb-6 items-end"> 
                 <div>
                     <label for="groupSelect" class="input-label-tag">Select Group</label>
@@ -276,7 +282,6 @@
                 </div>
             </div>
 
-            <!-- Calendar Display -->
             <div id="scheduleOutput" class="mt-6">
                 <div class="flex items-center justify-between mb-5">
                     <button id="prevMonthButton" class="nav-button">&lt; Prev</button>
@@ -296,7 +301,6 @@
             </div>
         </div>
 
-        <!-- Action Buttons -->
         <div class="text-center mt-3 mb-6 space-y-3 md:space-y-0 md:flex md:justify-center md:space-x-3">
             <button id="pmZonesButton" class="action-button">
                 PM Zones & E-Gates
@@ -307,7 +311,6 @@
         </div>
     </div>
 
-    <!-- Modals -->
     <div id="pmZonesModal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-black/85 opacity-0 pointer-events-none p-4"> 
         <div class="modal-content frosted-glass-pane w-11/12 md:max-w-4xl lg:max-w-5xl mx-auto p-5 md:p-6 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4 pb-3 border-b border-white/12">
@@ -839,12 +842,12 @@
                 const members = groupMembersData[groupWorkingTodayIndex];
                 const currentZonesToUse = (members && members.length === 4) ? ZONES : BASE_ZONES;
                 
-                let dashboardHTML = `<h3>On Duty Today</h3>`; // Removed date from title
+                let dashboardHTML = `<h3>On Duty Today</h3>`; 
                 dashboardHTML += `<p><strong>Working Group:</strong> ${groupName.replace(' GRP', '')}</p>`;
 
                 const holidayToday = getHolidayInfo(todayUTC, todayUTC.getUTCFullYear());
                 if (holidayToday) {
-                    dashboardHTML += `<p class="text-yellow-400 font-semibold">⭐ Today is a Holiday: ${holidayToday}</p>`;
+                    dashboardHTML += `<p class="holiday-text">⭐ Today is a Holiday: ${holidayToday}</p>`;
                 }
 
                 if (members) {
@@ -857,7 +860,7 @@
                             groupNthShiftForZoneCalc = Math.floor((daysSinceGlobalRef - groupOffsetFromGlobalRefStart) / 5) + 1;
                         }
                     }
-                    let tempTechnicianShiftHistoryForDashboard = {}; // Local history for this calculation
+                    let tempTechnicianShiftHistoryForDashboard = {}; 
                     members.forEach((memberName, memberIndexInGroup) => {
                         let assignedZone = "N/A";
                          if (groupNthShiftForZoneCalc > 0) {
