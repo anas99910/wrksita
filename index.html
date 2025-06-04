@@ -61,7 +61,7 @@
         .nav-button:hover, .action-button:hover { background-color: rgba(75, 85, 99, 0.75); }
         .nav-button:focus, .action-button:focus { outline: none; box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.35); }
 
-        #resetToLiveButton { /* This ID is for "JUMP TO THE PRESENT" */
+        #resetToLiveButton {
              background-color: rgba(13, 148, 136, 0.4); 
              border: 1px solid rgba(20, 83, 45, 0.5);
         }
@@ -245,22 +245,22 @@
             margin-bottom: 0.5rem; 
             text-align: center;
         }
-        .controls-section { /* Container for a title and its controls */
-            margin-bottom: 1.5rem; /* Space between Quick Search and Manual Calc */
+        .controls-section { 
+            margin-bottom: 1.5rem; 
         }
-        .controls-row { /* For aligning input and button(s) in a row */
+        .controls-row { 
             display: flex;
-            flex-wrap: wrap; /* Allow wrapping on small screens */
-            align-items: flex-end; /* Align items to bottom for consistent button height */
+            flex-wrap: wrap; 
+            align-items: flex-end; 
             gap: 0.5rem;
-            justify-content: center; /* Center the row content */
+            justify-content: center; 
         }
          .controls-row input[type="month"], .controls-row select {
-            flex-grow: 1; /* Allow input to take available space */
-            min-width: 150px; /* Minimum width for inputs */
+            flex-grow: 1; 
+            min-width: 150px; 
         }
         .controls-row button {
-            flex-shrink: 0; /* Prevent buttons from shrinking */
+            flex-shrink: 0; 
         }
 
 
@@ -277,7 +277,7 @@
             .live-clock-main { font-size: 0.75rem; margin-bottom: 1rem; } 
 
             #monthNameDisplay { font-size: 1.125rem; } 
-            .nav-button, .action-button { padding: 0.5rem 0.75rem; font-size: 0.7rem; width: 100%;} /* Full width buttons on mobile */
+            .nav-button, .action-button { padding: 0.5rem 0.75rem; font-size: 0.7rem; width: 100%;} 
             .controls-row {
                 flex-direction: column;
             }
@@ -510,7 +510,7 @@
             const legendContainer = document.getElementById('legend');
             const prevMonthButton = document.getElementById('prevMonthButton');
             const nextMonthButton = document.getElementById('nextMonthButton');
-            const monthlyStatsBannerOriginal = document.getElementById('monthlyStatsBanner'); 
+            // const monthlyStatsBannerOriginal = document.getElementById('monthlyStatsBanner'); // No longer needed as a separate element
             const pmZonesButton = document.getElementById('pmZonesButton');
             const pmZonesModal = document.getElementById('pmZonesModal');
             const closePmZonesModalButton = document.getElementById('closePmZonesModal');
@@ -561,8 +561,10 @@
             const OFFICE_ZONE = 'Office';
             const ZONES = ['Zone A', 'Zone B', 'Zone C', 'Office']; 
             
-            const GLOBAL_REFERENCE_DATE = new Date(Date.UTC(2025, 5, 3)); 
-            const GLOBAL_REFERENCE_GROUP_INDEX = 4; 
+            const GLOBAL_REFERENCE_DATE = new Date(Date.UTC(2025, 5, 3)); // June 3, 2025, 00:00 UTC
+            const GLOBAL_REFERENCE_GROUP_INDEX = 4; // M.BELKOUCHI GRP (index 4) shift starts at 9 AM Moroccan time on this date.
+            const SHIFT_START_HOUR_MOROCCO = 9;
+
 
             const localStorageKeyDate = 'workRestSchedule_startDate';
             const localStorageKeyGroup = 'workRestSchedule_selectedGroup';
@@ -651,20 +653,33 @@
                 return null; 
             }
             
-             function getTechnicianWorkShiftCount(technicianName, groupIndexOfTechnician, upToDate) {
+            // Calculates the effective start date of a shift based on Moroccan time (UTC+1) and 9 AM shift change.
+            function getEffectiveShiftStartDate(dateToCheck) {
+                const moroccoTimeOffset = 1; // Morocco is UTC+1
+                const currentUTCHour = dateToCheck.getUTCHours();
+                const currentMoroccoHour = (currentUTCHour + moroccoTimeOffset + 24) % 24;
+
+                let effectiveDate = new Date(Date.UTC(dateToCheck.getUTCFullYear(), dateToCheck.getUTCMonth(), dateToCheck.getUTCDate()));
+                if (currentMoroccoHour < SHIFT_START_HOUR_MOROCCO) {
+                    effectiveDate.setUTCDate(effectiveDate.getUTCDate() - 1);
+                }
+                return effectiveDate;
+            }
+            
+             function getTechnicianWorkShiftCount(technicianName, groupIndexOfTechnician, upToDate_ShiftStartDate) {
                 let shiftCount = 0;
-                let tempDate = new Date(GLOBAL_REFERENCE_DATE.getTime());
+                let tempShiftStartDate = new Date(GLOBAL_REFERENCE_DATE.getTime());
 
-                while(tempDate.getTime() <= upToDate.getTime()) {
-                    const diffFromGlobalRef = Math.floor((tempDate.getTime() - GLOBAL_REFERENCE_DATE.getTime()) / (1000 * 60 * 60 * 24));
-                    const groupWorkingOnTempDate = (GLOBAL_REFERENCE_GROUP_INDEX + diffFromGlobalRef % 5 + 5) % 5;
+                while(tempShiftStartDate.getTime() <= upToDate_ShiftStartDate.getTime()) {
+                    const diffFromGlobalRef = Math.floor((tempShiftStartDate.getTime() - GLOBAL_REFERENCE_DATE.getTime()) / (1000 * 60 * 60 * 24));
+                    const groupWorkingOnTempShiftStartDate = (GLOBAL_REFERENCE_GROUP_INDEX + diffFromGlobalRef % 5 + 5) % 5;
 
-                    if (groupWorkingOnTempDate === groupIndexOfTechnician) {
+                    if (groupWorkingOnTempShiftStartDate === groupIndexOfTechnician) {
                         if (groupMembersData[groupIndexOfTechnician] && groupMembersData[groupIndexOfTechnician].includes(technicianName)) {
                             shiftCount++;
                         }
                     }
-                    tempDate.setUTCDate(tempDate.getUTCDate() + 1);
+                    tempShiftStartDate.setUTCDate(tempShiftStartDate.getUTCDate() + 1); // Check next day's shift start
                 }
                 return shiftCount;
             }
@@ -711,10 +726,12 @@
 
                 for (let dayOfMonth = 1; dayOfMonth <= daysInMonth; dayOfMonth++) {
                     const currentDateInCalendar = new Date(Date.UTC(targetYear, targetMonth_0_indexed, dayOfMonth));
-                    const diffInMilliseconds = currentDateInCalendar.getTime() - cycleStartDate.getTime();
-                    const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
-                    const workingGroupOffset = ((diffInDays % 5) + 5) % 5; 
+                    
+                    // Determine the group whose shift *starts* at 9 AM on this calendar day
+                    const diffInDaysFromCycleStart = Math.floor((currentDateInCalendar.getTime() - cycleStartDate.getTime()) / (1000 * 60 * 60 * 24));
+                    const workingGroupOffset = ((diffInDaysFromCycleStart % 5) + 5) % 5; 
                     const actualWorkingGroupIndex = (selectedGroupIndex + workingGroupOffset) % 5; 
+                    
                     const isSelectedGroupWorkingThisDay = (actualWorkingGroupIndex === selectedGroupIndex);
                     if (isSelectedGroupWorkingThisDay) { workdayCount++; }
                     const workingGroupNameInCell = groupAbbreviations[actualWorkingGroupIndex]; 
@@ -881,10 +898,10 @@
             function updateOnDutyDashboard(statsDataForCalendarMonth = null) {
                 if (!onDutyDashboardElement) return;
 
-                const today = new Date();
-                const todayUTC = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
+                const today = new Date(); // Current local time
+                const effectiveScheduleDateForToday = getEffectiveShiftStartDate(today);
 
-                const diffInMilliseconds = todayUTC.getTime() - GLOBAL_REFERENCE_DATE.getTime();
+                const diffInMilliseconds = effectiveScheduleDateForToday.getTime() - GLOBAL_REFERENCE_DATE.getTime();
                 const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
                 const dayInCycleForReferenceGroup = (diffInDays % 5 + 5) % 5;
                 const groupWorkingTodayIndex = (GLOBAL_REFERENCE_GROUP_INDEX + dayInCycleForReferenceGroup) % 5;
@@ -896,7 +913,7 @@
                 let dashboardHTML = `<h3><span class="dashboard-icon">👥</span>On Duty Today</h3>`; 
                 dashboardHTML += `<p><strong class="working-group-label">Working Group:</strong> <strong>${groupName.replace(' GRP', '')}</strong></p>`;
 
-                const holidayToday = getHolidayInfo(todayUTC, todayUTC.getUTCFullYear());
+                const holidayToday = getHolidayInfo(today, today.getUTCFullYear()); // Check holiday for actual today
                 if (holidayToday) {
                     dashboardHTML += `<p class="holiday-text"><span class="dashboard-icon">⭐</span>Today is a Holiday: ${holidayToday}</p>`;
                 }
@@ -904,7 +921,7 @@
                 if (members) {
                     dashboardHTML += `<ul>`;
                     let groupNthShiftForZoneCalc = 0;
-                    const daysSinceGlobalRef = Math.floor((todayUTC.getTime() - GLOBAL_REFERENCE_DATE.getTime()) / (1000 * 60 * 60 * 24));
+                    const daysSinceGlobalRef = Math.floor((effectiveScheduleDateForToday.getTime() - GLOBAL_REFERENCE_DATE.getTime()) / (1000 * 60 * 60 * 24));
                     if (daysSinceGlobalRef >= 0) {
                         const groupOffsetFromGlobalRefStart = (groupWorkingTodayIndex - GLOBAL_REFERENCE_GROUP_INDEX + 5) % 5;
                         if (daysSinceGlobalRef >= groupOffsetFromGlobalRefStart) {
@@ -915,7 +932,7 @@
                     members.forEach((memberName, memberIndexInGroup) => {
                         let assignedZone = "N/A";
                          if (groupNthShiftForZoneCalc > 0) {
-                            const technicianGlobalShiftCount = getTechnicianWorkShiftCount(memberName, groupWorkingTodayIndex, todayUTC);
+                            const technicianGlobalShiftCount = getTechnicianWorkShiftCount(memberName, groupWorkingTodayIndex, effectiveScheduleDateForToday);
                             let lastZoneForThisTech = tempTechnicianShiftHistoryForDashboard[memberName] ? tempTechnicianShiftHistoryForDashboard[memberName].lastZone : null;
                             const groupShiftBaseZoneIndex = ((groupNthShiftForZoneCalc - 1) + groupWorkingTodayIndex) % currentZonesToUse.length;
                             let potentialZoneIndex = (groupShiftBaseZoneIndex + memberIndexInGroup) % currentZonesToUse.length;
@@ -968,9 +985,9 @@
                 } else {
                     console.log("No saved preferences. Defaulting to live company schedule.");
                     const today = new Date();
-                    const todayUTC = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
+                    const effectiveScheduleDateForToday = getEffectiveShiftStartDate(today);
 
-                    const diffInMilliseconds = todayUTC.getTime() - GLOBAL_REFERENCE_DATE.getTime();
+                    const diffInMilliseconds = effectiveScheduleDateForToday.getTime() - GLOBAL_REFERENCE_DATE.getTime();
                     const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
                     
                     const dayInCycleForReferenceGroup = (diffInDays % 5 + 5) % 5;
@@ -979,10 +996,10 @@
                     selectedGroupIndex = groupWorkingTodayIndex;
                     if (groupSelect) groupSelect.value = selectedGroupIndex;
 
-                    cycleStartDate = new Date(todayUTC); 
-                    if (startDateInput) startDateInput.value = todayUTC.toISOString().split('T')[0];
+                    cycleStartDate = new Date(effectiveScheduleDateForToday); 
+                    if (startDateInput) startDateInput.value = effectiveScheduleDateForToday.toISOString().split('T')[0];
                     
-                    currentDisplayDate = new Date(Date.UTC(todayUTC.getFullYear(), todayUTC.getMonth(), 1)); 
+                    currentDisplayDate = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 1)); 
                 }
                 generateSchedule(); 
             }
@@ -1066,7 +1083,6 @@
                     localStorage.removeItem(localStorageKeyDate);
                     localStorage.removeItem(localStorageKeyGroup);
                     initializeApp(); 
-                    // updateOnDutyDashboard(); // Already called by initializeApp -> generateSchedule -> updateOnDutyDashboard
                 });
             } else { console.error("Error: resetToLiveButton not found for event listener."); }
         });
