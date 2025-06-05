@@ -119,16 +119,28 @@
          .modal-content tr:last-child td:last-child { border-bottom-right-radius: 0.5rem; }
         .modal-content tr:last-child td { border-bottom: none; }
 
-        .zone-details-table { margin-top: 1.5rem; }
-        .zone-details-table th, .zone-details-table td {
+        .zone-details-table, .pc-positions-table { margin-top: 1.5rem; }
+        .zone-details-table th, .zone-details-table td,
+        .pc-positions-table th, .pc-positions-table td {
             padding: 0.5rem;
             font-size: 0.8rem;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        .zone-details-table th {
+        .zone-details-table th, .pc-positions-table th {
             background-color: rgba(75, 85, 99, 0.4); 
             color: #F3F4F6; 
         }
+        .pc-positions-table .main-header th {
+            background-color: rgba(107, 114, 128, 0.5); /* Slightly different for Nv 0 / Nv 1 */
+            color: #FFF;
+            font-weight: 600;
+        }
+         .pc-positions-table .sub-header th {
+            background-color: rgba(55, 65, 81, 0.4); /* Darker for sub-headers */
+            font-size: 0.75rem;
+        }
+
+
         .zone-details-table .zone-a-bg { background-color: rgba(16, 185, 129, 0.2); color: #A7F3D0; } 
         .zone-details-table .zone-b-bg { background-color: rgba(59, 130, 246, 0.2); color: #BFDBFE; } 
         .zone-details-table .zone-c-bg { background-color: rgba(245, 158, 11, 0.2); color: #FDE68A; } 
@@ -176,6 +188,16 @@
             color: #FFD700; 
             text-shadow: 0 0 2px rgba(0,0,0,0.5); 
         }
+         .pm-indicator {
+            position: absolute;
+            bottom: 2px;
+            left: 3px;
+            font-size: 0.6rem; 
+            color: #cbd5e1; 
+            opacity: 0.7;
+            line-height: 1;
+        }
+
         /* Dashboard Panel Styles */
         #onDutyDashboard {
             margin-bottom: 1rem; 
@@ -291,7 +313,9 @@
                 -webkit-backdrop-filter: blur(8px) saturate(100%);
             }
             .holiday-indicator { font-size: 0.65rem; top:2px; right: 2px;}
-            .zone-details-table th, .zone-details-table td { font-size: 0.7rem; padding: 0.3rem; }
+            .pm-indicator { font-size: 0.55rem; bottom: 1px; left: 2px;}
+            .zone-details-table th, .zone-details-table td,
+            .pc-positions-table th, .pc-positions-table td { font-size: 0.7rem; padding: 0.3rem; }
             #onDutyDashboard { padding: 1rem; margin-top:0.5rem; } 
             #onDutyDashboard h3 { font-size: 1.1rem; } 
             #onDutyDashboard p, #onDutyDashboard li { font-size: 0.8rem; }
@@ -376,13 +400,17 @@
             </div>
         </div>
 
-        <div class="text-center mt-3 mb-6"> 
+        <div class="text-center mt-3 mb-6 space-y-3 md:space-y-0 md:flex md:justify-center md:space-x-3">
             <button id="pmZonesButton" class="action-button">
                 PM Zones & E-Gates
+            </button>
+            <button id="pcPositionsButton" class="action-button"> <!-- New Button -->
+                PC POSITIONS
             </button>
         </div>
     </div>
 
+    <!-- PM Zones Modal -->
     <div id="pmZonesModal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-black/85 opacity-0 pointer-events-none p-4"> 
         <div class="modal-content frosted-glass-pane w-11/12 md:max-w-4xl lg:max-w-5xl mx-auto p-5 md:p-6 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4 pb-3 border-b border-white/12">
@@ -475,6 +503,74 @@
         </div>
     </div>
 
+    <!-- PC Positions Modal -->
+    <div id="pcPositionsModal" class="modal fixed inset-0 z-[60] flex items-center justify-center bg-black/85 opacity-0 pointer-events-none p-4">
+        <div class="modal-content frosted-glass-pane w-11/12 md:max-w-4xl lg:max-w-6xl mx-auto p-5 md:p-6 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4 pb-3 border-b border-white/12">
+                <h3 class="text-lg font-semibold text-sky-300 uppercase-text selectable-text">PC POSITIONS</h3>
+                <button id="closePcPositionsModal" class="text-gray-400 hover:text-red-400 text-2xl font-bold">&times;</button>
+            </div>
+            <div class="selectable-text overflow-x-auto">
+                <table class="pc-positions-table w-full text-left text-xs">
+                    <thead class="main-header">
+                        <tr>
+                            <th colspan="2" class="text-center">Nv 0</th>
+                            <th colspan="3" class="text-center">Nv 1</th>
+                        </tr>
+                    </thead>
+                    <thead class="sub-header">
+                         <tr>
+                            <th>enregist transit</th>
+                            <th>enregistrement</th>
+                            <th>enregistrement</th>
+                            <th>embarq E</th>
+                            <th>embarq F</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-300">
+                        <!-- Data rows based on image - this will be long -->
+                        <tr> <td>CMN1TDE001</td> <td>CMN1CKB001</td> <td>CMN1CKB033</td> <td>CMN1GTT015</td> <td>CMN1GTT031</td> </tr>
+                        <tr> <td>CMN1TDE002</td> <td>CMN1CKB002</td> <td>CMN1CKB034</td> <td>CMN1GTT016</td> <td>CMN1GTT032</td> </tr>
+                        <tr> <td>CMN1TDE003</td> <td>CMN1CKB003</td> <td>CMN1CKB035</td> <td>CMN1GTT017</td> <td>CMN1GTT033</td> </tr>
+                        <tr> <td>CMN1TDE004</td> <td>CMN1CKB004</td> <td>CMN1CKB036</td> <td>CMN1GTT018</td> <td>CMN1GTT034</td> </tr>
+                        <tr> <td>CMN1TDE005</td> <td>CMN1CKB005</td> <td>CMN1CKB037</td> <td>CMN1GTT019</td> <td>CMN1GTT035</td> </tr>
+                        <tr> <td>CMN1TDE006</td> <td>CMN1CKB006</td> <td>CMN1CKB038</td> <td>CMN1GTT020</td> <td>CMN1GTT036</td> </tr>
+                        <tr> <td>CMN1TDE007</td> <td>CMN1CKB007</td> <td>CMN1CKB039</td> <td>CMN1GTT021</td> <td>CMN1GTT037</td> </tr>
+                        <tr> <td>CMN1TDE008</td> <td>CMN1CKB008</td> <td>CMN1CKB040</td> <td>CMN1GTT022</td> <td>CMN1GTT038</td> </tr>
+                        <tr> <td>CMN1TDE009</td> <td>CMN1CKB009</td> <td>CMN1CKB041</td> <td>CMN1GTT023</td> <td>CMN1GTT039</td> </tr>
+                        <tr> <td>CMN1TDE010</td> <td>CMN1CKB010</td> <td>CMN1CKB042</td> <td>CMN1GTT024</td> <td>CMN1GTT040</td> </tr>
+                        <tr> <td>CMN1TDE011</td> <td>CMN1CKB011</td> <td>CMN1CKB043</td> <td>CMN1GTT025</td> <td>CMN1GTT041</td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB012</td> <td>CMN1CKB044</td> <td>CMN1GTT026</td> <td>CMN1GTT042</td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB013</td> <td>CMN1CKB045</td> <td>CMN1GTT027</td> <td>CMN1GTT043</td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB014</td> <td>CMN1CKB046</td> <td>CMN1GTT028</td> <td>CMN1GTT044</td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB015</td> <td>CMN1CKB047</td> <td>CMN1GTT029</td> <td>CMN1GTT045</td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB016</td> <td>CMN1CKB048</td> <td>CMN1GTT030</td> <td></td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB017</td> <td>CMN1CKB049</td> <td></td> <td></td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB018</td> <td>CMN1CKB050</td> <td></td> <td></td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB019</td> <td>CMN1CKB051</td> <td></td> <td></td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB020</td> <td>CMN1CKB052</td> <td></td> <td></td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB021</td> <td>CMN1CKB053</td> <td></td> <td></td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB022</td> <td>CMN1CKB054</td> <td></td> <td></td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB023</td> <td>CMN1CKB055</td> <td></td> <td></td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB024</td> <td>CMN1CKB056</td> <td></td> <td></td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB025</td> <td>CMN1CKB057</td> <td></td> <td></td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB026</td> <td>CMN1CKB058</td> <td></td> <td></td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB027</td> <td>CMN1CKB059</td> <td>CMN1CKB076</td><td></td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB028</td> <td>CMN1CKB060</td> <td>CMN1CKB068</td> <td>CMN1CKB077</td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB029</td> <td>CMN1CKB061</td> <td>CMN1CKB069</td> <td>CMN1CKB078</td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB030</td> <td>CMN1CKB062</td> <td>CMN1CKB070</td> <td>CMN1CKB079</td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB031</td> <td>CMN1CKB063</td> <td>CMN1CKB071</td> <td>CMN1CKB080</td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB032</td> <td>CMN1CKB064</td> <td>CMN1CKB072</td> <td>CMN1CKB081</td> </tr>
+                        <tr><td>Hors Gabari</td>  <td>CMN1CKB085</td> <td>CMN1CKB065</td> <td>CMN1CKB073</td> <td>CMN1CKB082</td> </tr>
+                        <tr> <td></td>           <td></td>           <td>CMN1CKB066</td> <td>CMN1CKB074</td> <td>CMN1CKB083</td> </tr>
+                        <tr> <td></td>           <td></td>           <td>CMN1CKB067</td> <td>CMN1CKB075</td> <td>CMN1CKB084</td> </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
     <div id="groupMembersModal" class="modal fixed inset-0 z-[60] flex items-center justify-center bg-black/85 opacity-0 pointer-events-none p-4">
         <div id="groupMembersModalContent" class="modal-content frosted-glass-pane w-full max-w-sm mx-auto p-5 max-h-[85vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 pb-2.5 border-b border-white/12">
@@ -510,7 +606,6 @@
             const legendContainer = document.getElementById('legend');
             const prevMonthButton = document.getElementById('prevMonthButton');
             const nextMonthButton = document.getElementById('nextMonthButton');
-            // const monthlyStatsBannerOriginal = document.getElementById('monthlyStatsBanner'); // No longer needed as a separate element
             const pmZonesButton = document.getElementById('pmZonesButton');
             const pmZonesModal = document.getElementById('pmZonesModal');
             const closePmZonesModalButton = document.getElementById('closePmZonesModal');
@@ -518,6 +613,9 @@
             const onDutyDashboardElement = document.getElementById('onDutyDashboard'); 
             const monthYearJumpInput = document.getElementById('monthYearJumpInput');
             const jumpToDateButton = document.getElementById('jumpToDateButton');
+            const pcPositionsButton = document.getElementById('pcPositionsButton'); // New Button
+            const pcPositionsModal = document.getElementById('pcPositionsModal');   // New Modal
+            const closePcPositionsModalButton = document.getElementById('closePcPositionsModal'); // New Modal Close Button
             
             const groupMembersModal = document.getElementById('groupMembersModal');
             const groupMembersModalTitle = document.getElementById('groupMembersModalTitle');
@@ -561,8 +659,8 @@
             const OFFICE_ZONE = 'Office';
             const ZONES = ['Zone A', 'Zone B', 'Zone C', 'Office']; 
             
-            const GLOBAL_REFERENCE_DATE = new Date(Date.UTC(2025, 5, 3)); // June 3, 2025, 00:00 UTC
-            const GLOBAL_REFERENCE_GROUP_INDEX = 4; // M.BELKOUCHI GRP (index 4) shift starts at 9 AM Moroccan time on this date.
+            const GLOBAL_REFERENCE_DATE = new Date(Date.UTC(2025, 5, 3)); 
+            const GLOBAL_REFERENCE_GROUP_INDEX = 4; 
             const SHIFT_START_HOUR_MOROCCO = 9;
 
 
@@ -613,6 +711,11 @@
                 holidayLegendItem.innerHTML = `<span class="holiday-indicator-legend" style="color: #FFD700; text-shadow: 0 0 2px rgba(0,0,0,0.5);">⭐</span><span>Holiday</span>`;
                 legendContainer.appendChild(holidayLegendItem);
 
+                const pmLegendItem = document.createElement('div'); 
+                pmLegendItem.className = 'flex items-center gap-1.5';
+                pmLegendItem.innerHTML = `<span style="color: #cbd5e1;">🧹</span><span>PM</span>`;
+                legendContainer.appendChild(pmLegendItem);
+
                 groupColors.forEach((colorInfo) => {
                     const groupLegendItem = document.createElement('div');
                     groupLegendItem.className = 'flex items-center gap-1.5';
@@ -653,9 +756,8 @@
                 return null; 
             }
             
-            // Calculates the effective start date of a shift based on Moroccan time (UTC+1) and 9 AM shift change.
             function getEffectiveShiftStartDate(dateToCheck) {
-                const moroccoTimeOffset = 1; // Morocco is UTC+1
+                const moroccoTimeOffset = 1; 
                 const currentUTCHour = dateToCheck.getUTCHours();
                 const currentMoroccoHour = (currentUTCHour + moroccoTimeOffset + 24) % 24;
 
@@ -668,7 +770,7 @@
             
              function getTechnicianWorkShiftCount(technicianName, groupIndexOfTechnician, upToDate_ShiftStartDate) {
                 let shiftCount = 0;
-                let tempShiftStartDate = new Date(GLOBAL_REFERENCE_DATE.getTime());
+                let tempShiftStartDate = new Date(GLOBAL_REFERENCE_DATE.getTime()); 
 
                 while(tempShiftStartDate.getTime() <= upToDate_ShiftStartDate.getTime()) {
                     const diffFromGlobalRef = Math.floor((tempShiftStartDate.getTime() - GLOBAL_REFERENCE_DATE.getTime()) / (1000 * 60 * 60 * 24));
@@ -679,7 +781,7 @@
                             shiftCount++;
                         }
                     }
-                    tempShiftStartDate.setUTCDate(tempShiftStartDate.getUTCDate() + 1); // Check next day's shift start
+                    tempShiftStartDate.setUTCDate(tempShiftStartDate.getUTCDate() + 1);
                 }
                 return shiftCount;
             }
@@ -727,7 +829,6 @@
                 for (let dayOfMonth = 1; dayOfMonth <= daysInMonth; dayOfMonth++) {
                     const currentDateInCalendar = new Date(Date.UTC(targetYear, targetMonth_0_indexed, dayOfMonth));
                     
-                    // Determine the group whose shift *starts* at 9 AM on this calendar day
                     const diffInDaysFromCycleStart = Math.floor((currentDateInCalendar.getTime() - cycleStartDate.getTime()) / (1000 * 60 * 60 * 24));
                     const workingGroupOffset = ((diffInDaysFromCycleStart % 5) + 5) % 5; 
                     const actualWorkingGroupIndex = (selectedGroupIndex + workingGroupOffset) % 5; 
@@ -752,6 +853,14 @@
                         holidayIcon.className = 'holiday-indicator';
                         holidayIcon.textContent = '⭐'; 
                         dayCell.appendChild(holidayIcon);
+                    }
+
+                    if (dayOfMonth >= daysInMonth - 4) { 
+                        const pmIndicator = document.createElement('span');
+                        pmIndicator.className = 'pm-indicator';
+                        pmIndicator.textContent = '🧹PM';
+                        dayCell.appendChild(pmIndicator);
+                        dayCell.title = (dayCell.title ? dayCell.title + ' / ' : '') + 'Monthly PM';
                     }
                     
                     const workingGroupMembers = groupMembersData[actualWorkingGroupIndex];
@@ -898,7 +1007,7 @@
             function updateOnDutyDashboard(statsDataForCalendarMonth = null) {
                 if (!onDutyDashboardElement) return;
 
-                const today = new Date(); // Current local time
+                const today = new Date(); 
                 const effectiveScheduleDateForToday = getEffectiveShiftStartDate(today);
 
                 const diffInMilliseconds = effectiveScheduleDateForToday.getTime() - GLOBAL_REFERENCE_DATE.getTime();
@@ -913,7 +1022,7 @@
                 let dashboardHTML = `<h3><span class="dashboard-icon">👥</span>On Duty Today</h3>`; 
                 dashboardHTML += `<p><strong class="working-group-label">Working Group:</strong> <strong>${groupName.replace(' GRP', '')}</strong></p>`;
 
-                const holidayToday = getHolidayInfo(today, today.getUTCFullYear()); // Check holiday for actual today
+                const holidayToday = getHolidayInfo(today, today.getUTCFullYear()); 
                 if (holidayToday) {
                     dashboardHTML += `<p class="holiday-text"><span class="dashboard-icon">⭐</span>Today is a Holiday: ${holidayToday}</p>`;
                 }
@@ -1044,6 +1153,10 @@
             if (pmZonesButton) pmZonesButton.addEventListener('click', () => openModal(pmZonesModal));
             else console.error("Error: pmZonesButton not found for event listener.");
 
+            if (pcPositionsButton) { // Event listener for the new button
+                pcPositionsButton.addEventListener('click', () => openModal(pcPositionsModal));
+            } else { console.error("Error: pcPositionsButton not found."); }
+
             if (viewDispatchButtonInModal) { 
                  viewDispatchButtonInModal.addEventListener('click', () => {
                     closeModal(groupMembersModal); 
@@ -1068,6 +1181,17 @@
                     if (event.target === pmZonesModal) { closeModal(pmZonesModal); }
                 });
             } else console.error("Error: pmZonesModal not found for event listener.");
+            
+            if (closePcPositionsModalButton) { // Event listener for new modal's close button
+                closePcPositionsModalButton.addEventListener('click', () => closeModal(pcPositionsModal));
+            } else { console.error("Error: closePcPositionsModalButton not found."); }
+
+            if (pcPositionsModal) { // Event listener for new modal backdrop click
+                pcPositionsModal.addEventListener('click', (event) => {
+                    if (event.target === pcPositionsModal) { closeModal(pcPositionsModal); }
+                });
+            } else { console.error("Error: pcPositionsModal not found."); }
+
 
             if (closeGroupMembersModalButton) closeGroupMembersModalButton.addEventListener('click', () => closeModal(groupMembersModal));
             else console.error("Error: closeGroupMembersModalButton not found for event listener.");
