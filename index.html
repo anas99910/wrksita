@@ -119,28 +119,16 @@
          .modal-content tr:last-child td:last-child { border-bottom-right-radius: 0.5rem; }
         .modal-content tr:last-child td { border-bottom: none; }
 
-        .zone-details-table, .pc-positions-table { margin-top: 1.5rem; }
-        .zone-details-table th, .zone-details-table td,
-        .pc-positions-table th, .pc-positions-table td {
+        .zone-details-table { margin-top: 1.5rem; }
+        .zone-details-table th, .zone-details-table td {
             padding: 0.5rem;
             font-size: 0.8rem;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        .zone-details-table th, .pc-positions-table th {
+        .zone-details-table th {
             background-color: rgba(75, 85, 99, 0.4); 
             color: #F3F4F6; 
         }
-        .pc-positions-table .main-header th {
-            background-color: rgba(107, 114, 128, 0.5); /* Slightly different for Nv 0 / Nv 1 */
-            color: #FFF;
-            font-weight: 600;
-        }
-         .pc-positions-table .sub-header th {
-            background-color: rgba(55, 65, 81, 0.4); /* Darker for sub-headers */
-            font-size: 0.75rem;
-        }
-
-
         .zone-details-table .zone-a-bg { background-color: rgba(16, 185, 129, 0.2); color: #A7F3D0; } 
         .zone-details-table .zone-b-bg { background-color: rgba(59, 130, 246, 0.2); color: #BFDBFE; } 
         .zone-details-table .zone-c-bg { background-color: rgba(245, 158, 11, 0.2); color: #FDE68A; } 
@@ -285,6 +273,71 @@
             flex-shrink: 0; 
         }
 
+        /* Admin Panel Specific Styles */
+        #adminPanelModal .modal-content {
+            max-width: 900px; 
+        }
+        .admin-group-section {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .admin-group-section:last-child {
+            border-bottom: none;
+        }
+        .admin-group-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #A7F3D0;
+            margin-bottom: 0.75rem;
+        }
+        .admin-technician-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.4rem 0;
+            font-size: 0.9rem;
+        }
+        .admin-technician-item input[type="text"] {
+            flex-grow: 1;
+            margin-right: 0.5rem;
+            padding: 0.3rem 0.5rem;
+            font-size: 0.85rem;
+            background-color: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #E5E7EB;
+            border-radius: 0.25rem;
+        }
+        .admin-technician-item button {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.7rem;
+            margin-left: 0.25rem;
+            background-color: rgba(239, 68, 68, 0.5); 
+            border-color: rgba(185, 28, 28, 0.6); 
+        }
+         .admin-technician-item button.rename-btn {
+            background-color: rgba(59, 130, 246, 0.5); 
+            border-color: rgba(37, 99, 235, 0.6); 
+         }
+        .admin-add-technician {
+            margin-top: 0.75rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+         .admin-add-technician input[type="text"] {
+            flex-grow: 1;
+             padding: 0.3rem 0.5rem;
+            font-size: 0.85rem;
+            background-color: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #E5E7EB;
+            border-radius: 0.25rem;
+        }
+        .admin-add-technician button {
+            background-color: rgba(16, 185, 129, 0.5); 
+            border-color: rgba(5, 150, 105, 0.6);
+        }
+
 
         @media (hover: hover) and (pointer: fine) {
             .day-cell-base:hover {
@@ -321,6 +374,11 @@
             #onDutyDashboard p, #onDutyDashboard li { font-size: 0.8rem; }
             #monthlyStatsBannerInDashboard { font-size: 0.65rem; padding: 0.4rem; }
             .section-title { font-size: 0.75rem; margin-top: 1rem; }
+            #adminPanelModal .modal-content { max-width: 95%; }
+            .admin-technician-item { flex-direction: column; align-items: stretch; gap: 0.25rem; }
+            .admin-technician-item input[type="text"] { margin-right: 0; margin-bottom: 0.25rem; }
+            .admin-technician-item button { width: 100%; margin-left: 0; }
+            .admin-add-technician { flex-direction: column; }
         }
     </style>
 </head>
@@ -333,8 +391,7 @@
         </div>
 
         <div id="onDutyDashboard" class="frosted-glass-pane mx-auto max-w-3xl w-full">
-            <!-- Content will be populated by JavaScript, including the monthly stats banner -->
-        </div>
+            </div>
 
         <div class="container frosted-glass-pane mx-auto max-w-3xl w-full p-5 md:p-8 mb-8 mt-4">
             
@@ -354,7 +411,6 @@
                 <div id="calendarGrid" class="grid grid-cols-7 gap-1 md:gap-1.5">
                 </div>
 
-                <!-- Controls Below Calendar -->
                 <div class="mt-6 space-y-4">
                     <div class="controls-section">
                         <div class="section-title uppercase-text">
@@ -390,9 +446,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- End of Controls -->
-
-
                 <div id="messageArea" class="mt-5 text-center text-rose-300 font-medium uppercase-text text-xs"></div>
 
                 <div id="legend" class="mt-6 pt-3 border-t border-gray-500/25 flex flex-wrap justify-center gap-x-4 gap-y-1.5 items-center text-[0.65rem] uppercase-text text-gray-300">
@@ -404,13 +457,14 @@
             <button id="pmZonesButton" class="action-button">
                 PM Zones & E-Gates
             </button>
-            <button id="pcPositionsButton" class="action-button"> <!-- New Button -->
+            <button id="pcPositionsButton" class="action-button"> 
                 PC POSITIONS
+            </button>
+            <button id="adminPanelButton" class="action-button" style="background-color: rgba(217, 119, 6, 0.5); border-color: rgba(146, 64, 14, 0.6);"> Admin Panel
             </button>
         </div>
     </div>
 
-    <!-- PM Zones Modal -->
     <div id="pmZonesModal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-black/85 opacity-0 pointer-events-none p-4"> 
         <div class="modal-content frosted-glass-pane w-11/12 md:max-w-4xl lg:max-w-5xl mx-auto p-5 md:p-6 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4 pb-3 border-b border-white/12">
@@ -482,28 +536,27 @@
                     <h4 class="text-base font-semibold text-emerald-300 uppercase-text mb-3">E-GATE TERMINALS</h4>
                     <div class="egate-terminal-title uppercase-text !text-emerald-400">TERMINAL I</div>
                     <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5 mb-3"> 
-                        <span class="egate-machine business-egate">🖥️ CMN3PFX001</span>
+                        <span class="egate-machine business-egate">💻💻 Business Class CMN3PFX001</span>
                     </div>
                     <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5 mb-3"> 
-                        <span class="egate-machine">🖥️ CMN3PFX008</span>
-                        <span class="egate-machine">🖥️ CMN3PFX002</span>
-                        <span class="egate-machine">🖥️ CMN3PFX003</span>
+                        <span class="egate-machine">💻💻 CMN3PFX008</span>
+                        <span class="egate-machine">💻💻 CMN3PFX002</span>
+                        <span class="egate-machine">💻💻 CMN3PFX003</span>
                     </div>
                     <div class="egate-terminal-title uppercase-text !text-emerald-400">TERMINAL II</div>
                     <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5 mb-3"> 
-                        <span class="egate-machine business-egate">🖥️ CMN3PFX004</span>
+                        <span class="egate-machine business-egate">💻💻 Business Class CMN3PFX004</span>
                     </div>
                      <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5"> 
-                        <span class="egate-machine">🖥️ CMN3PFX006</span>
-                        <span class="egate-machine">🖥️ CMN3PFX005</span>
-                        <span class="egate-machine">🖥️ CMN3PFX007</span>
+                        <span class="egate-machine">💻💻 CMN3PFX006</span>
+                        <span class="egate-machine">�💻 CMN3PFX005</span>
+                        <span class="egate-machine">💻💻 CMN3PFX007</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- PC Positions Modal -->
     <div id="pcPositionsModal" class="modal fixed inset-0 z-[60] flex items-center justify-center bg-black/85 opacity-0 pointer-events-none p-4">
         <div class="modal-content frosted-glass-pane w-11/12 md:max-w-4xl lg:max-w-6xl mx-auto p-5 md:p-6 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4 pb-3 border-b border-white/12">
@@ -528,7 +581,6 @@
                         </tr>
                     </thead>
                     <tbody class="text-gray-300">
-                        <!-- Data rows based on image - this will be long -->
                         <tr> <td>CMN1TDE001</td> <td>CMN1CKB001</td> <td>CMN1CKB033</td> <td>CMN1GTT015</td> <td>CMN1GTT031</td> </tr>
                         <tr> <td>CMN1TDE002</td> <td>CMN1CKB002</td> <td>CMN1CKB034</td> <td>CMN1GTT016</td> <td>CMN1GTT032</td> </tr>
                         <tr> <td>CMN1TDE003</td> <td>CMN1CKB003</td> <td>CMN1CKB035</td> <td>CMN1GTT017</td> <td>CMN1GTT033</td> </tr>
@@ -570,6 +622,21 @@
         </div>
     </div>
 
+    <div id="adminPanelModal" class="modal fixed inset-0 z-[70] flex items-center justify-center bg-black/85 opacity-0 pointer-events-none p-4">
+        <div class="modal-content frosted-glass-pane w-11/12 md:max-w-2xl lg:max-w-3xl mx-auto p-5 md:p-6 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4 pb-3 border-b border-white/12">
+                <h3 class="text-lg font-semibold text-amber-300 uppercase-text selectable-text">ADMIN PANEL - MANAGE TECHNICIANS</h3>
+                <button id="closeAdminPanelModal" class="text-gray-400 hover:text-red-400 text-2xl font-bold">&times;</button>
+            </div>
+            <div id="adminPanelContent" class="selectable-text space-y-4">
+                </div>
+            <div class="mt-6 pt-4 border-t border-white/10 flex justify-end space-x-3">
+                <button id="saveAdminChangesButton" class="action-button" style="background-color: rgba(22, 163, 74, 0.6); border-color: rgba(21, 128, 61, 0.7);">Save Changes</button>
+                <button id="closeAdminPanelButtonSecondary" class="action-button">Close</button>
+            </div>
+        </div>
+    </div>
+
 
     <div id="groupMembersModal" class="modal fixed inset-0 z-[60] flex items-center justify-center bg-black/85 opacity-0 pointer-events-none p-4">
         <div id="groupMembersModalContent" class="modal-content frosted-glass-pane w-full max-w-sm mx-auto p-5 max-h-[85vh] overflow-y-auto">
@@ -606,6 +673,7 @@
             const legendContainer = document.getElementById('legend');
             const prevMonthButton = document.getElementById('prevMonthButton');
             const nextMonthButton = document.getElementById('nextMonthButton');
+            // const monthlyStatsBannerOriginal = document.getElementById('monthlyStatsBanner'); // Ref no longer needed
             const pmZonesButton = document.getElementById('pmZonesButton');
             const pmZonesModal = document.getElementById('pmZonesModal');
             const closePmZonesModalButton = document.getElementById('closePmZonesModal');
@@ -613,9 +681,15 @@
             const onDutyDashboardElement = document.getElementById('onDutyDashboard'); 
             const monthYearJumpInput = document.getElementById('monthYearJumpInput');
             const jumpToDateButton = document.getElementById('jumpToDateButton');
-            const pcPositionsButton = document.getElementById('pcPositionsButton'); // New Button
-            const pcPositionsModal = document.getElementById('pcPositionsModal');   // New Modal
-            const closePcPositionsModalButton = document.getElementById('closePcPositionsModal'); // New Modal Close Button
+            const pcPositionsButton = document.getElementById('pcPositionsButton'); 
+            const pcPositionsModal = document.getElementById('pcPositionsModal');   
+            const closePcPositionsModalButton = document.getElementById('closePcPositionsModal'); 
+            const adminPanelButton = document.getElementById('adminPanelButton');
+            const adminPanelModal = document.getElementById('adminPanelModal');
+            const closeAdminPanelModalButton = document.getElementById('closeAdminPanelModal');
+            const adminPanelContent = document.getElementById('adminPanelContent');
+            const saveAdminChangesButton = document.getElementById('saveAdminChangesButton');
+            const closeAdminPanelButtonSecondary = document.getElementById('closeAdminPanelButtonSecondary');
             
             const groupMembersModal = document.getElementById('groupMembersModal');
             const groupMembersModalTitle = document.getElementById('groupMembersModalTitle');
@@ -623,12 +697,24 @@
             const closeGroupMembersModalButton = document.getElementById('closeGroupMembersModal');
             const viewDispatchButtonInModal = document.getElementById('viewDispatchButtonInModal');
 
-
-            const groupNames = [ 
+            // --- Default Data (used if nothing in localStorage) ---
+            const defaultGroupNames = [ 
                 "K.MOUAD GRP", "Y.CHARMOUH GRP", "A.FARBOSI GRP", 
                 "A.AMARSAL GRP", "M.BELKOUCHI GRP"
             ];
-            const groupAbbreviations = [ "M.KAOU", "Y.CHAR", "A.FRBS", "A.AMRSL", "M.BEL" ];
+            const defaultGroupMembersData = [
+                ["Mouad KAOUTAR", "Anas BENCHICHE", "Younes Ch", "Kamal BOURROU"], 
+                ["Youssef CHARMOUH", "Mehdi ASKARI", "Soufiane BELFAKIR"],        
+                ["Ahmed FARBOUSSI", "Reda ALLOUCH", "Seddik IDOUAKRIM"],         
+                ["Ahmed AMARSAL", "Mohamed MASKAOUI", "Ayoub SADIKI"],           
+                ["Mehdi BELKOUCHI", "Ayoub CHAAOUBI", "Zakaria BOURHRISS"]       
+            ];
+            
+            let groupNames = JSON.parse(localStorage.getItem('adminGroupNames')) || [...defaultGroupNames];
+            let groupMembersData = JSON.parse(localStorage.getItem('adminGroupMembersData')) || defaultGroupMembersData.map(arr => [...arr]);
+
+
+            const groupAbbreviations = [ "M.KAOU", "Y.CHAR", "A.FRBS", "A.AMRSL", "M.BEL" ]; 
             
             const groupColors = [
                 { baseName: 'Saturn Gold', rgb: '186, 150, 83', textClass: 'text-gray-900', name: groupAbbreviations[0] },
@@ -636,14 +722,6 @@
                 { baseName: 'Cosmic Dust', rgb: '170, 170, 160', textClass: 'text-gray-900', name: groupAbbreviations[2] },
                 { baseName: 'Nebula Purple', rgb: '100, 80, 110', textClass: 'text-gray-100', name: groupAbbreviations[3] },
                 { baseName: 'Red Giant', rgb: '160, 70, 60', textClass: 'text-gray-100', name: groupAbbreviations[4] }
-            ];
-
-            const groupMembersData = [
-                ["Mouad KAOUTAR", "Anas BENCHICHE", "Younes Ch", "Kamal BOURROU"], 
-                ["Youssef CHARMOUH", "Mehdi ASKARI", "Soufiane BELFAKIR"],        
-                ["Ahmed FARBOUSSI", "Reda ALLOUCH", "Seddik IDOUAKRIM"],         
-                ["Ahmed AMARSAL", "Mohamed MASKAOUI", "Ayoub SADIKI"],           
-                ["Mehdi BELKOUCHI", "Ayoub CHAAOUBI", "Zakaria BOURHRISS"]       
             ];
 
             const moroccanHolidays = {
@@ -1115,6 +1193,136 @@
             
             initializeApp();
 
+            // --- Admin Panel Logic ---
+            function requestAdminPasswordAndOpenPanel() {
+                console.log("Admin Panel button clicked. Requesting password.");
+                const adminPass = "0000"; 
+                let attempts = 0;
+                const maxAttempts = 3;
+
+                function askAdminPassword() {
+                    if (attempts >= maxAttempts) {
+                        alert("Maximum password attempts reached. Access denied.");
+                        return;
+                    }
+                    const enteredPass = prompt(`Enter Admin Password (Attempt ${attempts + 1}/${maxAttempts}):`);
+                    attempts++;
+                    if (enteredPass === adminPass) {
+                        console.log("Admin password correct. Opening panel.");
+                        openModal(adminPanelModal);
+                        populateAdminPanel(); 
+                    } else if (enteredPass !== null) { 
+                        console.log("Incorrect admin password entered.");
+                        alert("Incorrect admin password.");
+                        askAdminPassword(); 
+                    } else {
+                        console.log("Admin password prompt cancelled.");
+                    }
+                }
+                askAdminPassword();
+            }
+
+            function populateAdminPanel() {
+                if (!adminPanelContent) {
+                     console.error("Admin panel content area not found.");
+                     return;
+                }
+                console.log("Populating admin panel.");
+                adminPanelContent.innerHTML = ''; 
+
+                groupNames.forEach((groupName, groupIndex) => {
+                    const groupSection = document.createElement('div');
+                    groupSection.className = 'admin-group-section';
+                    
+                    const title = document.createElement('h5');
+                    title.className = 'admin-group-title';
+                    title.textContent = groupName;
+                    groupSection.appendChild(title);
+
+                    const ul = document.createElement('ul');
+                    groupMembersData[groupIndex].forEach((techName, techIndex) => {
+                        const li = document.createElement('li');
+                        li.className = 'admin-technician-item';
+                        
+                        const nameInput = document.createElement('input');
+                        nameInput.type = 'text';
+                        nameInput.value = techName;
+                        nameInput.dataset.groupIndex = groupIndex;
+                        nameInput.dataset.techIndex = techIndex;
+                        nameInput.classList.add('rounded-md', 'p-1', 'text-sm', 'bg-gray-700', 'text-white', 'border', 'border-gray-600');
+
+
+                        const renameButton = document.createElement('button');
+                        renameButton.textContent = 'Rename';
+                        renameButton.className = 'action-button rename-btn';
+                        renameButton.onclick = () => renameTechnician(groupIndex, techIndex, nameInput.value);
+                        
+                        const removeButton = document.createElement('button');
+                        removeButton.textContent = 'Remove';
+                        removeButton.className = 'action-button'; 
+                        removeButton.onclick = () => removeTechnician(groupIndex, techIndex);
+
+                        li.appendChild(nameInput);
+                        li.appendChild(renameButton);
+                        li.appendChild(removeButton);
+                        ul.appendChild(li);
+                    });
+                    groupSection.appendChild(ul);
+
+                    const addDiv = document.createElement('div');
+                    addDiv.className = 'admin-add-technician';
+                    const addInput = document.createElement('input');
+                    addInput.type = 'text';
+                    addInput.placeholder = 'New Technician Name';
+                     addInput.classList.add('rounded-md', 'p-1', 'text-sm', 'bg-gray-700', 'text-white', 'border', 'border-gray-600');
+                    const addButton = document.createElement('button');
+                    addButton.textContent = 'Add Tech';
+                    addButton.className = 'action-button';
+                    addButton.onclick = () => addTechnician(groupIndex, addInput);
+                    
+                    addDiv.appendChild(addInput);
+                    addDiv.appendChild(addButton);
+                    groupSection.appendChild(addDiv);
+
+                    adminPanelContent.appendChild(groupSection);
+                });
+            }
+
+            function renameTechnician(groupIndex, techIndex, newName) {
+                if (newName && newName.trim() !== "") {
+                    groupMembersData[groupIndex][techIndex] = newName.trim();
+                    populateAdminPanel(); 
+                } else {
+                    alert("Technician name cannot be empty.");
+                }
+            }
+
+            function removeTechnician(groupIndex, techIndex) {
+                groupMembersData[groupIndex].splice(techIndex, 1);
+                populateAdminPanel(); 
+            }
+
+            function addTechnician(groupIndex, inputElement) {
+                const newName = inputElement.value.trim();
+                if (newName) {
+                    groupMembersData[groupIndex].push(newName);
+                    populateAdminPanel(); 
+                    inputElement.value = ''; 
+                } else {
+                    alert("Please enter a name for the new technician.");
+                }
+            }
+
+            function saveAdminChangesToLocalStorage() {
+                localStorage.setItem('adminGroupNames', JSON.stringify(groupNames)); 
+                localStorage.setItem('adminGroupMembersData', JSON.stringify(groupMembersData));
+                alert("Changes saved to your browser's local storage! The schedule will now use this data.");
+                closeModal(adminPanelModal);
+                initializeApp(); 
+            }
+
+
+            // Event Listeners
             if (startDateInput) startDateInput.addEventListener('change', handleInputsChange);
             else console.error("Error: startDateInput not found for event listener.");
             
@@ -1153,7 +1361,7 @@
             if (pmZonesButton) pmZonesButton.addEventListener('click', () => openModal(pmZonesModal));
             else console.error("Error: pmZonesButton not found for event listener.");
 
-            if (pcPositionsButton) { // Event listener for the new button
+            if (pcPositionsButton) { 
                 pcPositionsButton.addEventListener('click', () => openModal(pcPositionsModal));
             } else { console.error("Error: pcPositionsButton not found."); }
 
@@ -1182,11 +1390,11 @@
                 });
             } else console.error("Error: pmZonesModal not found for event listener.");
             
-            if (closePcPositionsModalButton) { // Event listener for new modal's close button
+            if (closePcPositionsModalButton) { 
                 closePcPositionsModalButton.addEventListener('click', () => closeModal(pcPositionsModal));
             } else { console.error("Error: closePcPositionsModalButton not found."); }
 
-            if (pcPositionsModal) { // Event listener for new modal backdrop click
+            if (pcPositionsModal) { 
                 pcPositionsModal.addEventListener('click', (event) => {
                     if (event.target === pcPositionsModal) { closeModal(pcPositionsModal); }
                 });
@@ -1209,8 +1417,30 @@
                     initializeApp(); 
                 });
             } else { console.error("Error: resetToLiveButton not found for event listener."); }
+
+             if (adminPanelButton) {
+                adminPanelButton.addEventListener('click', requestAdminPasswordAndOpenPanel);
+            } else { console.error("Error: adminPanelButton not found.")}
+
+            if (closeAdminPanelModalButton) { 
+                closeAdminPanelModalButton.addEventListener('click', () => closeModal(adminPanelModal));
+            }
+            if (closeAdminPanelButtonSecondary) { 
+                closeAdminPanelButtonSecondary.addEventListener('click', () => closeModal(adminPanelModal));
+            }
+            if (adminPanelModal) {
+                adminPanelModal.addEventListener('click', (event) => {
+                     if (event.target === adminPanelModal) { closeModal(adminPanelModal); }
+                });
+            }
+            if (saveAdminChangesButton) {
+                saveAdminChangesButton.addEventListener('click', saveAdminChangesToLocalStorage);
+            } else { console.error("Error: saveAdminChangesButton not found.")}
+
+
         });
     </script>
 
 </body>
 </html>
+�
