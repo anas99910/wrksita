@@ -1476,35 +1476,46 @@
             
             initializeApp();
 
-        async function requestAdminPasswordAndOpenPanel() {
-            const enteredPass = prompt("Enter Admin Password:");
-
-            if (enteredPass === null) {
-                return; // User cancelled the prompt.
-            }
-
-            try {
-                // This now calls your secure Netlify Function
-                const response = await fetch('/.netlify/functions/check-password', {
-                    method: 'POST',
-                    body: JSON.stringify({ password: enteredPass })
-                });
-
-                const result = await response.json();
-
-                if (response.ok && result.success) {
-                    // The server confirmed the password is correct
-                    openModal(adminPanelModal);
+            async function requestAdminPasswordAndOpenPanel() {
+                // Check if the user is already authenticated in this session
+                if (sessionStorage.getItem('isAdminAuthenticated') === 'true') {
                     populateAdminPanel();
-                } else {
-                    // The server said the password was wrong
-                    alert("Incorrect password.");
+                    openModal(adminPanelModal);
+                    return;
                 }
-            } catch (error) {
-                console.error('Error checking password:', error);
-                alert('There was a problem contacting the server. Please try again.');
+
+                const enteredPass = prompt("Enter Admin Password:");
+
+                if (enteredPass === null) {
+                    return; // User cancelled the prompt.
+                }
+
+                try {
+                    // This now calls your secure Netlify Function
+                    const response = await fetch('/.netlify/functions/check-password', {
+                        method: 'POST',
+                        body: JSON.stringify({ password: enteredPass })
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok && result.success) {
+                        // The server confirmed the password is correct
+                        // Set the flag in sessionStorage to remember the user for this session
+                        sessionStorage.setItem('isAdminAuthenticated', 'true');
+                        
+                        populateAdminPanel();
+                        openModal(adminPanelModal);
+                    } else {
+                        // The server said the password was wrong
+                        alert("Incorrect password.");
+                    }
+                } catch (error) {
+                    console.error('Error checking password:', error);
+                    alert('There was a problem contacting the server. Please try again.');
+                }
             }
-        }
+
             function populateAdminPanel() {
                 if (!adminPanelContent) return;
                 adminPanelContent.innerHTML = `
@@ -1837,4 +1848,4 @@
     </script>
 
 </body>
-</html>
+</ht
