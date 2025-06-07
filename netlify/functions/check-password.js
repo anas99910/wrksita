@@ -1,6 +1,6 @@
 exports.handler = async function(event, context) {
     // The password is securely stored on the server.
-    const ADMIN_PASSWORD = "2002"; 
+    const ADMIN_PASSWORD = "2002@cmn"; 
 
     // Get the password that the user submitted.
     const submittedPassword = JSON.parse(event.body).password;
