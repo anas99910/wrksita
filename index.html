@@ -1260,7 +1260,7 @@
                 if(printableScheduleTitle) printableScheduleTitle.textContent = `Planning - ${monthName.toUpperCase()}`;
 
                 let calendarHtml = '<table>';
-                calendarHtml += '<thead><tr><th>Lundi</th><th>Mardi</th><th>Mercredi</th><th>Jeudi</th><th>Vendredi</th><th>Sabedi</th><th>Dimanche</th></tr></thead>';
+                calendarHtml += '<thead><tr><th>Lundi</th><th>Mardi</th><th>Mercredi</th><th>Jeudi</th><th>Vendredi</th><th>Samedi</th><th>Dimanche</th></tr></thead>';
                 calendarHtml += '<tbody><tr>';
 
                 let adjustedFirstDay = (new Date(Date.UTC(year, month_0_indexed, 1)).getUTCDay() + 6) % 7;
@@ -1403,13 +1403,6 @@
             initializeApp();
 
         async function requestAdminPasswordAndOpenPanel() {
-            // First, check if the user is already logged in during this session.
-            if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
-                openModal(adminPanelModal);
-                populateAdminPanel();
-                return;
-            }
-
             const enteredPass = prompt("Enter Admin Password:");
 
             if (enteredPass === null) {
@@ -1426,9 +1419,7 @@
                 const result = await response.json();
 
                 if (response.ok && result.success) {
-                    // The server confirmed the password is correct.
-                    // **NEW**: Save the login state to session storage.
-                    sessionStorage.setItem('isAdminLoggedIn', 'true');
+                    // The server confirmed the password is correct
                     openModal(adminPanelModal);
                     populateAdminPanel();
                 } else {
