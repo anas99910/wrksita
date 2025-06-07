@@ -1087,15 +1087,9 @@
                         dayCell.title = (dayCell.title ? dayCell.title + ' / ' : '') + 'Monthly PM';
                     }
                     
-                    const workingGroupMembers = groupMembersData[actualWorkingGroupIndex] || [];
-                    const membersWithZonesAndLeave = workingGroupMembers.map(name => ({
-                        name,
-                        zone: 'N/A', 
-                        onLeave: isTechnicianOnLeave(name, currentDateInCalendar)
-                    }));
+                    // The event listener is updated to no longer pass the member list directly.
+                    dayCell.addEventListener('click', () => showGroupMembers(actualWorkingGroupIndex, dayOfMonth, currentDisplayDate, holidayName));
 
-
-                    dayCell.addEventListener('click', () => showGroupMembers(actualWorkingGroupIndex, dayOfMonth, currentDisplayDate, holidayName, membersWithZonesAndLeave));
                     if (isSelectedGroupWorkingThisDay) dayCell.classList.add('ring-2', 'ring-red-400', 'ring-offset-1', 'ring-selected-group'); 
                     if (currentDateInCalendar.getTime() === todayUTCForHighlight.getTime()) {
                         dayCell.classList.remove('ring-red-400', 'ring-selected-group'); 
@@ -1116,12 +1110,14 @@
                     const leaveIndicatorContainer = document.createElement('div');
                     leaveIndicatorContainer.className = 'day-cell-leave-container';
 
-                    membersWithZonesAndLeave.forEach(member => {
-                        if (member.onLeave) {
+                    // This part is still needed to show the red X on the calendar itself.
+                    const workingGroupMembers = groupMembersData[actualWorkingGroupIndex] || [];
+                    workingGroupMembers.forEach(name => {
+                        if (isTechnicianOnLeave(name, currentDateInCalendar)) {
                             const leaveIndicator = document.createElement('div');
                             leaveIndicator.className = 'day-cell-leave-item';
-                            leaveIndicator.textContent = `❌ ${member.name.split(' ')[0]}`;
-                            leaveIndicator.title = `${member.name} on leave`;
+                            leaveIndicator.textContent = `❌ ${name.split(' ')[0]}`;
+                            leaveIndicator.title = `${name} on leave`;
                             leaveIndicatorContainer.appendChild(leaveIndicator);
                         }
                     });
@@ -1137,9 +1133,14 @@
                 updateOnDutyDashboard(); 
             }
         
-            function showGroupMembers(groupIndex, day, displayDate, holidayName = null, membersWithInfo = []) { 
+            /**
+             * MODIFIED FUNCTION
+             * Displays a modal with the list of technicians for a given day, including their assigned zone.
+             */
+            function showGroupMembers(groupIndex, day, displayDate, holidayName = null) {
                 if (!groupMembersModalTitle || !groupMembersList) return;
-                const groupName = groupNames[groupIndex].replace(' GRP', ''); 
+
+                const groupName = groupNames[groupIndex].replace(' GRP', '');
                 const dateOfClickedDay = new Date(Date.UTC(displayDate.getUTCFullYear(), displayDate.getUTCMonth(), day));
                 const formattedDate = dateOfClickedDay.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' });
                 
@@ -1147,22 +1148,64 @@
                 if (holidayName) titleText += ` (Holiday: ${holidayName})`;
                 groupMembersModalTitle.textContent = titleText;
 
-                groupMembersList.innerHTML = ''; 
-                if (membersWithInfo.length > 0) {
-                    membersWithInfo.forEach(memberInfo => {
-                        const listItem = document.createElement('li');
-                        if (memberInfo.onLeave) {
-                            listItem.innerHTML = `<span class="on-leave">${memberInfo.name}</span><span class="leave-icon">❌ Congé</span>`;
-                        } else {
-                            listItem.textContent = `${memberInfo.name}`; // Zone info removed for simplicity, handled by dashboard
-                        }
-                        groupMembersList.appendChild(listItem);
-                    });
-                } else {
+                groupMembersList.innerHTML = '';
+                
+                // --- Logic to calculate and display zones, adapted from generatePrintableSchedule ---
+                const workingGroupMembers = groupMembersData[groupIndex] || [];
+                if (workingGroupMembers.length === 0) {
                     const listItem = document.createElement('li');
                     listItem.textContent = 'No members listed for this group.';
                     groupMembersList.appendChild(listItem);
+                    openModal(groupMembersModal);
+                    return;
                 }
+                
+                // Calculate the number of shifts this group has had to determine the base zone.
+                let groupNthShiftForZoneCalc = 0; 
+                const daysSinceGlobalRef = Math.floor((dateOfClickedDay.getTime() - GLOBAL_REFERENCE_DATE.getTime()) / (1000 * 60 * 60 * 24));
+                if (daysSinceGlobalRef >= 0) {
+                    const groupOffsetFromGlobalRefStart = (groupIndex - GLOBAL_REFERENCE_GROUP_INDEX + 5) % 5;
+                    if (daysSinceGlobalRef >= groupOffsetFromGlobalRefStart) {
+                        groupNthShiftForZoneCalc = Math.floor((daysSinceGlobalRef - groupOffsetFromGlobalRefStart) / 5) + 1;
+                    }
+                }
+                
+                // Determine which set of zones to use based on group size
+                const currentZonesToUse = (workingGroupMembers.length === 4) ? ZONES : BASE_ZONES;
+
+                // A temporary history for this single calculation to prevent immediate zone repetition if needed.
+                let localTechnicianShiftHistory = {}; 
+
+                workingGroupMembers.forEach((memberName, memberIndexInGroup) => {
+                    const onLeave = isTechnicianOnLeave(memberName, dateOfClickedDay);
+                    const listItem = document.createElement('li');
+
+                    if (onLeave) {
+                        listItem.innerHTML = `<span class="on-leave">${memberName}</span><span class="leave-icon">❌ Congé</span>`;
+                    } else {
+                        let assignedZone = "N/A";
+                        
+                        // Calculate zone only if the shift calculation is valid
+                        if (groupNthShiftForZoneCalc > 0) {
+                            const groupShiftBaseZoneIndex = ((groupNthShiftForZoneCalc - 1) + groupIndex) % currentZonesToUse.length;
+                            let potentialZoneIndex = (groupShiftBaseZoneIndex + memberIndexInGroup) % currentZonesToUse.length;
+                            assignedZone = currentZonesToUse[potentialZoneIndex];
+                            
+                            // This logic prevents a tech from having the same zone as the previous tech in the list for this day.
+                            let lastZoneForThisTech = localTechnicianShiftHistory[memberName] ? localTechnicianShiftHistory[memberName].lastZone : null;
+                            if (lastZoneForThisTech && assignedZone === lastZoneForThisTech) {
+                                potentialZoneIndex = (potentialZoneIndex + 1) % currentZonesToUse.length;
+                                assignedZone = currentZonesToUse[potentialZoneIndex];
+                            }
+                            localTechnicianShiftHistory[memberName] = { lastZone: assignedZone };
+                        }
+
+                        // Set the list item's HTML with the name and assigned zone
+                        listItem.innerHTML = `${memberName} - <strong style="color: #A7F3D0; font-weight: 600;">${assignedZone}</strong>`;
+                    }
+                    groupMembersList.appendChild(listItem);
+                });
+                
                 openModal(groupMembersModal);
             }
             
