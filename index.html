@@ -357,17 +357,48 @@
         #printableScheduleModal th { background-color: #f3f4f6; font-weight: bold; text-transform: uppercase; color: #374151; }
         #printableScheduleModal .day-cell { height: 100px; vertical-align: top; }
         #printableScheduleModal .date-number { font-weight: bold; font-size: 14px; margin-bottom: 5px; color: #1f2937; }
+        #printableScheduleModal .printable-pm-indicator { font-weight: bold; color: #1d4ed8; margin-top: 5px; font-size: 11px;}
         #printableScheduleModal .day-off { background-color: #f9fafb; }
         #printableScheduleModal .technician-info {
             display: block; padding: 3px 5px; margin-top: 3px;
             border-radius: 4px; font-size: 10px; font-weight: 500;
+            color: #1f2937; /* Enforce dark text for all zones */
         }
         #printableScheduleModal .technician-info.on-leave { background-color: #fee2e2; color: #991b1b; text-decoration: line-through; font-weight: bold;}
-        #printableScheduleModal .technician-info.zone-a { background-color: #d1fae5; color: #064e3b; }
-        #printableScheduleModal .technician-info.zone-b { background-color: #dbeafe; color: #1e3a8a; }
-        #printableScheduleModal .technician-info.zone-c { background-color: #fef9c3; color: #78350f; }
-        #printableScheduleModal .technician-info.office { background-color: #e5e7eb; color: #1f2937; }
+        #printableScheduleModal .technician-info.zone-a { background-color: #d1fae5; }
+        #printableScheduleModal .technician-info.zone-b { background-color: #dbeafe; }
+        #printableScheduleModal .technician-info.zone-c { background-color: #fef9c3; }
+        #printableScheduleModal .technician-info.office { background-color: #e5e7eb; }
         #printableScheduleModal .technician-info.na { background-color: #f3f4f6; color: #4b5563; }
+        
+        /* Styles for the dispatch table in printable view */
+        #printableScheduleModal .printable-dispatch-section {
+            margin-top: 2rem;
+            color: #000;
+        }
+        #printableScheduleModal .printable-dispatch-section h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #111827;
+        }
+        #printableScheduleModal .zone-details-table {
+            color: #111827;
+            font-size: 0.8rem;
+        }
+        #printableScheduleModal .zone-details-table th, 
+        #printableScheduleModal .zone-details-table td {
+            border: 1px solid #d1d5db;
+            padding: 8px;
+        }
+        #printableScheduleModal .zone-details-table th {
+            background-color: #e5e7eb;
+            font-weight: bold;
+        }
+        #printableScheduleModal .zone-details-table .zone-a-bg { background-color: #a7f3d0; color: #065f46; }
+        #printableScheduleModal .zone-details-table .zone-b-bg { background-color: #bfdbfe; color: #1e40af; }
+        #printableScheduleModal .zone-details-table .zone-c-bg { background-color: #fde68a; color: #78350f; }
 
 
         @media (hover: hover) and (pointer: fine) {
@@ -1177,32 +1208,36 @@
                 const daysInMonth = new Date(Date.UTC(year, month_0_indexed + 1, 0)).getUTCDate();
                 const firstDayOfWeek = new Date(Date.UTC(year, month_0_indexed, 1)).getUTCDay();
 
-                let html = '<table>';
-                html += '<thead><tr><th>Lundi</th><th>Mardi</th><th>Mercredi</th><th>Jeudi</th><th>Vendredi</th><th>Samedi</th><th>Dimanche</th></tr></thead>';
-                html += '<tbody><tr>';
+                let calendarHtml = '<table>';
+                calendarHtml += '<thead><tr><th>Lundi</th><th>Mardi</th><th>Mercredi</th><th>Jeudi</th><th>Vendredi</th><th>Samedi</th><th>Dimanche</th></tr></thead>';
+                calendarHtml += '<tbody><tr>';
 
                 let adjustedFirstDay = (firstDayOfWeek === 0) ? 6 : firstDayOfWeek - 1;
                 for (let i = 0; i < adjustedFirstDay; i++) {
-                    html += '<td class="day-cell day-off"></td>';
+                    calendarHtml += '<td class="day-cell day-off"></td>';
                 }
 
                 for (let day = 1; day <= daysInMonth; day++) {
                     const currentDate = new Date(Date.UTC(year, month_0_indexed, day));
                     let dayOfWeek = (currentDate.getUTCDay() === 0) ? 6 : currentDate.getUTCDay() - 1;
 
-                    if (dayOfWeek === 0 && day !== 1) html += '</tr><tr>';
+                    if (dayOfWeek === 0 && day !== 1) calendarHtml += '</tr><tr>';
                     
                     const diffInDaysFromCycleStart = Math.floor((currentDate.getTime() - cycleStartDate.getTime()) / (1000 * 60 * 60 * 24));
                     const workingGroupOffset = ((diffInDaysFromCycleStart % 5) + 5) % 5;
                     const actualWorkingGroupIndex = (selectedGroupIndex + workingGroupOffset) % 5;
                     const workingGroupMembers = groupMembersData[actualWorkingGroupIndex] || [];
                     
-                    html += '<td class="day-cell">';
-                    html += `<div class="date-number">${day}</div>`;
+                    calendarHtml += '<td class="day-cell">';
+                    calendarHtml += `<div class="date-number">${day}</div>`;
                     
                     const holidayName = getHolidayInfo(currentDate, year);
-                    if (holidayName) html += `<strong style="color: #c026d3;">${holidayName.toUpperCase()}</strong>`;
+                    if (holidayName) calendarHtml += `<strong style="color: #c026d3;">${holidayName.toUpperCase()}</strong>`;
                     
+                    if (day >= daysInMonth - 4) {
+                        calendarHtml += `<div class="printable-pm-indicator">🧹 PM</div>`;
+                    }
+
                     const currentZonesToUse = (workingGroupMembers.length === 4) ? ZONES : BASE_ZONES;
 
                     let groupNthShiftForZoneCalc = 0; 
@@ -1217,7 +1252,7 @@
                     workingGroupMembers.forEach((memberName, memberIndexInGroup) => {
                         const onLeave = isTechnicianOnLeave(memberName, currentDate);
                         if (onLeave) {
-                            html += `<span class="technician-info on-leave">${memberName} - ❌ Congé</span>`;
+                            calendarHtml += `<span class="technician-info on-leave">${memberName} - ❌ Congé</span>`;
                         } else {
                             let assignedZone = "N/A";
                             let zoneClass = "na";
@@ -1239,20 +1274,24 @@
                                 zoneClass = assignedZone.toLowerCase().replace(' ', '-');
                             }
                             
-                            html += `<span class="technician-info ${zoneClass}">${memberName} - <strong>${assignedZone || 'N/A'}</strong></span>`;
+                            calendarHtml += `<span class="technician-info ${zoneClass}">${memberName} - <strong>${assignedZone || 'N/A'}</strong></span>`;
                         }
                     });
-                    html += '</td>';
+                    calendarHtml += '</td>';
                 }
 
                 let lastDayOfWeek = new Date(Date.UTC(year, month_0_indexed, daysInMonth)).getUTCDay();
                 lastDayOfWeek = (lastDayOfWeek === 0) ? 6 : lastDayOfWeek - 1;
                 for (let i = lastDayOfWeek; i < 6; i++) {
-                    html += '<td class="day-cell day-off"></td>';
+                    calendarHtml += '<td class="day-cell day-off"></td>';
                 }
 
-                html += '</tr></tbody></table>';
-                printableContent.innerHTML = html;
+                calendarHtml += '</tr></tbody></table>';
+
+                // Get the dispatch table HTML
+                const dispatchTableHTML = document.getElementById('dispatchTableSection').innerHTML;
+
+                printableContent.innerHTML = calendarHtml + `<div class="printable-dispatch-section">${dispatchTableHTML}</div>`;
             }
             
             function initializeApp() { 
