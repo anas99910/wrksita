@@ -766,7 +766,10 @@
     <footer class="w-full text-center py-6">
         <p class="text-xs text-gray-500/60"> Made by Ben chikhe Anas</p>
     </footer>
-
+    
+    <!-- For production, it's recommended to minify and obfuscate this JavaScript code. 
+    You can use an online tool to make the code unreadable, which helps protect your logic. 
+    Paste the obfuscated code back inside this script tag. -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const appContent = document.getElementById('appContent');
@@ -1210,21 +1213,19 @@
                 const monthName = currentDisplayDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
                 if(printableScheduleTitle) printableScheduleTitle.textContent = `Planning - ${monthName.toUpperCase()}`;
 
-                const daysInMonth = new Date(Date.UTC(year, month_0_indexed + 1, 0)).getUTCDate();
-                const firstDayOfWeek = new Date(Date.UTC(year, month_0_indexed, 1)).getUTCDay();
-
                 let calendarHtml = '<table>';
                 calendarHtml += '<thead><tr><th>Lundi</th><th>Mardi</th><th>Mercredi</th><th>Jeudi</th><th>Vendredi</th><th>Samedi</th><th>Dimanche</th></tr></thead>';
                 calendarHtml += '<tbody><tr>';
 
-                let adjustedFirstDay = (firstDayOfWeek === 0) ? 6 : firstDayOfWeek - 1;
+                let adjustedFirstDay = (new Date(Date.UTC(year, month_0_indexed, 1)).getUTCDay() + 6) % 7;
                 for (let i = 0; i < adjustedFirstDay; i++) {
                     calendarHtml += '<td class="day-cell day-off"></td>';
                 }
 
+                const daysInMonth = new Date(Date.UTC(year, month_0_indexed + 1, 0)).getUTCDate();
                 for (let day = 1; day <= daysInMonth; day++) {
                     const currentDate = new Date(Date.UTC(year, month_0_indexed, day));
-                    let dayOfWeek = (currentDate.getUTCDay() === 0) ? 6 : currentDate.getUTCDay() - 1;
+                    let dayOfWeek = (currentDate.getUTCDay() + 6) % 7;
 
                     if (dayOfWeek === 0 && day !== 1) calendarHtml += '</tr><tr>';
                     
@@ -1285,8 +1286,7 @@
                     calendarHtml += '</td>';
                 }
 
-                let lastDayOfWeek = new Date(Date.UTC(year, month_0_indexed, daysInMonth)).getUTCDay();
-                lastDayOfWeek = (lastDayOfWeek === 0) ? 6 : lastDayOfWeek - 1;
+                let lastDayOfWeek = (new Date(Date.UTC(year, month_0_indexed, daysInMonth)).getUTCDay() + 6) % 7;
                 for (let i = lastDayOfWeek; i < 6; i++) {
                     calendarHtml += '<td class="day-cell day-off"></td>';
                 }
@@ -1632,5 +1632,32 @@
         });
     </script>
 
+    <script>
+        // This script attempts to disable right-clicking and developer tools.
+        // NOTE: This is not a foolproof method and can be easily bypassed by savvy users.
+        // It is primarily a deterrent for casual inspection.
+    
+        document.addEventListener('contextmenu', event => event.preventDefault());
+    
+        document.onkeydown = function(e) {
+            // Disable F12 key
+            if(e.keyCode == 123) {
+                return false;
+            }
+            // Disable I key (Ctrl+Shift+I)
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+                return false;
+            }
+            // Disable J key (Ctrl+Shift+J)
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+                return false;
+            }
+            // Disable U key (Ctrl+U)
+            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+                return false;
+            }
+        };
+    </script>
+
 </body>
-</html>
+</ht
