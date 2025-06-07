@@ -196,7 +196,7 @@
         .day-cell-leave-item {
             font-size: 0.6rem; /* 9.6px */
             line-height: 1;
-            color: #fca5a5; /* red-300 */
+            color: #f87171; /* brighter red */
             font-weight: 600;
             text-shadow: 0 0 2px rgba(0,0,0,0.5);
         }
@@ -259,7 +259,7 @@
             padding: 0.15rem 0; 
             color: #D1D5DB; 
         }
-        #onDutyDashboard .on-leave { text-decoration: line-through; color: #fca5a5; }
+        #onDutyDashboard .on-leave { text-decoration: line-through; color: #f87171; font-weight: 600; }
         #onDutyDashboard .holiday-text { 
             color: #FCD34D; 
             font-weight: 500;
@@ -350,22 +350,22 @@
         #adminLeaveSection .leave-item { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background-color: rgba(0,0,0,0.15); border-radius: 0.375rem; margin-top: 0.5rem; }
         #adminLeaveSection .leave-item button { background-color: rgba(239, 68, 68, 0.5); }
 
-        /* Printable Schedule Modal Styles */
-        #printableScheduleModal .printable-content { background-color: #ffffff; color: #000000; padding: 20px; }
-        #printableScheduleModal table { width: 100%; border-collapse: collapse; font-size: 10px; }
-        #printableScheduleModal th, #printableScheduleModal td { border: 1px solid #ccc; padding: 4px; text-align: left; vertical-align: top; }
-        #printableScheduleModal th { background-color: #f2f2f2; font-weight: bold; }
-        #printableScheduleModal .day-cell { height: 90px; vertical-align: top; }
-        #printableScheduleModal .date-number { font-weight: bold; font-size: 12px; margin-bottom: 4px; color: #333; }
-        #printableScheduleModal .day-off { background-color: #f3f4f6; }
+        /* --- UPDATED Printable Schedule Modal Styles --- */
+        #printableScheduleModal .printable-content { background-color: #ffffff; color: #111827; padding: 15px; }
+        #printableScheduleModal table { width: 100%; border-collapse: collapse; font-size: 10px; color: #111827; }
+        #printableScheduleModal th, #printableScheduleModal td { border: 1px solid #d1d5db; padding: 5px; text-align: left; vertical-align: top; }
+        #printableScheduleModal th { background-color: #f3f4f6; font-weight: bold; text-transform: uppercase; color: #374151; }
+        #printableScheduleModal .day-cell { height: 100px; vertical-align: top; }
+        #printableScheduleModal .date-number { font-weight: bold; font-size: 14px; margin-bottom: 5px; color: #1f2937; }
+        #printableScheduleModal .day-off { background-color: #f9fafb; }
         #printableScheduleModal .technician-info {
-            display: block; padding: 2px 4px; margin-bottom: 2px;
-            border-radius: 3px; font-size: 9px; font-weight: 500;
+            display: block; padding: 3px 5px; margin-top: 3px;
+            border-radius: 4px; font-size: 10px; font-weight: 500;
         }
-        #printableScheduleModal .technician-info.on-leave { background-color: #fee2e2; color: #991b1b; text-decoration: line-through;}
+        #printableScheduleModal .technician-info.on-leave { background-color: #fee2e2; color: #991b1b; text-decoration: line-through; font-weight: bold;}
         #printableScheduleModal .technician-info.zone-a { background-color: #d1fae5; color: #064e3b; }
-        #printableScheduleModal .technician-info.zone-b { background-color: #dbeafe; color: #1e40af; }
-        #printableScheduleModal .technician-info.zone-c { background-color: #fef3c7; color: #92400e; }
+        #printableScheduleModal .technician-info.zone-b { background-color: #dbeafe; color: #1e3a8a; }
+        #printableScheduleModal .technician-info.zone-c { background-color: #fef9c3; color: #78350f; }
         #printableScheduleModal .technician-info.office { background-color: #e5e7eb; color: #1f2937; }
         #printableScheduleModal .technician-info.na { background-color: #f3f4f6; color: #4b5563; }
 
@@ -1205,6 +1205,15 @@
                     
                     const currentZonesToUse = (workingGroupMembers.length === 4) ? ZONES : BASE_ZONES;
 
+                    let groupNthShiftForZoneCalc = 0; 
+                    const daysSinceGlobalRef = Math.floor((currentDate.getTime() - GLOBAL_REFERENCE_DATE.getTime()) / (1000 * 60 * 60 * 24));
+                    if (daysSinceGlobalRef >= 0) {
+                        const groupOffsetFromGlobalRefStart = (actualWorkingGroupIndex - GLOBAL_REFERENCE_GROUP_INDEX + 5) % 5;
+                        if (daysSinceGlobalRef >= groupOffsetFromGlobalRefStart) {
+                            groupNthShiftForZoneCalc = Math.floor((daysSinceGlobalRef - groupOffsetFromGlobalRefStart) / 5) + 1;
+                        }
+                    }
+                    
                     workingGroupMembers.forEach((memberName, memberIndexInGroup) => {
                         const onLeave = isTechnicianOnLeave(memberName, currentDate);
                         if (onLeave) {
@@ -1212,18 +1221,25 @@
                         } else {
                             let assignedZone = "N/A";
                             let zoneClass = "na";
-                             let lastZoneForThisTech = localTechnicianShiftHistory[memberName] ? localTechnicianShiftHistory[memberName].lastZone : null;
-                            const groupShiftBaseZoneIndex = ((Math.floor(diffInDaysFromCycleStart / 5)) + actualWorkingGroupIndex) % currentZonesToUse.length;
-                            let potentialZoneIndex = (groupShiftBaseZoneIndex + memberIndexInGroup) % currentZonesToUse.length;
-                            assignedZone = currentZonesToUse[potentialZoneIndex];
                             
-                            if (lastZoneForThisTech && assignedZone === lastZoneForThisTech) {
-                                potentialZoneIndex = (potentialZoneIndex + 1) % currentZonesToUse.length;
+                            if (groupNthShiftForZoneCalc > 0) {
+                                let lastZoneForThisTech = localTechnicianShiftHistory[memberName] ? localTechnicianShiftHistory[memberName].lastZone : null;
+                                const groupShiftBaseZoneIndex = ((groupNthShiftForZoneCalc - 1) + actualWorkingGroupIndex) % currentZonesToUse.length;
+                                let potentialZoneIndex = (groupShiftBaseZoneIndex + memberIndexInGroup) % currentZonesToUse.length;
                                 assignedZone = currentZonesToUse[potentialZoneIndex];
+                                
+                                if (lastZoneForThisTech && assignedZone === lastZoneForThisTech) {
+                                    potentialZoneIndex = (potentialZoneIndex + 1) % currentZonesToUse.length;
+                                    assignedZone = currentZonesToUse[potentialZoneIndex];
+                                }
+                                localTechnicianShiftHistory[memberName] = { lastZone: assignedZone };
                             }
-                            localTechnicianShiftHistory[memberName] = { lastZone: assignedZone };
-                            zoneClass = assignedZone.toLowerCase().replace(' ', '-');
-                            html += `<span class="technician-info ${zoneClass}">${memberName} - <strong>${assignedZone}</strong></span>`;
+                            
+                            if (assignedZone) {
+                                zoneClass = assignedZone.toLowerCase().replace(' ', '-');
+                            }
+                            
+                            html += `<span class="technician-info ${zoneClass}">${memberName} - <strong>${assignedZone || 'N/A'}</strong></span>`;
                         }
                     });
                     html += '</td>';
