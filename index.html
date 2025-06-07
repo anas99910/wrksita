@@ -362,14 +362,14 @@
         #printableScheduleModal .technician-info {
             display: block; padding: 3px 5px; margin-top: 3px;
             border-radius: 4px; font-size: 10px; font-weight: 500;
-            color: #1f2937; /* Enforce dark text for all zones */
+            color: #1f2937 !important; /* Enforce dark text for all zones */
         }
-        #printableScheduleModal .technician-info.on-leave { background-color: #fee2e2; color: #991b1b; text-decoration: line-through; font-weight: bold;}
+        #printableScheduleModal .technician-info.on-leave { background-color: #fee2e2; color: #991b1b !important; text-decoration: line-through; font-weight: bold;}
         #printableScheduleModal .technician-info.zone-a { background-color: #d1fae5; }
         #printableScheduleModal .technician-info.zone-b { background-color: #dbeafe; }
         #printableScheduleModal .technician-info.zone-c { background-color: #fef9c3; }
         #printableScheduleModal .technician-info.office { background-color: #e5e7eb; }
-        #printableScheduleModal .technician-info.na { background-color: #f3f4f6; color: #4b5563; }
+        #printableScheduleModal .technician-info.na { background-color: #f3f4f6; color: #4b5563 !important; }
         
         /* Styles for the dispatch table in printable view */
         #printableScheduleModal .printable-dispatch-section {
@@ -748,8 +748,10 @@
                 <h3 id="printableScheduleTitle" class="text-lg font-semibold text-teal-300 uppercase-text">Printable Schedule</h3>
                 <button id="closePrintableModal" class="text-gray-400 hover:text-red-400 text-2xl font-bold">&times;</button>
             </div>
-            <div id="printableContent" class="printable-content flex-grow overflow-auto">
-                <!-- Printable schedule will be generated here -->
+            <div id="printableContentWrapper" class="flex-grow overflow-auto">
+                <div id="printableContent">
+                    <!-- Printable schedule will be generated here -->
+                </div>
             </div>
             <div class="modal-footer mt-6 pt-4 border-t border-white/10 flex justify-end space-x-3">
                 <button id="downloadScheduleImage" class="action-button">Download as Image</button>
@@ -809,6 +811,7 @@
             // Printable Schedule Modal elements
             const printScheduleButton = document.getElementById('printScheduleButton');
             const printableScheduleModal = document.getElementById('printableScheduleModal');
+            const printableContentWrapper = document.getElementById('printableContentWrapper');
             const printableContent = document.getElementById('printableContent');
             const closePrintableModalButton = document.getElementById('closePrintableModal');
             const printThisViewButton = document.getElementById('printThisView');
@@ -1237,7 +1240,7 @@
                     if (day >= daysInMonth - 4) {
                         calendarHtml += `<div class="printable-pm-indicator">🧹 PM</div>`;
                     }
-
+                    
                     const currentZonesToUse = (workingGroupMembers.length === 4) ? ZONES : BASE_ZONES;
 
                     let groupNthShiftForZoneCalc = 0; 
@@ -1604,11 +1607,19 @@
                 downloadScheduleImageButton.addEventListener('click', () => {
                     const scheduleEl = document.getElementById('printableContent');
                      if(html2canvas) {
-                        html2canvas(scheduleEl, { scale: 2 }).then(canvas => {
+                        const options = {
+                            scale: 2,
+                            width: scheduleEl.scrollWidth,
+                            height: scheduleEl.scrollHeight,
+                        };
+                        html2canvas(scheduleEl, options).then(canvas => {
                             const link = document.createElement('a');
                             link.download = `schedule-${currentDisplayDate.getUTCFullYear()}-${currentDisplayDate.getUTCMonth()+1}.png`;
                             link.href = canvas.toDataURL();
                             link.click();
+                        }).catch(err => {
+                            console.error("Failed to generate image:", err);
+                            alert("Sorry, there was an error generating the image.");
                         });
                     } else {
                         alert('Could not download image. The html2canvas library is missing.');
