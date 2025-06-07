@@ -1531,29 +1531,14 @@
                         <h4 class="admin-section-title">Manage Groups & Technicians</h4>
                         <div id="adminGroupContent"></div>
                     </div>
-                    <div class="admin-section">
+                    <div id="leaveManagementSection" class="admin-section">
                          <h4 class="admin-section-title">Gestion des Congés</h4>
-                         <div id="leaveBalanceSection">
-                            <h5 class="admin-group-title">Solde de Congé</h5>
+                         <div>
+                            <label for="leaveTechSelector" class="input-label-tag">Select Technician</label>
+                            <select id="leaveTechSelector" class="w-full p-2.5 rounded-md"></select>
                          </div>
-                         <div id="leaveHistorySection" class="mt-8">
-                             <h5 class="admin-group-title">Historique des Congés</h5>
-                             <div class="leave-form">
-                                <div>
-                                    <label for="leaveTechSelect" class="input-label-tag">Technician</label>
-                                    <select id="leaveTechSelect" class="rounded-md"></select>
-                                </div>
-                                <div>
-                                    <label for="leaveStartDate" class="input-label-tag">Start Date</label>
-                                    <input type="date" id="leaveStartDate" class="rounded-md">
-                                </div>
-                                <div>
-                                    <label for="leaveEndDate" class="input-label-tag">End Date</label>
-                                    <input type="date" id="leaveEndDate" class="rounded-md">
-                                </div>
-                                <button id="addLeaveButton" class="action-button" style="background-color: rgba(16, 185, 129, 0.5);">Add Leave</button>
-                             </div>
-                             <div id="leaveList" class="mt-4"></div>
+                         <div id="leaveDetailsForTech" class="mt-4 hidden">
+                            <!-- Content will be populated by JS -->
                          </div>
                     </div>
                      <div class="admin-section">
@@ -1646,98 +1631,125 @@
             }
 
             function populateLeaveManagementUI() {
-                const leaveTechSelect = document.getElementById('leaveTechSelect');
-                const leaveList = document.getElementById('leaveList');
-                const leaveBalanceSection = document.getElementById('leaveBalanceSection');
-
-                if (!leaveTechSelect || !leaveList || !leaveBalanceSection) return;
+                const leaveTechSelector = document.getElementById('leaveTechSelector');
+                if (!leaveTechSelector) return;
 
                 const allTechs = groupMembersData.flat().sort();
-
-                // Populate Leave Balance Section
-                leaveBalanceSection.innerHTML = '<h5 class="admin-group-title">Solde de Congé</h5>'; // Reset
+                
+                leaveTechSelector.innerHTML = '<option value="">-- Select a Technician --</option>';
                 allTechs.forEach(techName => {
-                    const balanceItem = document.createElement('div');
-                    balanceItem.className = 'balance-item';
-                    
-                    const nameSpan = document.createElement('span');
-                    nameSpan.textContent = techName;
-                    
-                    const balanceInput = document.createElement('input');
-                    balanceInput.type = 'number';
-                    balanceInput.className = 'leave-balance-input rounded-md';
-                    balanceInput.dataset.tech = techName; // Link input to technician
-                    balanceInput.value = leaveBalances[techName] || 0;
-
-                    const plusButton = document.createElement('button');
-                    plusButton.textContent = '+';
-                    plusButton.className = 'action-button balance-btn plus';
-                    plusButton.onclick = () => { balanceInput.value = parseInt(balanceInput.value) + 1; };
-
-                    const minusButton = document.createElement('button');
-                    minusButton.textContent = '-';
-                    minusButton.className = 'action-button balance-btn minus';
-                    minusButton.onclick = () => { balanceInput.value = parseInt(balanceInput.value) - 1; };
-
-                    balanceItem.appendChild(nameSpan);
-                    balanceItem.appendChild(minusButton);
-                    balanceItem.appendChild(balanceInput);
-                    balanceItem.appendChild(plusButton);
-                    leaveBalanceSection.appendChild(balanceItem);
-                });
-
-
-                // Populate Leave History Section
-                leaveTechSelect.innerHTML = '<option value="">Select Technician</option>';
-                allTechs.forEach(tech => {
                     const option = document.createElement('option');
-                    option.value = tech;
-                    option.textContent = tech;
-                    leaveTechSelect.appendChild(option);
+                    option.value = techName;
+                    option.textContent = techName;
+                    leaveTechSelector.appendChild(option);
                 });
+                
+                leaveTechSelector.onchange = (event) => {
+                    displayLeaveDetailsForTechnician(event.target.value);
+                };
+            }
 
+            function displayLeaveDetailsForTechnician(techName) {
+                const detailsContainer = document.getElementById('leaveDetailsForTech');
+                if (!detailsContainer) return;
+
+                if (!techName) {
+                    detailsContainer.classList.add('hidden');
+                    return;
+                }
+
+                detailsContainer.classList.remove('hidden');
+                detailsContainer.innerHTML = `
+                    <div id="leaveBalanceSection" class="mt-4">
+                        <h5 class="admin-group-title">Solde de Congé</h5>
+                        <div class="balance-item">
+                            <span>${techName}</span>
+                            <button class="action-button balance-btn minus" onclick="updateBalance('${techName}', -1)">-</button>
+                            <input type="number" id="balance-input-${techName.replace(/\s+/g, '-')}" class="leave-balance-input rounded-md" value="${leaveBalances[techName] || 0}">
+                            <button class="action-button balance-btn plus" onclick="updateBalance('${techName}', 1)">+</button>
+                        </div>
+                    </div>
+                    <div id="leaveHistorySection" class="mt-8">
+                        <h5 class="admin-group-title">Add & View Leave History</h5>
+                        <div class="leave-form">
+                             <div>
+                                <label for="leaveStartDate" class="input-label-tag">Start Date</label>
+                                <input type="date" id="leaveStartDate" class="rounded-md">
+                            </div>
+                            <div>
+                                <label for="leaveEndDate" class="input-label-tag">End Date</label>
+                                <input type="date" id="leaveEndDate" class="rounded-md">
+                            </div>
+                            <button id="addLeaveButton" class="action-button" style="background-color: rgba(16, 185, 129, 0.5);">Add Leave</button>
+                        </div>
+                        <div id="leaveList" class="mt-4"></div>
+                    </div>
+                `;
+
+                // Populate History
+                const leaveList = document.getElementById('leaveList');
                 leaveList.innerHTML = '';
-                technicianLeaves.forEach((leave, index) => {
+                technicianLeaves.filter(leave => leave.name === techName).forEach((leave, index) => {
+                     // Find original index to allow removal
+                    const originalIndex = technicianLeaves.findIndex(l => l.name === leave.name && l.startDate === leave.startDate && l.endDate === leave.endDate);
                     const item = document.createElement('div');
                     item.className = 'leave-item';
                     item.innerHTML = `
                         <span><strong>${leave.name}</strong> from ${leave.startDate} to ${leave.endDate}</span>
-                        <button class="action-button" onclick="removeLeave(${index})">Remove</button>
+                        <button class="action-button" onclick="removeLeave(${originalIndex})">Remove</button>
                     `;
                     leaveList.appendChild(item);
                 });
-                
-                document.getElementById('addLeaveButton').onclick = addLeave;
-            }
 
-            window.removeLeave = (index) => {
-                technicianLeaves.splice(index, 1);
-                populateLeaveManagementUI();
+                // Attach event listener for adding leave
+                document.getElementById('addLeaveButton').onclick = () => {
+                    const startDate = document.getElementById('leaveStartDate').value;
+                    const endDate = document.getElementById('leaveEndDate').value;
+                     if (techName && startDate && endDate && new Date(startDate) <= new Date(endDate)) {
+                        technicianLeaves.push({ name: techName, startDate, endDate });
+                        displayLeaveDetailsForTechnician(techName); // Refresh view
+                    } else {
+                        alert("Please fill all fields correctly. End date must be after or same as start date.");
+                    }
+                };
+
+                 // Attach event listener to update in-memory balance on input change
+                const balanceInput = document.getElementById(`balance-input-${techName.replace(/\s+/g, '-')}`);
+                balanceInput.onchange = () => {
+                    leaveBalances[techName] = parseInt(balanceInput.value) || 0;
+                };
+            }
+            
+            window.updateBalance = (techName, amount) => {
+                const inputId = `balance-input-${techName.replace(/\s+/g, '-')}`;
+                const balanceInput = document.getElementById(inputId);
+                let currentValue = parseInt(balanceInput.value) || 0;
+                balanceInput.value = currentValue + amount;
+                leaveBalances[techName] = parseInt(balanceInput.value); // Update in-memory object
             };
 
-            function addLeave() {
-                const techName = document.getElementById('leaveTechSelect').value;
-                const startDate = document.getElementById('leaveStartDate').value;
-                const endDate = document.getElementById('leaveEndDate').value;
-
-                if (techName && startDate && endDate && new Date(startDate) <= new Date(endDate)) {
-                    technicianLeaves.push({ name: techName, startDate, endDate });
-                    populateLeaveManagementUI();
-                } else {
-                    alert("Please fill all fields correctly. End date must be after or same as start date.");
-                }
-            }
+            window.removeLeave = (index) => {
+                const techName = technicianLeaves[index].name;
+                technicianLeaves.splice(index, 1);
+                populateLeaveManagementUI(); // Re-populate main dropdown
+                displayLeaveDetailsForTechnician(techName); // Refresh the details view
+            };
 
             function renameTechnician(groupIndex, techIndex, newName) {
                 if (newName && newName.trim() !== "") {
                     const oldName = groupMembersData[groupIndex][techIndex];
                     groupMembersData[groupIndex][techIndex] = newName.trim();
                     
-                    // Update name in leaveBalances
+                    // Update name in leaveBalances and leave history
                     if(leaveBalances.hasOwnProperty(oldName)) {
                         leaveBalances[newName.trim()] = leaveBalances[oldName];
                         delete leaveBalances[oldName];
                     }
+                    technicianLeaves.forEach(leave => {
+                        if (leave.name === oldName) {
+                            leave.name = newName.trim();
+                        }
+                    });
 
                     populateAdminPanel(); 
                 } else {
@@ -1756,9 +1768,8 @@
                     delete leaveBalances[techName];
                 }
 
-                // Remove from leave history (optional, or mark as inactive)
+                // Remove from leave history
                 technicianLeaves = technicianLeaves.filter(leave => leave.name !== techName);
-
 
                 populateAdminPanel(); 
             }
@@ -1790,18 +1801,13 @@
             }
 
             async function saveAdminChangesToFirestore(isInitialSetup = false) {
-                 // Update leave balances from the input fields before saving
-                const balanceInputs = document.querySelectorAll('.leave-balance-input');
-                balanceInputs.forEach(input => {
-                    const techName = input.dataset.tech;
-                    leaveBalances[techName] = parseInt(input.value) || 0;
-                });
-                
+                // Balances are already updated in memory by the input 'onchange' and '+/-' button events.
+                // We just need to save the current state of the objects.
                 const dataToSave = {
                     groupNames: groupNames,
                     groupMembersDataJSON: JSON.stringify(groupMembersData),
                     technicianLeaves: technicianLeaves,
-                    leaveBalances: leaveBalances // NEW: Save leave balances
+                    leaveBalances: leaveBalances
                 };
 
                 try {
