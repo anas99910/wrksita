@@ -1457,6 +1457,13 @@
                         </div>
                         <div id="leaveList" class="mt-4"></div>
                     </div>
+                     <div class="admin-section">
+                        <h4 class="admin-section-title" style="color: #ef4444;">DANGER ZONE</h4>
+                        <div class="text-center">
+                            <p class="text-sm text-gray-400 mb-2">This will permanently delete all current settings and restore the application to its original default state for all users.</p>
+                            <button id="factoryResetButton" class="action-button" style="background-color: rgba(239, 68, 68, 0.5); border-color: rgba(185, 28, 28, 0.6);">Factory Reset Application Data</button>
+                        </div>
+                    </div>
                 `;
 
                 const adminGroupContent = document.getElementById('adminGroupContent');
@@ -1526,6 +1533,16 @@
                 });
                 
                 populateLeaveManagementUI();
+
+                document.getElementById('factoryResetButton').addEventListener('click', () => {
+                     if (confirm("DANGER: Are you absolutely sure you want to reset all groups and leave data to the default settings? This cannot be undone and will affect all users.")) {
+                        groupNames = [...defaultGroupNames]; 
+                        groupMembersData = defaultGroupMembersData.map(arr => [...arr]);
+                        technicianLeaves = [];
+                        saveAdminChangesToFirestore(true); // Save defaults to Firestore
+                        alert("Application data has been reset to defaults.");
+                     }
+                });
             }
 
             function populateLeaveManagementUI() {
@@ -1666,17 +1683,15 @@
             if (pcPositionsModal) pcPositionsModal.addEventListener('click', (event) => { if (event.target === pcPositionsModal) closeModal(pcPositionsModal); });
             if (closeGroupMembersModalButton) closeGroupMembersModalButton.addEventListener('click', () => closeModal(groupMembersModal));
             if (groupMembersModal) groupMembersModal.addEventListener('click', (event) => { if (event.target === groupMembersModal) closeModal(groupMembersModal); });
+            
             if (resetToLiveButton) {
                 resetToLiveButton.addEventListener('click', () => {
-                    // This now resets the data in the database to the defaults.
-                    if (confirm("Are you sure you want to reset all groups and leave data to the default settings? This will affect all users.")) {
-                        groupNames = [...defaultGroupNames]; 
-                        groupMembersData = defaultGroupMembersData.map(arr => [...arr]);
-                        technicianLeaves = [];
-                        saveAdminChangesToFirestore(true); // Save defaults to Firestore
-                    }
+                    const now = new Date();
+                    currentDisplayDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), 1));
+                    generateSchedule();
                 });
             }
+
             if (adminPanelButton) adminPanelButton.addEventListener('click', requestAdminPasswordAndOpenPanel);
             if (closeAdminPanelModalButton) closeAdminPanelModalButton.addEventListener('click', () => closeModal(adminPanelModal));
             if (closeAdminPanelButtonSecondary) closeAdminPanelButtonSecondary.addEventListener('click', () => closeModal(adminPanelModal));
