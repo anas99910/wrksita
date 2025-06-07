@@ -7,6 +7,38 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📅</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        // =================================================================================
+        // PASTE YOUR FIREBASE CONFIGURATION OBJECT HERE
+        // Replace the placeholder values with the ones you copied from the Firebase console.
+        // =================================================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyCAFI8ji9YBWp3gxRmriPFvermXImdzPCE",
+            authDomain: "sita-planning-app.firebaseapp.com",
+            projectId: "sita-planning-app",
+            storageBucket: "sita-planning-app.appspot.com",
+            messagingSenderId: "352950148479",
+            appId: "1:352950148479:web:57e9a73c996b637c698e4a",
+            measurementId: "G-HL0NHKFM3Q"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Make db and Firestore functions globally available to the other script tags
+        window.db = db;
+        window.doc = doc;
+        window.getDoc = getDoc;
+        window.setDoc = setDoc;
+        window.onSnapshot = onSnapshot;
+    </script>
     <style>
         body { 
             font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
@@ -780,9 +812,6 @@
         <p class="text-xs text-gray-500/60"> Made by Ben chikhe Anas</p>
     </footer>
     
-    <!-- For production, it's recommended to minify and obfuscate this JavaScript code. 
-    You can use an online tool to make the code unreadable, which helps protect your logic. 
-    Paste the obfuscated code back inside this script tag. -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const appContent = document.getElementById('appContent');
@@ -847,9 +876,13 @@
                 ["Mehdi BELKOUCHI", "Ayoub CHAAOUBI", "Zakaria BOURHRISS"]       
             ];
             
-            let groupNames = JSON.parse(localStorage.getItem('adminGroupNames')) || [...defaultGroupNames];
-            let groupMembersData = JSON.parse(localStorage.getItem('adminGroupMembersData')) || defaultGroupMembersData.map(arr => [...arr]);
-            let technicianLeaves = JSON.parse(localStorage.getItem('adminTechnicianLeaves')) || [];
+            let groupNames = [...defaultGroupNames];
+            let groupMembersData = defaultGroupMembersData.map(arr => [...arr]);
+            let technicianLeaves = [];
+
+            // --- Database Reference ---
+            // This points to a single document in Firestore where all our app data will be stored.
+            const appDataDocRef = window.doc(window.db, "sita-data", "main-config");
 
 
             const groupAbbreviations = [ "M.KAOU", "Y.CHAR", "A.FRBS", "A.AMRSL", "M.BEL" ]; 
@@ -882,7 +915,6 @@
 
             const localStorageKeyDate = 'workRestSchedule_startDate';
             const localStorageKeyGroup = 'workRestSchedule_selectedGroup';
-            const localStorageKeyLeaves = 'adminTechnicianLeaves';
 
             let cycleStartDate; 
             let currentDisplayDate; 
@@ -1152,6 +1184,7 @@
                     if(!currentDisplayDate) {
                         currentDisplayDate = new Date(Date.UTC(cycleStartDate.getUTCFullYear(), cycleStartDate.getUTCMonth(), 1));
                     }
+                    // Save user preference, not app data
                     localStorage.setItem(localStorageKeyDate, startDateInput.value);
                     localStorage.setItem(localStorageKeyGroup, newSelectedGroupIndex.toString());
                     generateSchedule(); 
@@ -1312,75 +1345,92 @@
                 printableContent.innerHTML = calendarHtml + `<div class="printable-dispatch-section">${dispatchTableHTML}</div>`;
             }
             
-            function initializeApp() { 
+            async function initializeApp() { 
                 updateLiveClock(); 
                 setInterval(updateLiveClock, 1000); 
-                populateGroupSelect(); 
-                updateLegend();
 
-                const savedStartDateString = localStorage.getItem(localStorageKeyDate);
-                const savedGroupIndexString = localStorage.getItem(localStorageKeyGroup);
-
-                if (savedStartDateString && savedGroupIndexString !== null) {
-                    selectedGroupIndex = parseInt(savedGroupIndexString, 10);
-                    if (groupSelect) groupSelect.value = selectedGroupIndex;
-                    
-                    if (startDateInput) startDateInput.value = savedStartDateString;
-                    cycleStartDate = parseDateString(savedStartDateString);
-
-                    if (cycleStartDate) {
-                        currentDisplayDate = new Date(Date.UTC(cycleStartDate.getUTCFullYear(), cycleStartDate.getUTCMonth(), 1));
-                    } else { 
-                        const now = new Date();
-                        currentDisplayDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), 1));
+                // Listen for real-time updates from Firestore
+                window.onSnapshot(appDataDocRef, (doc) => {
+                    if (doc.exists()) {
+                        const data = doc.data();
+                        groupNames = data.groupNames;
+                        // **FIX**: Parse the JSON string back into a nested array
+                        groupMembersData = JSON.parse(data.groupMembersDataJSON || '[]'); 
+                        technicianLeaves = data.technicianLeaves;
+                    } else {
+                        // Document doesn't exist, so create it with default data.
+                        console.log("No data found in Firestore, creating new document...");
+                        saveAdminChangesToFirestore(true); // Save default data
                     }
-                } else {
-                    const today = new Date();
-                    const effectiveScheduleDateForToday = getEffectiveShiftStartDate(today);
-                    const diffInMilliseconds = effectiveScheduleDateForToday.getTime() - GLOBAL_REFERENCE_DATE.getTime();
-                    const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
-                    const dayInCycleForReferenceGroup = (diffInDays % 5 + 5) % 5;
-                    const groupWorkingTodayIndex = (GLOBAL_REFERENCE_GROUP_INDEX + dayInCycleForReferenceGroup) % 5;
-                    selectedGroupIndex = groupWorkingTodayIndex;
-                    if (groupSelect) groupSelect.value = selectedGroupIndex;
-                    cycleStartDate = new Date(effectiveScheduleDateForToday); 
-                    if (startDateInput) startDateInput.value = effectiveScheduleDateForToday.toISOString().split('T')[0];
-                    currentDisplayDate = new Date(Date.UTC(today.getUTCFullYear(), today.getMonth(), 1)); 
-                }
-                generateSchedule(); 
+
+                    // Once data is loaded (or created), populate the UI
+                    populateGroupSelect(); 
+                    updateLegend();
+                    
+                    const savedStartDateString = localStorage.getItem(localStorageKeyDate);
+                    const savedGroupIndexString = localStorage.getItem(localStorageKeyGroup);
+
+                    if (savedStartDateString && savedGroupIndexString !== null) {
+                        selectedGroupIndex = parseInt(savedGroupIndexString, 10);
+                        if (groupSelect) groupSelect.value = selectedGroupIndex;
+                        
+                        if (startDateInput) startDateInput.value = savedStartDateString;
+                        cycleStartDate = parseDateString(savedStartDateString);
+
+                        if (cycleStartDate) {
+                            currentDisplayDate = new Date(Date.UTC(cycleStartDate.getUTCFullYear(), cycleStartDate.getUTCMonth(), 1));
+                        } else { 
+                            const now = new Date();
+                            currentDisplayDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), 1));
+                        }
+                    } else {
+                        const today = new Date();
+                        const effectiveScheduleDateForToday = getEffectiveShiftStartDate(today);
+                        const diffInMilliseconds = effectiveScheduleDateForToday.getTime() - GLOBAL_REFERENCE_DATE.getTime();
+                        const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
+                        const dayInCycleForReferenceGroup = (diffInDays % 5 + 5) % 5;
+                        const groupWorkingTodayIndex = (GLOBAL_REFERENCE_GROUP_INDEX + dayInCycleForReferenceGroup) % 5;
+                        selectedGroupIndex = groupWorkingTodayIndex;
+                        if (groupSelect) groupSelect.value = selectedGroupIndex;
+                        cycleStartDate = new Date(effectiveScheduleDateForToday); 
+                        if (startDateInput) startDateInput.value = effectiveScheduleDateForToday.toISOString().split('T')[0];
+                        currentDisplayDate = new Date(Date.UTC(today.getUTCFullYear(), today.getMonth(), 1)); 
+                    }
+                    generateSchedule(); 
+                });
             }
             
             initializeApp();
 
         async function requestAdminPasswordAndOpenPanel() {
-    const enteredPass = prompt("Enter Admin Password:");
+            const enteredPass = prompt("Enter Admin Password:");
 
-    if (enteredPass === null) {
-        return; // User cancelled the prompt.
-    }
+            if (enteredPass === null) {
+                return; // User cancelled the prompt.
+            }
 
-    try {
-        // This now calls your secure Netlify Function
-        const response = await fetch('/.netlify/functions/check-password', {
-            method: 'POST',
-            body: JSON.stringify({ password: enteredPass })
-        });
+            try {
+                // This now calls your secure Netlify Function
+                const response = await fetch('/.netlify/functions/check-password', {
+                    method: 'POST',
+                    body: JSON.stringify({ password: enteredPass })
+                });
 
-        const result = await response.json();
+                const result = await response.json();
 
-        if (response.ok && result.success) {
-            // The server confirmed the password is correct
-            openModal(adminPanelModal);
-            populateAdminPanel();
-        } else {
-            // The server said the password was wrong
-            alert("Incorrect password.");
+                if (response.ok && result.success) {
+                    // The server confirmed the password is correct
+                    openModal(adminPanelModal);
+                    populateAdminPanel();
+                } else {
+                    // The server said the password was wrong
+                    alert("Incorrect password.");
+                }
+            } catch (error) {
+                console.error('Error checking password:', error);
+                alert('There was a problem contacting the server. Please try again.');
+            }
         }
-    } catch (error) {
-        console.error('Error checking password:', error);
-        alert('There was a problem contacting the server. Please try again.');
-    }
-}
             function populateAdminPanel() {
                 if (!adminPanelContent) return;
                 adminPanelContent.innerHTML = `
@@ -1558,14 +1608,24 @@
                 populateAdminPanel();
             }
 
-            function saveAdminChangesToLocalStorage() {
-                localStorage.setItem('adminGroupNames', JSON.stringify(groupNames)); 
-                localStorage.setItem('adminGroupMembersData', JSON.stringify(groupMembersData));
-                localStorage.setItem(localStorageKeyLeaves, JSON.stringify(technicianLeaves));
-                alert("All changes saved! The schedule will now reflect these updates.");
-                closeModal(adminPanelModal);
-                generateSchedule(); // Regenerate schedule to show changes immediately
-                updateOnDutyDashboard();
+            async function saveAdminChangesToFirestore(isInitialSetup = false) {
+                const dataToSave = {
+                    groupNames: groupNames,
+                    // **FIX**: Stringify the nested array before saving
+                    groupMembersDataJSON: JSON.stringify(groupMembersData),
+                    technicianLeaves: technicianLeaves
+                };
+
+                try {
+                    await window.setDoc(appDataDocRef, dataToSave);
+                    if (!isInitialSetup) {
+                        alert("All changes saved to the database!");
+                        closeModal(adminPanelModal);
+                    }
+                } catch (error) {
+                    console.error("Error writing document: ", error);
+                    alert("There was an error saving your changes to the database.");
+                }
             }
 
 
@@ -1608,22 +1668,20 @@
             if (groupMembersModal) groupMembersModal.addEventListener('click', (event) => { if (event.target === groupMembersModal) closeModal(groupMembersModal); });
             if (resetToLiveButton) {
                 resetToLiveButton.addEventListener('click', () => {
-                    localStorage.removeItem(localStorageKeyDate);
-                    localStorage.removeItem(localStorageKeyGroup);
-                    localStorage.removeItem('adminGroupNames');
-                    localStorage.removeItem('adminGroupMembersData');
-                    localStorage.removeItem(localStorageKeyLeaves);
-                    groupNames = [...defaultGroupNames]; 
-                    groupMembersData = defaultGroupMembersData.map(arr => [...arr]);
-                    technicianLeaves = [];
-                    initializeApp(); 
+                    // This now resets the data in the database to the defaults.
+                    if (confirm("Are you sure you want to reset all groups and leave data to the default settings? This will affect all users.")) {
+                        groupNames = [...defaultGroupNames]; 
+                        groupMembersData = defaultGroupMembersData.map(arr => [...arr]);
+                        technicianLeaves = [];
+                        saveAdminChangesToFirestore(true); // Save defaults to Firestore
+                    }
                 });
             }
             if (adminPanelButton) adminPanelButton.addEventListener('click', requestAdminPasswordAndOpenPanel);
             if (closeAdminPanelModalButton) closeAdminPanelModalButton.addEventListener('click', () => closeModal(adminPanelModal));
             if (closeAdminPanelButtonSecondary) closeAdminPanelButtonSecondary.addEventListener('click', () => closeModal(adminPanelModal));
             if (adminPanelModal) adminPanelModal.addEventListener('click', (event) => { if (event.target === adminPanelModal) closeModal(adminPanelModal); });
-            if (saveAdminChangesButton) saveAdminChangesButton.addEventListener('click', saveAdminChangesToLocalStorage);
+            if (saveAdminChangesButton) saveAdminChangesButton.addEventListener('click', () => saveAdminChangesToFirestore());
             
             // New Printable Schedule Listeners
             if (printScheduleButton) {
