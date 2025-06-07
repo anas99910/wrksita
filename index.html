@@ -167,17 +167,39 @@
             font-size: 0.9rem; color: #E5E7EB; 
         }
         #groupMembersModalContent li:last-child { border-bottom: none; }
+        #groupMembersModalContent .on-leave { text-decoration: line-through; color: #f87171; }
+        #groupMembersModalContent .leave-icon { color: #f87171; margin-left: 0.25rem; }
+
 
         .day-cell-base {
             border-radius: 0.5rem; 
             border-width: 1px; 
             box-shadow: 0 1px 4px rgba(0,0,0,0.1); 
             position: relative; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0.375rem; /* p-1.5 */
         }
         .day-cell-number { font-size: 1rem; margin-bottom: 0.125rem; }
         .day-cell-group-name { font-size: 0.55rem; line-height: 1.1; letter-spacing: 0.025em; }
         .ring-selected-group { ring-offset-color: rgba(35,35,35,0.6); } 
         .ring-today { ring-offset-color: rgba(35,35,35,0.6); }
+        .day-cell-leave-container {
+            margin-top: 0.25rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        .day-cell-leave-item {
+            font-size: 0.6rem; /* 9.6px */
+            line-height: 1;
+            color: #fca5a5; /* red-300 */
+            font-weight: 600;
+            text-shadow: 0 0 2px rgba(0,0,0,0.5);
+        }
         
         .holiday-indicator {
             position: absolute;
@@ -237,6 +259,7 @@
             padding: 0.15rem 0; 
             color: #D1D5DB; 
         }
+        #onDutyDashboard .on-leave { text-decoration: line-through; color: #fca5a5; }
         #onDutyDashboard .holiday-text { 
             color: #FCD34D; 
             font-weight: 500;
@@ -287,132 +310,59 @@
         }
 
         /* Admin Panel Specific Styles */
-        #adminPanelModal .modal-content {
-            max-width: 900px; 
-        }
-        .admin-group-section {
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
+        #adminPanelModal .modal-content { max-width: 900px; }
+        .admin-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-        .admin-group-section:last-child {
-            border-bottom: none;
+        .admin-section:last-child { border-bottom: none; }
+        .admin-section-title {
+            font-size: 1.25rem; font-weight: 600; color: #fcd34d;
+            margin-bottom: 1rem; text-align: center;
         }
         .admin-group-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #A7F3D0;
-            margin-bottom: 0.75rem;
+            font-size: 1.1rem; font-weight: 600; color: #A7F3D0; margin-bottom: 0.75rem;
         }
         .admin-technician-item {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            padding: 0.6rem 0;
-            font-size: 0.9rem;
-            gap: 0.5rem;
+            display: flex; align-items: center; flex-wrap: wrap;
+            justify-content: space-between; padding: 0.6rem 0;
+            font-size: 0.9rem; gap: 0.5rem;
         }
-        .admin-technician-item .tech-name-wrapper {
-            flex-grow: 1;
-            min-width: 150px;
-        }
-        .admin-technician-item .tech-actions-wrapper {
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .admin-technician-item input[type="text"] {
-            width: 100%;
-            padding: 0.3rem 0.5rem;
-            font-size: 0.85rem;
-            background-color: rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: #E5E7EB;
-            border-radius: 0.25rem;
+        .admin-technician-item .tech-name-wrapper { flex-grow: 1; min-width: 150px; }
+        .admin-technician-item .tech-actions-wrapper { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+        .admin-technician-item input[type="text"], .admin-add-technician input[type="text"] {
+            width: 100%; padding: 0.3rem 0.5rem; font-size: 0.85rem;
+            background-color: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1);
+            color: #E5E7EB; border-radius: 0.25rem;
         }
         .admin-technician-item button {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem; font-size: 0.7rem;
             background-color: rgba(239, 68, 68, 0.5); 
             border-color: rgba(185, 28, 28, 0.6); 
         }
-         .admin-technician-item button.rename-btn {
-            background-color: rgba(59, 130, 246, 0.5); 
-            border-color: rgba(37, 99, 235, 0.6); 
-         }
-         .admin-technician-item button.transfer-btn {
-            background-color: rgba(139, 92, 246, 0.5);
-            border-color: rgba(109, 40, 217, 0.6);
-         }
-        .admin-technician-item .transfer-select {
-            padding: 0.3rem 0.5rem;
-            font-size: 0.8rem;
-            min-width: 120px;
-        }
-
-        .admin-add-technician {
-            margin-top: 0.75rem;
-            display: flex;
-            gap: 0.5rem;
-        }
-         .admin-add-technician input[type="text"] {
-            flex-grow: 1;
-             padding: 0.3rem 0.5rem;
-            font-size: 0.85rem;
-            background-color: rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: #E5E7EB;
-            border-radius: 0.25rem;
-        }
-        .admin-add-technician button {
-            background-color: rgba(16, 185, 129, 0.5); 
-            border-color: rgba(5, 150, 105, 0.6);
-        }
+        .admin-technician-item button.rename-btn { background-color: rgba(59, 130, 246, 0.5); border-color: rgba(37, 99, 235, 0.6); }
+        .admin-technician-item button.transfer-btn { background-color: rgba(139, 92, 246, 0.5); border-color: rgba(109, 40, 217, 0.6); }
+        .admin-technician-item .transfer-select { padding: 0.3rem 0.5rem; font-size: 0.8rem; min-width: 120px; }
+        .admin-add-technician { margin-top: 0.75rem; display: flex; gap: 0.5rem; }
+        .admin-add-technician button { background-color: rgba(16, 185, 129, 0.5); border-color: rgba(5, 150, 105, 0.6); }
+        #adminLeaveSection .leave-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem; align-items: end; }
+        #adminLeaveSection .leave-item { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background-color: rgba(0,0,0,0.15); border-radius: 0.375rem; margin-top: 0.5rem; }
+        #adminLeaveSection .leave-item button { background-color: rgba(239, 68, 68, 0.5); }
 
         /* Printable Schedule Modal Styles */
-        #printableScheduleModal .printable-content {
-            background-color: #ffffff;
-            color: #000000;
-            padding: 20px;
-        }
-        #printableScheduleModal table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 10px;
-        }
-        #printableScheduleModal th, #printableScheduleModal td {
-            border: 1px solid #ccc;
-            padding: 4px;
-            text-align: left;
-            vertical-align: top;
-        }
-        #printableScheduleModal th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-        #printableScheduleModal .day-cell {
-            height: 90px;
-            vertical-align: top;
-        }
-        #printableScheduleModal .date-number {
-            font-weight: bold;
-            font-size: 12px;
-            margin-bottom: 4px;
-            color: #333;
-        }
-        #printableScheduleModal .day-off {
-            background-color: #f3f4f6;
-        }
+        #printableScheduleModal .printable-content { background-color: #ffffff; color: #000000; padding: 20px; }
+        #printableScheduleModal table { width: 100%; border-collapse: collapse; font-size: 10px; }
+        #printableScheduleModal th, #printableScheduleModal td { border: 1px solid #ccc; padding: 4px; text-align: left; vertical-align: top; }
+        #printableScheduleModal th { background-color: #f2f2f2; font-weight: bold; }
+        #printableScheduleModal .day-cell { height: 90px; vertical-align: top; }
+        #printableScheduleModal .date-number { font-weight: bold; font-size: 12px; margin-bottom: 4px; color: #333; }
+        #printableScheduleModal .day-off { background-color: #f3f4f6; }
         #printableScheduleModal .technician-info {
-            display: block;
-            padding: 2px 4px;
-            margin-bottom: 2px;
-            border-radius: 3px;
-            font-size: 9px;
-            font-weight: 500;
+            display: block; padding: 2px 4px; margin-bottom: 2px;
+            border-radius: 3px; font-size: 9px; font-weight: 500;
         }
+        #printableScheduleModal .technician-info.on-leave { background-color: #fee2e2; color: #991b1b; text-decoration: line-through;}
         #printableScheduleModal .technician-info.zone-a { background-color: #d1fae5; color: #064e3b; }
         #printableScheduleModal .technician-info.zone-b { background-color: #dbeafe; color: #1e40af; }
         #printableScheduleModal .technician-info.zone-c { background-color: #fef3c7; color: #92400e; }
@@ -733,15 +683,16 @@
     </div>
 
     <div id="adminPanelModal" class="modal fixed inset-0 z-[70] flex items-center justify-center bg-black/85 opacity-0 pointer-events-none p-4">
-        <div class="modal-content frosted-glass-pane w-11/12 md:max-w-2xl lg:max-w-3xl mx-auto p-5 md:p-6 max-h-[90vh] overflow-y-auto">
+        <div class="modal-content frosted-glass-pane w-11/12 md:max-w-4xl lg:max-w-5xl mx-auto p-5 md:p-6 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4 pb-3 border-b border-white/12">
-                <h3 class="text-lg font-semibold text-amber-300 uppercase-text selectable-text">ADMIN PANEL - MANAGE TECHNICIANS</h3>
+                <h3 class="text-lg font-semibold text-amber-300 uppercase-text selectable-text">ADMIN PANEL</h3>
                 <button id="closeAdminPanelModal" class="text-gray-400 hover:text-red-400 text-2xl font-bold">&times;</button>
             </div>
             <div id="adminPanelContent" class="selectable-text space-y-4">
-                </div>
+                <!-- Admin content generated by JS -->
+            </div>
             <div class="mt-6 pt-4 border-t border-white/10 flex justify-end space-x-3">
-                <button id="saveAdminChangesButton" class="action-button" style="background-color: rgba(22, 163, 74, 0.6); border-color: rgba(21, 128, 61, 0.7);">Save Changes</button>
+                <button id="saveAdminChangesButton" class="action-button" style="background-color: rgba(22, 163, 74, 0.6); border-color: rgba(21, 128, 61, 0.7);">Save All Changes</button>
                 <button id="closeAdminPanelButtonSecondary" class="action-button">Close</button>
             </div>
         </div>
@@ -824,7 +775,7 @@
             const closeGroupMembersModalButton = document.getElementById('closeGroupMembersModal');
             const viewDispatchButtonInModal = document.getElementById('viewDispatchButtonInModal');
 
-            // New Printable Schedule Modal elements
+            // Printable Schedule Modal elements
             const printScheduleButton = document.getElementById('printScheduleButton');
             const printableScheduleModal = document.getElementById('printableScheduleModal');
             const printableContent = document.getElementById('printableContent');
@@ -834,11 +785,8 @@
             const printableScheduleTitle = document.getElementById('printableScheduleTitle');
 
 
-            // --- Default Data (used if nothing in localStorage) ---
-            const defaultGroupNames = [ 
-                "K.MOUAD GRP", "Y.CHARMOUH GRP", "A.FARBOSI GRP", 
-                "A.AMARSAL GRP", "M.BELKOUCHI GRP"
-            ];
+            // --- Data Management ---
+            const defaultGroupNames = [ "K.MOUAD GRP", "Y.CHARMOUH GRP", "A.FARBOSI GRP", "A.AMARSAL GRP", "M.BELKOUCHI GRP" ];
             const defaultGroupMembersData = [
                 ["Mouad KAOUTAR", "Anas BENCHICHE", "Younes Ch", "Kamal BOURROU"], 
                 ["Youssef CHARMOUH", "Mehdi ASKARI", "Soufiane BELFAKIR"],        
@@ -849,6 +797,7 @@
             
             let groupNames = JSON.parse(localStorage.getItem('adminGroupNames')) || [...defaultGroupNames];
             let groupMembersData = JSON.parse(localStorage.getItem('adminGroupMembersData')) || defaultGroupMembersData.map(arr => [...arr]);
+            let technicianLeaves = JSON.parse(localStorage.getItem('adminTechnicianLeaves')) || [];
 
 
             const groupAbbreviations = [ "M.KAOU", "Y.CHAR", "A.FRBS", "A.AMRSL", "M.BEL" ]; 
@@ -881,6 +830,7 @@
 
             const localStorageKeyDate = 'workRestSchedule_startDate';
             const localStorageKeyGroup = 'workRestSchedule_selectedGroup';
+            const localStorageKeyLeaves = 'adminTechnicianLeaves';
 
             let cycleStartDate; 
             let currentDisplayDate; 
@@ -930,6 +880,11 @@
                 pmLegendItem.className = 'flex items-center gap-1.5';
                 pmLegendItem.innerHTML = `<span style="color: #cbd5e1;">🧹</span><span>PM</span>`;
                 legendContainer.appendChild(pmLegendItem);
+                
+                const leaveLegendItem = document.createElement('div');
+                leaveLegendItem.className = 'flex items-center gap-1.5';
+                leaveLegendItem.innerHTML = `<span style="color: #f87171;">❌</span><span>On Leave</span>`;
+                legendContainer.appendChild(leaveLegendItem);
 
                 groupColors.forEach((colorInfo) => {
                     const groupLegendItem = document.createElement('div');
@@ -951,9 +906,8 @@
                 const parts = dateString.split('-');
                 if (parts.length !== 3) return null;
                 const [year, month, day] = parts.map(Number);
-                if (isNaN(year) || isNaN(month) || isNaN(day)) return null;
-                if (year < 1000 || year > 9999 || month < 1 || month > 12 || day < 1 || day > 31) return null; 
-                return new Date(Date.UTC(year, month - 1, day)); 
+                if (isNaN(year) || isNaN(month) || isNaN(day)) return null; 
+                return new Date(Date.UTC(year, month - 1, day, 12)); // Use noon to avoid timezone issues 
             }
             
             function getHolidayInfo(date, year) {
@@ -962,15 +916,20 @@
                 const mmdd = `${month}-${day}`;
                 const yyyymmdd = `${year}-${mmdd}`;
 
-                if (moroccanHolidays[yyyymmdd]) { 
-                    return moroccanHolidays[yyyymmdd];
-                }
-                if (moroccanHolidays[mmdd]) { 
-                    return moroccanHolidays[mmdd];
-                }
+                if (moroccanHolidays[yyyymmdd]) return moroccanHolidays[yyyymmdd];
+                if (moroccanHolidays[mmdd]) return moroccanHolidays[mmdd];
                 return null; 
             }
             
+            function isTechnicianOnLeave(techName, date) {
+                const checkDate = date.getTime();
+                return technicianLeaves.some(leave => {
+                    const leaveStart = parseDateString(leave.startDate).getTime();
+                    const leaveEnd = parseDateString(leave.endDate).getTime();
+                    return leave.name === techName && checkDate >= leaveStart && checkDate <= leaveEnd;
+                });
+            }
+
             function getEffectiveShiftStartDate(dateToCheck) {
                 const moroccoTimeOffset = 1; 
                 const currentUTCHour = dateToCheck.getUTCHours();
@@ -982,49 +941,18 @@
                 }
                 return effectiveDate;
             }
-            
-             function getTechnicianWorkShiftCount(technicianName, groupIndexOfTechnician, upToDate_ShiftStartDate) {
-                let shiftCount = 0;
-                let tempShiftStartDate = new Date(GLOBAL_REFERENCE_DATE.getTime()); 
-
-                while(tempShiftStartDate.getTime() <= upToDate_ShiftStartDate.getTime()) {
-                    const diffFromGlobalRef = Math.floor((tempShiftStartDate.getTime() - GLOBAL_REFERENCE_DATE.getTime()) / (1000 * 60 * 60 * 24));
-                    const groupWorkingOnTempShiftStartDate = (GLOBAL_REFERENCE_GROUP_INDEX + diffFromGlobalRef % 5 + 5) % 5;
-
-                    if (groupWorkingOnTempShiftStartDate === groupIndexOfTechnician) {
-                        if (groupMembersData[groupIndexOfTechnician] && groupMembersData[groupIndexOfTechnician].includes(technicianName)) {
-                            shiftCount++;
-                        }
-                    }
-                    tempShiftStartDate.setUTCDate(tempShiftStartDate.getUTCDate() + 1);
-                }
-                return shiftCount;
-            }
-
 
             function generateSchedule() { 
                 if (messageArea) messageArea.textContent = ''; 
                 if (calendarGrid) calendarGrid.innerHTML = ''; 
                 if (monthNameDisplay) monthNameDisplay.textContent = ''; 
                 
-                if (!groupSelect || !startDateInput) return;
-
-                selectedGroupIndex = parseInt(groupSelect.value, 10); 
-                const tempCycleStartDate = parseDateString(startDateInput.value); 
-
-                if (!tempCycleStartDate) {
-                    if(messageArea) messageArea.textContent = 'PLEASE SELECT A VALID START DATE.';
-                    if (onDutyDashboardElement) { 
-                        const statsElement = onDutyDashboardElement.querySelector('#monthlyStatsBannerInDashboard');
-                        if (statsElement) statsElement.innerHTML = ''; 
-                    }
+                if (!groupSelect || !startDateInput || !cycleStartDate) {
+                    if(messageArea) messageArea.textContent = 'PLEASE CONFIGURE THE SCHEDULE FIRST.';
                     return;
                 }
-                cycleStartDate = tempCycleStartDate; 
-                
-                if (!currentDisplayDate) { 
-                     currentDisplayDate = new Date(Date.UTC(cycleStartDate.getUTCFullYear(), cycleStartDate.getUTCMonth(), 1));
-                }
+
+                selectedGroupIndex = parseInt(groupSelect.value, 10);
                 
                 const targetYear = currentDisplayDate.getUTCFullYear();
                 const targetMonth_0_indexed = currentDisplayDate.getUTCMonth();
@@ -1047,20 +975,17 @@
                     const diffInDaysFromCycleStart = Math.floor((currentDateInCalendar.getTime() - cycleStartDate.getTime()) / (1000 * 60 * 60 * 24));
                     const workingGroupOffset = ((diffInDaysFromCycleStart % 5) + 5) % 5; 
                     const actualWorkingGroupIndex = (selectedGroupIndex + workingGroupOffset) % 5; 
-                    
                     const isSelectedGroupWorkingThisDay = (actualWorkingGroupIndex === selectedGroupIndex);
-                    if (isSelectedGroupWorkingThisDay) { workdayCount++; }
+                    if (isSelectedGroupWorkingThisDay) workdayCount++;
+                    
                     const workingGroupNameInCell = groupAbbreviations[actualWorkingGroupIndex]; 
                     const dayCell = document.createElement('div');
                     const groupColor = groupColors[actualWorkingGroupIndex]; 
-                    dayCell.className = `day-cell-base p-1.5 md:p-2 min-h-[4rem] md:min-h-[5.5rem] flex flex-col justify-center items-center cursor-pointer ${groupColor.textClass}`; 
+                    dayCell.className = `day-cell-base min-h-[4rem] md:min-h-[5.5rem] cursor-pointer ${groupColor.textClass}`; 
                     dayCell.style.backgroundColor = `rgba(${groupColor.rgb}, ${isMobile ? 0.8 : 0.55})`; 
                     dayCell.style.borderColor = `rgba(${groupColor.rgb}, 0.75)`; 
-                    if (!isMobile) {
-                        dayCell.style.backdropFilter = 'blur(4px)'; 
-                        dayCell.style.webkitBackdropFilter = 'blur(4px)';
-                    }
-                    
+                    if (!isMobile) dayCell.style.backdropFilter = 'blur(4px)'; 
+
                     const holidayName = getHolidayInfo(currentDateInCalendar, targetYear);
                     if (holidayName) {
                         dayCell.title = holidayName; 
@@ -1078,44 +1003,16 @@
                         dayCell.title = (dayCell.title ? dayCell.title + ' / ' : '') + 'Monthly PM';
                     }
                     
-                    const workingGroupMembers = groupMembersData[actualWorkingGroupIndex];
-                    const currentZonesToUse = (workingGroupMembers && workingGroupMembers.length === 4) ? ZONES : BASE_ZONES;
-                    const membersWithZones = [];
-
-                    if (workingGroupMembers) {
-                        let groupNthShiftForZoneCalc = 0; 
-                        const daysSinceGlobalRef = Math.floor((currentDateInCalendar.getTime() - GLOBAL_REFERENCE_DATE.getTime()) / (1000 * 60 * 60 * 24));
-                        if (daysSinceGlobalRef >= 0) {
-                            const groupOffsetFromGlobalRefStart = (actualWorkingGroupIndex - GLOBAL_REFERENCE_GROUP_INDEX + 5) % 5;
-                            if (daysSinceGlobalRef >= groupOffsetFromGlobalRefStart) {
-                                groupNthShiftForZoneCalc = Math.floor((daysSinceGlobalRef - groupOffsetFromGlobalRefStart) / 5) + 1;
-                            }
-                        }
-
-                        workingGroupMembers.forEach((memberName, memberIndexInGroup) => {
-                            let assignedZone = "N/A";
-                            if (groupNthShiftForZoneCalc > 0) { 
-                                const technicianGlobalShiftCount = getTechnicianWorkShiftCount(memberName, actualWorkingGroupIndex, currentDateInCalendar);
-                                let lastZoneForThisTech = technicianShiftHistory[memberName] ? technicianShiftHistory[memberName].lastZone : null;
-                                const groupShiftBaseZoneIndex = ((groupNthShiftForZoneCalc -1) + actualWorkingGroupIndex) % currentZonesToUse.length;
-                                let potentialZoneIndex = (groupShiftBaseZoneIndex + memberIndexInGroup) % currentZonesToUse.length;
-                                assignedZone = currentZonesToUse[potentialZoneIndex];
-                                
-                                if (lastZoneForThisTech && assignedZone === lastZoneForThisTech) {
-                                    potentialZoneIndex = (potentialZoneIndex + 1) % currentZonesToUse.length;
-                                    assignedZone = currentZonesToUse[potentialZoneIndex];
-                                }
-                                technicianShiftHistory[memberName] = { lastZone: assignedZone };
-                            }
-                            membersWithZones.push({ name: memberName, zone: assignedZone });
-                        });
-                    }
+                    const workingGroupMembers = groupMembersData[actualWorkingGroupIndex] || [];
+                    const membersWithZonesAndLeave = workingGroupMembers.map(name => ({
+                        name,
+                        zone: 'N/A', 
+                        onLeave: isTechnicianOnLeave(name, currentDateInCalendar)
+                    }));
 
 
-                    dayCell.addEventListener('click', () => showGroupMembers(actualWorkingGroupIndex, dayOfMonth, currentDisplayDate, holidayName, membersWithZones));
-                    if (isSelectedGroupWorkingThisDay) {
-                        dayCell.classList.add('ring-2', 'ring-red-400', 'ring-offset-1', 'ring-selected-group'); 
-                    }
+                    dayCell.addEventListener('click', () => showGroupMembers(actualWorkingGroupIndex, dayOfMonth, currentDisplayDate, holidayName, membersWithZonesAndLeave));
+                    if (isSelectedGroupWorkingThisDay) dayCell.classList.add('ring-2', 'ring-red-400', 'ring-offset-1', 'ring-selected-group'); 
                     if (currentDateInCalendar.getTime() === todayUTCForHighlight.getTime()) {
                         dayCell.classList.remove('ring-red-400', 'ring-selected-group'); 
                         dayCell.classList.add('ring-2', 'ring-yellow-400', 'ring-offset-1', 'ring-today', '!font-bold'); 
@@ -1124,47 +1021,57 @@
                     const dayNumberDiv = document.createElement('div');
                     dayNumberDiv.className = 'day-cell-number font-medium';
                     dayNumberDiv.textContent = dayOfMonth;
+                    
                     const statusDiv = document.createElement('div');
                     statusDiv.className = 'day-cell-group-name font-medium uppercase-text tracking-tighter'; 
                     statusDiv.textContent = workingGroupNameInCell; 
+                    
                     dayCell.appendChild(dayNumberDiv);
                     dayCell.appendChild(statusDiv);
+                    
+                    const leaveIndicatorContainer = document.createElement('div');
+                    leaveIndicatorContainer.className = 'day-cell-leave-container';
+
+                    membersWithZonesAndLeave.forEach(member => {
+                        if (member.onLeave) {
+                            const leaveIndicator = document.createElement('div');
+                            leaveIndicator.className = 'day-cell-leave-item';
+                            leaveIndicator.textContent = `❌ ${member.name.split(' ')[0]}`;
+                            leaveIndicator.title = `${member.name} on leave`;
+                            leaveIndicatorContainer.appendChild(leaveIndicator);
+                        }
+                    });
+
+                    if (leaveIndicatorContainer.hasChildNodes()) {
+                        dayCell.appendChild(leaveIndicatorContainer);
+                    }
+                    
                     if (calendarGrid) calendarGrid.appendChild(dayCell);
                 }
                 
                 const restdayCount = daysInMonth - workdayCount;
-                const statsData = {
-                    monthName: monthNameDisplay ? monthNameDisplay.textContent : "",
-                    groupName: groupNames[selectedGroupIndex].replace(' GRP', ''),
-                    workDays: workdayCount,
-                    restDays: restdayCount
-                };
-                updateOnDutyDashboard(statsData); 
+                updateOnDutyDashboard(); 
             }
         
-            function showGroupMembers(groupIndex, day, displayDate, holidayName = null, membersWithZones = []) { 
+            function showGroupMembers(groupIndex, day, displayDate, holidayName = null, membersWithInfo = []) { 
                 if (!groupMembersModalTitle || !groupMembersList) return;
                 const groupName = groupNames[groupIndex].replace(' GRP', ''); 
                 const dateOfClickedDay = new Date(Date.UTC(displayDate.getUTCFullYear(), displayDate.getUTCMonth(), day));
                 const formattedDate = dateOfClickedDay.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' });
                 
                 let titleText = `${groupName} - ${formattedDate.toUpperCase()}`;
-                if (holidayName) {
-                    titleText += ` (Holiday: ${holidayName})`;
-                }
+                if (holidayName) titleText += ` (Holiday: ${holidayName})`;
                 groupMembersModalTitle.textContent = titleText;
 
                 groupMembersList.innerHTML = ''; 
-                if (membersWithZones.length > 0) {
-                    membersWithZones.forEach(memberInfo => {
+                if (membersWithInfo.length > 0) {
+                    membersWithInfo.forEach(memberInfo => {
                         const listItem = document.createElement('li');
-                        listItem.textContent = `${memberInfo.name} - ${memberInfo.zone}`;
-                        groupMembersList.appendChild(listItem);
-                    });
-                } else if (groupMembersData[groupIndex] && groupMembersData[groupIndex].length > 0) {
-                    groupMembersData[groupIndex].forEach(member => { 
-                        const listItem = document.createElement('li');
-                        listItem.textContent = `${member} (Zone N/A)`;
+                        if (memberInfo.onLeave) {
+                            listItem.innerHTML = `<span class="on-leave">${memberInfo.name}</span><span class="leave-icon">❌ Congé</span>`;
+                        } else {
+                            listItem.textContent = `${memberInfo.name}`; // Zone info removed for simplicity, handled by dashboard
+                        }
                         groupMembersList.appendChild(listItem);
                     });
                 } else {
@@ -1190,18 +1097,12 @@
                 if (newCycleStartDate) {
                     selectedGroupIndex = newSelectedGroupIndex;
                     cycleStartDate = newCycleStartDate;
-                    currentDisplayDate = new Date(Date.UTC(cycleStartDate.getUTCFullYear(), cycleStartDate.getUTCMonth(), 1));
-                    
+                    if(!currentDisplayDate) {
+                        currentDisplayDate = new Date(Date.UTC(cycleStartDate.getUTCFullYear(), cycleStartDate.getUTCMonth(), 1));
+                    }
                     localStorage.setItem(localStorageKeyDate, startDateInput.value);
                     localStorage.setItem(localStorageKeyGroup, newSelectedGroupIndex.toString());
-                    
                     generateSchedule(); 
-                } else if (startDateInput.value !== "") { 
-                     if(messageArea) messageArea.textContent = 'PLEASE SELECT A VALID START DATE.';
-                     if (onDutyDashboardElement) { 
-                        const statsElement = onDutyDashboardElement.querySelector('#monthlyStatsBannerInDashboard');
-                        if (statsElement) statsElement.innerHTML = '';
-                    }
                 }
             }
 
@@ -1216,26 +1117,23 @@
                  if (!modal) { console.error("Modal element not found for closeModal"); return; }
                 modal.classList.remove('opacity-100', 'modal-active', 'transform', 'scale-100');
                 modal.classList.add('opacity-0', 'pointer-events-none', 'transform', 'scale-95');
-                // Only remove overflow-hidden if no other modals are active
                 if (document.querySelectorAll('.modal.opacity-100').length <= 1) {
                     document.body.classList.remove('overflow-hidden');
                 }
             }
 
-            function updateOnDutyDashboard(statsDataForCalendarMonth = null) {
-                if (!onDutyDashboardElement) return;
+            function updateOnDutyDashboard() {
+                if (!onDutyDashboardElement || !cycleStartDate) return;
 
                 const today = new Date(); 
                 const effectiveScheduleDateForToday = getEffectiveShiftStartDate(today);
 
-                const diffInMilliseconds = effectiveScheduleDateForToday.getTime() - GLOBAL_REFERENCE_DATE.getTime();
-                const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
-                const dayInCycleForReferenceGroup = (diffInDays % 5 + 5) % 5;
-                const groupWorkingTodayIndex = (GLOBAL_REFERENCE_GROUP_INDEX + dayInCycleForReferenceGroup) % 5;
+                const diffInDays = Math.floor((effectiveScheduleDateForToday.getTime() - cycleStartDate.getTime()) / (1000 * 60 * 60 * 24));
+                const workingGroupOffset = ((diffInDays % 5) + 5) % 5;
+                const groupWorkingTodayIndex = (selectedGroupIndex + workingGroupOffset) % 5;
                 
                 const groupName = groupNames[groupWorkingTodayIndex];
-                const members = groupMembersData[groupWorkingTodayIndex];
-                const currentZonesToUse = (members && members.length === 4) ? ZONES : BASE_ZONES;
+                const members = groupMembersData[groupWorkingTodayIndex] || [];
                 
                 let dashboardHTML = `<h3><span class="dashboard-icon">👥</span>On Duty Today</h3>`; 
                 dashboardHTML += `<p><strong class="working-group-label">Working Group:</strong> <strong>${groupName.replace(' GRP', '')}</strong></p>`;
@@ -1245,43 +1143,21 @@
                     dashboardHTML += `<p class="holiday-text"><span class="dashboard-icon">⭐</span>Today is a Holiday: ${holidayToday}</p>`;
                 }
 
-                if (members) {
+                if (members.length > 0) {
                     dashboardHTML += `<ul>`;
-                    let groupNthShiftForZoneCalc = 0;
-                    const daysSinceGlobalRef = Math.floor((effectiveScheduleDateForToday.getTime() - GLOBAL_REFERENCE_DATE.getTime()) / (1000 * 60 * 60 * 24));
-                    if (daysSinceGlobalRef >= 0) {
-                        const groupOffsetFromGlobalRefStart = (groupWorkingTodayIndex - GLOBAL_REFERENCE_GROUP_INDEX + 5) % 5;
-                        if (daysSinceGlobalRef >= groupOffsetFromGlobalRefStart) {
-                            groupNthShiftForZoneCalc = Math.floor((daysSinceGlobalRef - groupOffsetFromGlobalRefStart) / 5) + 1;
+                    members.forEach((memberName) => {
+                        const onLeave = isTechnicianOnLeave(memberName, today);
+                         if (onLeave) {
+                            dashboardHTML += `<li class="on-leave">${memberName} - ❌ Congé</li>`;
+                        } else {
+                            dashboardHTML += `<li>${memberName}</li>`;
                         }
-                    }
-                    let tempTechnicianShiftHistoryForDashboard = {}; 
-                    members.forEach((memberName, memberIndexInGroup) => {
-                        let assignedZone = "N/A";
-                         if (groupNthShiftForZoneCalc > 0) {
-                            const technicianGlobalShiftCount = getTechnicianWorkShiftCount(memberName, groupWorkingTodayIndex, effectiveScheduleDateForToday);
-                            let lastZoneForThisTech = tempTechnicianShiftHistoryForDashboard[memberName] ? tempTechnicianShiftHistoryForDashboard[memberName].lastZone : null;
-                            const groupShiftBaseZoneIndex = ((groupNthShiftForZoneCalc - 1) + groupWorkingTodayIndex) % currentZonesToUse.length;
-                            let potentialZoneIndex = (groupShiftBaseZoneIndex + memberIndexInGroup) % currentZonesToUse.length;
-                            assignedZone = currentZonesToUse[potentialZoneIndex];
-                            if (lastZoneForThisTech && assignedZone === lastZoneForThisTech) {
-                                potentialZoneIndex = (potentialZoneIndex + 1) % currentZonesToUse.length;
-                                assignedZone = currentZonesToUse[potentialZoneIndex];
-                            }
-                            tempTechnicianShiftHistoryForDashboard[memberName] = { lastZone: assignedZone };
-                        }
-                        dashboardHTML += `<li>${memberName} - <strong>${assignedZone}</strong></li>`;
                     });
                     dashboardHTML += `</ul>`;
                 } else {
                     dashboardHTML += `<p>No member data for this group.</p>`;
                 }
                 
-                if (statsDataForCalendarMonth && statsDataForCalendarMonth.monthName) {
-                     dashboardHTML += `<div id="monthlyStatsBannerInDashboard">${statsDataForCalendarMonth.monthName} FOR ${statsDataForCalendarMonth.groupName}: ${statsDataForCalendarMonth.workDays} WORK, ${statsDataForCalendarMonth.restDays} REST</div>`;
-                }
-
-
                 onDutyDashboardElement.innerHTML = dashboardHTML;
             }
 
@@ -1293,7 +1169,6 @@
                 }
                 
                 const localTechnicianShiftHistory = {};
-
                 const year = currentDisplayDate.getUTCFullYear();
                 const month_0_indexed = currentDisplayDate.getUTCMonth();
                 const monthName = currentDisplayDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
@@ -1306,7 +1181,6 @@
                 html += '<thead><tr><th>Lundi</th><th>Mardi</th><th>Mercredi</th><th>Jeudi</th><th>Vendredi</th><th>Samedi</th><th>Dimanche</th></tr></thead>';
                 html += '<tbody><tr>';
 
-                // Adjust for week starting on Monday for this view
                 let adjustedFirstDay = (firstDayOfWeek === 0) ? 6 : firstDayOfWeek - 1;
                 for (let i = 0; i < adjustedFirstDay; i++) {
                     html += '<td class="day-cell day-off"></td>';
@@ -1316,58 +1190,45 @@
                     const currentDate = new Date(Date.UTC(year, month_0_indexed, day));
                     let dayOfWeek = (currentDate.getUTCDay() === 0) ? 6 : currentDate.getUTCDay() - 1;
 
-                    if (dayOfWeek === 0 && day !== 1) {
-                        html += '</tr><tr>';
-                    }
-
+                    if (dayOfWeek === 0 && day !== 1) html += '</tr><tr>';
+                    
                     const diffInDaysFromCycleStart = Math.floor((currentDate.getTime() - cycleStartDate.getTime()) / (1000 * 60 * 60 * 24));
                     const workingGroupOffset = ((diffInDaysFromCycleStart % 5) + 5) % 5;
                     const actualWorkingGroupIndex = (selectedGroupIndex + workingGroupOffset) % 5;
-                    const workingGroupMembers = groupMembersData[actualWorkingGroupIndex];
+                    const workingGroupMembers = groupMembersData[actualWorkingGroupIndex] || [];
                     
                     html += '<td class="day-cell">';
                     html += `<div class="date-number">${day}</div>`;
                     
                     const holidayName = getHolidayInfo(currentDate, year);
-                    if (holidayName) {
-                        html += `<strong style="color: #c026d3;">${holidayName.toUpperCase()}</strong>`;
-                    }
+                    if (holidayName) html += `<strong style="color: #c026d3;">${holidayName.toUpperCase()}</strong>`;
                     
-                    const currentZonesToUse = (workingGroupMembers && workingGroupMembers.length === 4) ? ZONES : BASE_ZONES;
+                    const currentZonesToUse = (workingGroupMembers.length === 4) ? ZONES : BASE_ZONES;
 
-                    if (workingGroupMembers) {
-                        let groupNthShiftForZoneCalc = 0; 
-                        const daysSinceGlobalRef = Math.floor((currentDate.getTime() - GLOBAL_REFERENCE_DATE.getTime()) / (1000 * 60 * 60 * 24));
-                        if (daysSinceGlobalRef >= 0) {
-                            const groupOffsetFromGlobalRefStart = (actualWorkingGroupIndex - GLOBAL_REFERENCE_GROUP_INDEX + 5) % 5;
-                            if (daysSinceGlobalRef >= groupOffsetFromGlobalRefStart) {
-                                groupNthShiftForZoneCalc = Math.floor((daysSinceGlobalRef - groupOffsetFromGlobalRefStart) / 5) + 1;
-                            }
-                        }
-
-                        workingGroupMembers.forEach((memberName, memberIndexInGroup) => {
+                    workingGroupMembers.forEach((memberName, memberIndexInGroup) => {
+                        const onLeave = isTechnicianOnLeave(memberName, currentDate);
+                        if (onLeave) {
+                            html += `<span class="technician-info on-leave">${memberName} - ❌ Congé</span>`;
+                        } else {
                             let assignedZone = "N/A";
                             let zoneClass = "na";
-                            if (groupNthShiftForZoneCalc > 0) { 
-                                const technicianGlobalShiftCount = getTechnicianWorkShiftCount(memberName, actualWorkingGroupIndex, currentDate);
-                                let lastZoneForThisTech = localTechnicianShiftHistory[memberName] ? localTechnicianShiftHistory[memberName].lastZone : null;
-                                const groupShiftBaseZoneIndex = ((groupNthShiftForZoneCalc -1) + actualWorkingGroupIndex) % currentZonesToUse.length;
-                                let potentialZoneIndex = (groupShiftBaseZoneIndex + memberIndexInGroup) % currentZonesToUse.length;
+                             let lastZoneForThisTech = localTechnicianShiftHistory[memberName] ? localTechnicianShiftHistory[memberName].lastZone : null;
+                            const groupShiftBaseZoneIndex = ((Math.floor(diffInDaysFromCycleStart / 5)) + actualWorkingGroupIndex) % currentZonesToUse.length;
+                            let potentialZoneIndex = (groupShiftBaseZoneIndex + memberIndexInGroup) % currentZonesToUse.length;
+                            assignedZone = currentZonesToUse[potentialZoneIndex];
+                            
+                            if (lastZoneForThisTech && assignedZone === lastZoneForThisTech) {
+                                potentialZoneIndex = (potentialZoneIndex + 1) % currentZonesToUse.length;
                                 assignedZone = currentZonesToUse[potentialZoneIndex];
-                                
-                                if (lastZoneForThisTech && assignedZone === lastZoneForThisTech) {
-                                    potentialZoneIndex = (potentialZoneIndex + 1) % currentZonesToUse.length;
-                                    assignedZone = currentZonesToUse[potentialZoneIndex];
-                                }
-                                localTechnicianShiftHistory[memberName] = { lastZone: assignedZone };
-                                zoneClass = assignedZone.toLowerCase().replace(' ', '-');
                             }
-                             html += `<span class="technician-info ${zoneClass}">${memberName} - <strong>${assignedZone}</strong></span>`;
-                        });
-                    }
+                            localTechnicianShiftHistory[memberName] = { lastZone: assignedZone };
+                            zoneClass = assignedZone.toLowerCase().replace(' ', '-');
+                            html += `<span class="technician-info ${zoneClass}">${memberName} - <strong>${assignedZone}</strong></span>`;
+                        }
+                    });
                     html += '</td>';
                 }
-                 // Fill the rest of the last week
+
                 let lastDayOfWeek = new Date(Date.UTC(year, month_0_indexed, daysInMonth)).getUTCDay();
                 lastDayOfWeek = (lastDayOfWeek === 0) ? 6 : lastDayOfWeek - 1;
                 for (let i = lastDayOfWeek; i < 6; i++) {
@@ -1432,11 +1293,35 @@
             
             function populateAdminPanel() {
                 if (!adminPanelContent) return;
-                adminPanelContent.innerHTML = ''; 
+                adminPanelContent.innerHTML = `
+                    <div id="adminGroupManagementSection" class="admin-section">
+                        <h4 class="admin-section-title">Manage Groups & Technicians</h4>
+                        <div id="adminGroupContent"></div>
+                    </div>
+                    <div id="adminLeaveSection" class="admin-section">
+                        <h4 class="admin-section-title">Manage Leave (Congé)</h4>
+                        <div class="leave-form">
+                            <div>
+                                <label for="leaveTechSelect" class="input-label-tag">Technician</label>
+                                <select id="leaveTechSelect"></select>
+                            </div>
+                            <div>
+                                <label for="leaveStartDate" class="input-label-tag">Start Date</label>
+                                <input type="date" id="leaveStartDate">
+                            </div>
+                            <div>
+                                <label for="leaveEndDate" class="input-label-tag">End Date</label>
+                                <input type="date" id="leaveEndDate">
+                            </div>
+                            <button id="addLeaveButton" class="action-button" style="background-color: rgba(16, 185, 129, 0.5);">Add Leave</button>
+                        </div>
+                        <div id="leaveList" class="mt-4"></div>
+                    </div>
+                `;
 
+                const adminGroupContent = document.getElementById('adminGroupContent');
                 groupNames.forEach((groupName, groupIndex) => {
                     const groupSection = document.createElement('div');
-                    groupSection.className = 'admin-group-section';
                     const title = document.createElement('h5');
                     title.className = 'admin-group-title';
                     title.textContent = groupName;
@@ -1446,32 +1331,22 @@
                     (groupMembersData[groupIndex] || []).forEach((techName, techIndex) => {
                         const li = document.createElement('li');
                         li.className = 'admin-technician-item';
-                        
-                        // Wrapper for name input
                         const nameWrapper = document.createElement('div');
                         nameWrapper.className = 'tech-name-wrapper';
                         const nameInput = document.createElement('input');
                         nameInput.type = 'text';
                         nameInput.value = techName;
                         nameWrapper.appendChild(nameInput);
-
-                        // Wrapper for all action buttons
                         const actionsWrapper = document.createElement('div');
                         actionsWrapper.className = 'tech-actions-wrapper';
-
-                        // Rename button
                         const renameButton = document.createElement('button');
                         renameButton.textContent = 'Rename';
                         renameButton.className = 'action-button rename-btn';
                         renameButton.onclick = () => renameTechnician(groupIndex, techIndex, nameInput.value);
-                        
-                        // Remove button
                         const removeButton = document.createElement('button');
                         removeButton.textContent = 'Remove';
                         removeButton.className = 'action-button'; 
                         removeButton.onclick = () => removeTechnician(groupIndex, techIndex);
-
-                        // Transfer controls
                         const transferSelect = document.createElement('select');
                         transferSelect.className = 'transfer-select';
                         groupNames.forEach((name, i) => {
@@ -1482,24 +1357,19 @@
                                 transferSelect.appendChild(option);
                             }
                         });
-
                         const transferButton = document.createElement('button');
                         transferButton.textContent = 'Transfer';
                         transferButton.className = 'action-button transfer-btn';
                         transferButton.onclick = () => transferTechnician(groupIndex, techIndex, parseInt(transferSelect.value));
-
                         actionsWrapper.appendChild(renameButton);
                         actionsWrapper.appendChild(removeButton);
                         actionsWrapper.appendChild(transferSelect);
                         actionsWrapper.appendChild(transferButton);
-
                         li.appendChild(nameWrapper);
                         li.appendChild(actionsWrapper);
                         ul.appendChild(li);
                     });
                     groupSection.appendChild(ul);
-
-                    // Add new technician section
                     const addDiv = document.createElement('div');
                     addDiv.className = 'admin-add-technician';
                     const addInput = document.createElement('input');
@@ -1512,11 +1382,57 @@
                     addDiv.appendChild(addInput);
                     addDiv.appendChild(addButton);
                     groupSection.appendChild(addDiv);
-
-                    adminPanelContent.appendChild(groupSection);
+                    adminGroupContent.appendChild(groupSection);
                 });
+                
+                populateLeaveManagementUI();
             }
 
+            function populateLeaveManagementUI() {
+                const leaveTechSelect = document.getElementById('leaveTechSelect');
+                const leaveList = document.getElementById('leaveList');
+                if (!leaveTechSelect || !leaveList) return;
+
+                leaveTechSelect.innerHTML = '<option value="">Select Technician</option>';
+                const allTechs = groupMembersData.flat().sort();
+                allTechs.forEach(tech => {
+                    const option = document.createElement('option');
+                    option.value = tech;
+                    option.textContent = tech;
+                    leaveTechSelect.appendChild(option);
+                });
+
+                leaveList.innerHTML = '';
+                technicianLeaves.forEach((leave, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'leave-item';
+                    item.innerHTML = `
+                        <span><strong>${leave.name}</strong> from ${leave.startDate} to ${leave.endDate}</span>
+                        <button class="action-button" onclick="removeLeave(${index})">Remove</button>
+                    `;
+                    leaveList.appendChild(item);
+                });
+                
+                document.getElementById('addLeaveButton').onclick = addLeave;
+            }
+
+            window.removeLeave = (index) => {
+                technicianLeaves.splice(index, 1);
+                populateLeaveManagementUI();
+            };
+
+            function addLeave() {
+                const techName = document.getElementById('leaveTechSelect').value;
+                const startDate = document.getElementById('leaveStartDate').value;
+                const endDate = document.getElementById('leaveEndDate').value;
+
+                if (techName && startDate && endDate && new Date(startDate) <= new Date(endDate)) {
+                    technicianLeaves.push({ name: techName, startDate, endDate });
+                    populateLeaveManagementUI();
+                } else {
+                    alert("Please fill all fields correctly. End date must be after or same as start date.");
+                }
+            }
 
             function renameTechnician(groupIndex, techIndex, newName) {
                 if (newName && newName.trim() !== "") {
@@ -1535,9 +1451,7 @@
             function addTechnician(groupIndex, inputElement) {
                 const newName = inputElement.value.trim();
                 if (newName) {
-                    if (!groupMembersData[groupIndex]) {
-                        groupMembersData[groupIndex] = [];
-                    }
+                    if (!groupMembersData[groupIndex]) groupMembersData[groupIndex] = [];
                     groupMembersData[groupIndex].push(newName);
                     populateAdminPanel(); 
                     inputElement.value = ''; 
@@ -1548,23 +1462,20 @@
 
             function transferTechnician(sourceGroupIndex, techIndex, destinationGroupIndex) {
                 const techName = groupMembersData[sourceGroupIndex][techIndex];
-                // Remove from source
                 groupMembersData[sourceGroupIndex].splice(techIndex, 1);
-                // Add to destination
-                if (!groupMembersData[destinationGroupIndex]) {
-                    groupMembersData[destinationGroupIndex] = [];
-                }
+                if (!groupMembersData[destinationGroupIndex]) groupMembersData[destinationGroupIndex] = [];
                 groupMembersData[destinationGroupIndex].push(techName);
-                // Refresh panel
                 populateAdminPanel();
             }
 
             function saveAdminChangesToLocalStorage() {
                 localStorage.setItem('adminGroupNames', JSON.stringify(groupNames)); 
                 localStorage.setItem('adminGroupMembersData', JSON.stringify(groupMembersData));
-                alert("Changes saved to your browser's local storage! The schedule will now use this data.");
+                localStorage.setItem(localStorageKeyLeaves, JSON.stringify(technicianLeaves));
+                alert("All changes saved! The schedule will now reflect these updates.");
                 closeModal(adminPanelModal);
-                initializeApp(); 
+                generateSchedule(); // Regenerate schedule to show changes immediately
+                updateOnDutyDashboard();
             }
 
 
@@ -1580,15 +1491,10 @@
                         const [yearStr, monthStr] = monthYearValue.split('-');
                         const year = parseInt(yearStr);
                         const month_0_indexed = parseInt(monthStr) - 1;
-                        if (!isNaN(year) && !isNaN(month_0_indexed) && month_0_indexed >= 0 && month_0_indexed <= 11) {
+                        if (!isNaN(year) && !isNaN(month_0_indexed)) {
                             currentDisplayDate = new Date(Date.UTC(year, month_0_indexed, 1));
                             generateSchedule();
-                            if(messageArea) messageArea.textContent = '';
-                        } else {
-                            if(messageArea) messageArea.textContent = 'Invalid month/year selected.';
                         }
-                    } else {
-                         if(messageArea) messageArea.textContent = 'Please select a month and year.';
                     }
                 });
             } 
@@ -1616,8 +1522,10 @@
                     localStorage.removeItem(localStorageKeyGroup);
                     localStorage.removeItem('adminGroupNames');
                     localStorage.removeItem('adminGroupMembersData');
+                    localStorage.removeItem(localStorageKeyLeaves);
                     groupNames = [...defaultGroupNames]; 
-                    groupMembersData = defaultGroupMembersData.map(arr => [...arr]); 
+                    groupMembersData = defaultGroupMembersData.map(arr => [...arr]);
+                    technicianLeaves = [];
                     initializeApp(); 
                 });
             }
