@@ -1250,10 +1250,14 @@
                 }
             }
 
+            /**
+             * MODIFIED FUNCTION
+             * Updates the "On Duty Today" dashboard to include technician zone assignments.
+             */
             function updateOnDutyDashboard() {
                 if (!onDutyDashboardElement || !cycleStartDate) return;
 
-                const today = new Date(); 
+                const today = new Date();
                 const effectiveScheduleDateForToday = getEffectiveShiftStartDate(today);
 
                 const diffInDays = Math.floor((effectiveScheduleDateForToday.getTime() - cycleStartDate.getTime()) / (1000 * 60 * 60 * 24));
@@ -1263,22 +1267,49 @@
                 const groupName = groupNames[groupWorkingTodayIndex];
                 const members = groupMembersData[groupWorkingTodayIndex] || [];
                 
-                let dashboardHTML = `<h3><span class="dashboard-icon">👥</span>On Duty Today</h3>`; 
+                let dashboardHTML = `<h3><span class="dashboard-icon">👥</span>On Duty Today</h3>`;
                 dashboardHTML += `<p><strong class="working-group-label">Working Group:</strong> <strong>${groupName.replace(' GRP', '')}</strong></p>`;
 
-                const holidayToday = getHolidayInfo(today, today.getUTCFullYear()); 
+                const holidayToday = getHolidayInfo(effectiveScheduleDateForToday, effectiveScheduleDateForToday.getUTCFullYear()); 
                 if (holidayToday) {
                     dashboardHTML += `<p class="holiday-text"><span class="dashboard-icon">⭐</span>Today is a Holiday: ${holidayToday}</p>`;
                 }
 
                 if (members.length > 0) {
                     dashboardHTML += `<ul>`;
-                    members.forEach((memberName) => {
-                        const onLeave = isTechnicianOnLeave(memberName, today);
-                         if (onLeave) {
+
+                    // --- Zone Calculation Logic ---
+                    let groupNthShiftForZoneCalc = 0; 
+                    const daysSinceGlobalRef = Math.floor((effectiveScheduleDateForToday.getTime() - GLOBAL_REFERENCE_DATE.getTime()) / (1000 * 60 * 60 * 24));
+                    if (daysSinceGlobalRef >= 0) {
+                        const groupOffsetFromGlobalRefStart = (groupWorkingTodayIndex - GLOBAL_REFERENCE_GROUP_INDEX + 5) % 5;
+                        if (daysSinceGlobalRef >= groupOffsetFromGlobalRefStart) {
+                            groupNthShiftForZoneCalc = Math.floor((daysSinceGlobalRef - groupOffsetFromGlobalRefStart) / 5) + 1;
+                        }
+                    }
+                    
+                    const currentZonesToUse = (members.length === 4) ? ZONES : BASE_ZONES;
+                    let localTechnicianShiftHistory = {};
+
+                    members.forEach((memberName, memberIndexInGroup) => {
+                        const onLeave = isTechnicianOnLeave(memberName, effectiveScheduleDateForToday);
+                        if (onLeave) {
                             dashboardHTML += `<li class="on-leave">${memberName} - ❌ Congé</li>`;
                         } else {
-                            dashboardHTML += `<li>${memberName}</li>`;
+                            let assignedZone = "N/A";
+                            if (groupNthShiftForZoneCalc > 0) {
+                                const groupShiftBaseZoneIndex = ((groupNthShiftForZoneCalc - 1) + groupWorkingTodayIndex) % currentZonesToUse.length;
+                                let potentialZoneIndex = (groupShiftBaseZoneIndex + memberIndexInGroup) % currentZonesToUse.length;
+                                assignedZone = currentZonesToUse[potentialZoneIndex];
+                                
+                                let lastZoneForThisTech = localTechnicianShiftHistory[memberName] ? localTechnicianShiftHistory[memberName].lastZone : null;
+                                if (lastZoneForThisTech && assignedZone === lastZoneForThisTech) {
+                                    potentialZoneIndex = (potentialZoneIndex + 1) % currentZonesToUse.length;
+                                    assignedZone = currentZonesToUse[potentialZoneIndex];
+                                }
+                                localTechnicianShiftHistory[memberName] = { lastZone: assignedZone };
+                            }
+                            dashboardHTML += `<li>${memberName} - <strong style="color: #A7F3D0; font-weight: 600;">${assignedZone}</strong></li>`;
                         }
                     });
                     dashboardHTML += `</ul>`;
