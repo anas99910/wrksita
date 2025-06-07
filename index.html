@@ -53,7 +53,7 @@
             user-select: auto;
             -webkit-user-select: auto;
         }
-        input[type="date"], input[type="month"], select { 
+        input[type="date"], input[type="month"], select, input[type="number"] { 
             appearance: none; 
             -webkit-appearance: none; 
             -moz-appearance: none; 
@@ -366,12 +366,12 @@
         }
         .admin-technician-item .tech-name-wrapper { flex-grow: 1; min-width: 150px; }
         .admin-technician-item .tech-actions-wrapper { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
-        .admin-technician-item input[type="text"], .admin-add-technician input[type="text"] {
+        .admin-technician-item input[type="text"], .admin-add-technician input[type="text"], #leaveBalanceSection input[type="number"] {
             width: 100%; padding: 0.3rem 0.5rem; font-size: 0.85rem;
             background-color: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1);
             color: #E5E7EB; border-radius: 0.25rem;
         }
-        .admin-technician-item button {
+        .admin-technician-item button, .balance-btn {
             padding: 0.25rem 0.5rem; font-size: 0.7rem;
             background-color: rgba(239, 68, 68, 0.5); 
             border-color: rgba(185, 28, 28, 0.6); 
@@ -381,9 +381,16 @@
         .admin-technician-item .transfer-select { padding: 0.3rem 0.5rem; font-size: 0.8rem; min-width: 120px; }
         .admin-add-technician { margin-top: 0.75rem; display: flex; gap: 0.5rem; }
         .admin-add-technician button { background-color: rgba(16, 185, 129, 0.5); border-color: rgba(5, 150, 105, 0.6); }
-        #adminLeaveSection .leave-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem; align-items: end; }
-        #adminLeaveSection .leave-item { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background-color: rgba(0,0,0,0.15); border-radius: 0.375rem; margin-top: 0.5rem; }
-        #adminLeaveSection .leave-item button { background-color: rgba(239, 68, 68, 0.5); }
+        
+        #leaveHistorySection .leave-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem; align-items: end; }
+        #leaveHistorySection .leave-item { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background-color: rgba(0,0,0,0.15); border-radius: 0.375rem; margin-top: 0.5rem; }
+        #leaveHistorySection .leave-item button { background-color: rgba(239, 68, 68, 0.5); }
+        #leaveBalanceSection .balance-item { display: grid; grid-template-columns: 1fr auto auto auto; align-items: center; gap: 0.75rem; padding: 0.5rem; margin-top: 0.5rem; }
+        #leaveBalanceSection .balance-item span { font-weight: 500; }
+        #leaveBalanceSection .balance-item input { width: 60px; text-align: center; }
+        .balance-btn { padding: 0.25rem 0.6rem; font-size: 1rem; line-height: 1; }
+        .balance-btn.plus { background-color: rgba(16, 185, 129, 0.5); }
+        .balance-btn.minus { background-color: rgba(239, 68, 68, 0.5); }
 
         /* --- UPDATED Printable Schedule Modal Styles --- */
         .printable-content { background-color: #ffffff; color: #111827; padding: 15px; }
@@ -879,6 +886,7 @@
             let groupNames = [...defaultGroupNames];
             let groupMembersData = defaultGroupMembersData.map(arr => [...arr]);
             let technicianLeaves = [];
+            let leaveBalances = {}; // NEW: To store leave balances
 
             // --- Database Reference ---
             // This points to a single document in Firestore where all our app data will be stored.
@@ -1427,10 +1435,10 @@
                 window.onSnapshot(appDataDocRef, (doc) => {
                     if (doc.exists()) {
                         const data = doc.data();
-                        groupNames = data.groupNames;
-                        // **FIX**: Parse the JSON string back into a nested array
+                        groupNames = data.groupNames || defaultGroupNames;
                         groupMembersData = JSON.parse(data.groupMembersDataJSON || '[]'); 
-                        technicianLeaves = data.technicianLeaves;
+                        technicianLeaves = data.technicianLeaves || [];
+                        leaveBalances = data.leaveBalances || {}; // NEW: Load leave balances
                     } else {
                         // Document doesn't exist, so create it with default data.
                         console.log("No data found in Firestore, creating new document...");
@@ -1523,24 +1531,30 @@
                         <h4 class="admin-section-title">Manage Groups & Technicians</h4>
                         <div id="adminGroupContent"></div>
                     </div>
-                    <div id="adminLeaveSection" class="admin-section">
-                        <h4 class="admin-section-title">Manage Leave (Congé)</h4>
-                        <div class="leave-form">
-                            <div>
-                                <label for="leaveTechSelect" class="input-label-tag">Technician</label>
-                                <select id="leaveTechSelect"></select>
-                            </div>
-                            <div>
-                                <label for="leaveStartDate" class="input-label-tag">Start Date</label>
-                                <input type="date" id="leaveStartDate">
-                            </div>
-                            <div>
-                                <label for="leaveEndDate" class="input-label-tag">End Date</label>
-                                <input type="date" id="leaveEndDate">
-                            </div>
-                            <button id="addLeaveButton" class="action-button" style="background-color: rgba(16, 185, 129, 0.5);">Add Leave</button>
-                        </div>
-                        <div id="leaveList" class="mt-4"></div>
+                    <div class="admin-section">
+                         <h4 class="admin-section-title">Gestion des Congés</h4>
+                         <div id="leaveBalanceSection">
+                            <h5 class="admin-group-title">Solde de Congé</h5>
+                         </div>
+                         <div id="leaveHistorySection" class="mt-8">
+                             <h5 class="admin-group-title">Historique des Congés</h5>
+                             <div class="leave-form">
+                                <div>
+                                    <label for="leaveTechSelect" class="input-label-tag">Technician</label>
+                                    <select id="leaveTechSelect" class="rounded-md"></select>
+                                </div>
+                                <div>
+                                    <label for="leaveStartDate" class="input-label-tag">Start Date</label>
+                                    <input type="date" id="leaveStartDate" class="rounded-md">
+                                </div>
+                                <div>
+                                    <label for="leaveEndDate" class="input-label-tag">End Date</label>
+                                    <input type="date" id="leaveEndDate" class="rounded-md">
+                                </div>
+                                <button id="addLeaveButton" class="action-button" style="background-color: rgba(16, 185, 129, 0.5);">Add Leave</button>
+                             </div>
+                             <div id="leaveList" class="mt-4"></div>
+                         </div>
                     </div>
                      <div class="admin-section">
                         <h4 class="admin-section-title" style="color: #ef4444;">DANGER ZONE</h4>
@@ -1580,7 +1594,7 @@
                         removeButton.className = 'action-button'; 
                         removeButton.onclick = () => removeTechnician(groupIndex, techIndex);
                         const transferSelect = document.createElement('select');
-                        transferSelect.className = 'transfer-select';
+                        transferSelect.className = 'transfer-select rounded-md';
                         groupNames.forEach((name, i) => {
                             if (i !== groupIndex) {
                                 const option = document.createElement('option');
@@ -1624,7 +1638,8 @@
                         groupNames = [...defaultGroupNames]; 
                         groupMembersData = defaultGroupMembersData.map(arr => [...arr]);
                         technicianLeaves = [];
-                        saveAdminChangesToFirestore(true); // Save defaults to Firestore
+                        leaveBalances = {};
+                        saveAdminChangesToFirestore(true);
                         alert("Application data has been reset to defaults.");
                      }
                 });
@@ -1633,10 +1648,47 @@
             function populateLeaveManagementUI() {
                 const leaveTechSelect = document.getElementById('leaveTechSelect');
                 const leaveList = document.getElementById('leaveList');
-                if (!leaveTechSelect || !leaveList) return;
+                const leaveBalanceSection = document.getElementById('leaveBalanceSection');
 
-                leaveTechSelect.innerHTML = '<option value="">Select Technician</option>';
+                if (!leaveTechSelect || !leaveList || !leaveBalanceSection) return;
+
                 const allTechs = groupMembersData.flat().sort();
+
+                // Populate Leave Balance Section
+                leaveBalanceSection.innerHTML = '<h5 class="admin-group-title">Solde de Congé</h5>'; // Reset
+                allTechs.forEach(techName => {
+                    const balanceItem = document.createElement('div');
+                    balanceItem.className = 'balance-item';
+                    
+                    const nameSpan = document.createElement('span');
+                    nameSpan.textContent = techName;
+                    
+                    const balanceInput = document.createElement('input');
+                    balanceInput.type = 'number';
+                    balanceInput.className = 'leave-balance-input rounded-md';
+                    balanceInput.dataset.tech = techName; // Link input to technician
+                    balanceInput.value = leaveBalances[techName] || 0;
+
+                    const plusButton = document.createElement('button');
+                    plusButton.textContent = '+';
+                    plusButton.className = 'action-button balance-btn plus';
+                    plusButton.onclick = () => { balanceInput.value = parseInt(balanceInput.value) + 1; };
+
+                    const minusButton = document.createElement('button');
+                    minusButton.textContent = '-';
+                    minusButton.className = 'action-button balance-btn minus';
+                    minusButton.onclick = () => { balanceInput.value = parseInt(balanceInput.value) - 1; };
+
+                    balanceItem.appendChild(nameSpan);
+                    balanceItem.appendChild(minusButton);
+                    balanceItem.appendChild(balanceInput);
+                    balanceItem.appendChild(plusButton);
+                    leaveBalanceSection.appendChild(balanceItem);
+                });
+
+
+                // Populate Leave History Section
+                leaveTechSelect.innerHTML = '<option value="">Select Technician</option>';
                 allTechs.forEach(tech => {
                     const option = document.createElement('option');
                     option.value = tech;
@@ -1678,7 +1730,15 @@
 
             function renameTechnician(groupIndex, techIndex, newName) {
                 if (newName && newName.trim() !== "") {
+                    const oldName = groupMembersData[groupIndex][techIndex];
                     groupMembersData[groupIndex][techIndex] = newName.trim();
+                    
+                    // Update name in leaveBalances
+                    if(leaveBalances.hasOwnProperty(oldName)) {
+                        leaveBalances[newName.trim()] = leaveBalances[oldName];
+                        delete leaveBalances[oldName];
+                    }
+
                     populateAdminPanel(); 
                 } else {
                     alert("Technician name cannot be empty.");
@@ -1686,7 +1746,20 @@
             }
 
             function removeTechnician(groupIndex, techIndex) {
+                const techName = groupMembersData[groupIndex][techIndex];
+                
+                // Remove from group
                 groupMembersData[groupIndex].splice(techIndex, 1);
+
+                // Remove from leave balances
+                if(leaveBalances.hasOwnProperty(techName)) {
+                    delete leaveBalances[techName];
+                }
+
+                // Remove from leave history (optional, or mark as inactive)
+                technicianLeaves = technicianLeaves.filter(leave => leave.name !== techName);
+
+
                 populateAdminPanel(); 
             }
 
@@ -1695,6 +1768,12 @@
                 if (newName) {
                     if (!groupMembersData[groupIndex]) groupMembersData[groupIndex] = [];
                     groupMembersData[groupIndex].push(newName);
+                    
+                    // Add to leave balances with default value
+                    if(!leaveBalances.hasOwnProperty(newName)) {
+                        leaveBalances[newName] = 0;
+                    }
+
                     populateAdminPanel(); 
                     inputElement.value = ''; 
                 } else {
@@ -1711,11 +1790,18 @@
             }
 
             async function saveAdminChangesToFirestore(isInitialSetup = false) {
+                 // Update leave balances from the input fields before saving
+                const balanceInputs = document.querySelectorAll('.leave-balance-input');
+                balanceInputs.forEach(input => {
+                    const techName = input.dataset.tech;
+                    leaveBalances[techName] = parseInt(input.value) || 0;
+                });
+                
                 const dataToSave = {
                     groupNames: groupNames,
-                    // **FIX**: Stringify the nested array before saving
                     groupMembersDataJSON: JSON.stringify(groupMembersData),
-                    technicianLeaves: technicianLeaves
+                    technicianLeaves: technicianLeaves,
+                    leaveBalances: leaveBalances // NEW: Save leave balances
                 };
 
                 try {
