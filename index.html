@@ -802,17 +802,11 @@
     <div id="onLeaveModal" class="modal fixed inset-0 z-[65] flex items-center justify-center bg-black/85 opacity-0 pointer-events-none p-4">
         <div id="onLeaveModalContent" class="modal-content frosted-glass-pane w-full max-w-2xl mx-auto p-5 md:p-6 max-h-[85vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4 pb-3 border-b border-white/12">
-                <h3 class="text-lg font-semibold text-indigo-300 uppercase-text">On Leave & History</h3>
+                <h3 class="text-lg font-semibold text-indigo-300 uppercase-text">Full Leave History</h3>
                 <button id="closeOnLeaveModal" class="text-gray-400 hover:text-red-400 text-2xl font-bold">&times;</button>
             </div>
             
-            <div id="currentlyOnLeaveSection" class="mb-6">
-                <h4 class="text-md font-semibold text-indigo-200 uppercase-text mb-3">Currently On Leave</h4>
-                <ul id="currentlyOnLeaveList" class="text-gray-200 selectable-text space-y-2"></ul>
-            </div>
-
-            <div id="fullLeaveHistorySection" class="pt-4 border-t border-white/10">
-                 <h4 class="text-md font-semibold text-indigo-200 uppercase-text mb-3">Full Leave History</h4>
+            <div id="fullLeaveHistorySection">
                  <select id="leaveHistoryTechFilter" class="w-full p-2.5 rounded-md mb-4"></select>
                  <ul id="leaveHistoryList" class="text-gray-200 selectable-text space-y-2"></ul>
             </div>
@@ -890,7 +884,6 @@
             const onLeaveButton = document.getElementById('onLeaveButton');
             const onLeaveModal = document.getElementById('onLeaveModal');
             const closeOnLeaveModalButton = document.getElementById('closeOnLeaveModal');
-            const currentlyOnLeaveList = document.getElementById('currentlyOnLeaveList');
             const leaveHistoryTechFilter = document.getElementById('leaveHistoryTechFilter');
             const leaveHistoryList = document.getElementById('leaveHistoryList');
 
@@ -1894,26 +1887,6 @@
             }
 
             function populateOnLeaveModal() {
-                const now = new Date();
-                const todayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-                
-                currentlyOnLeaveList.innerHTML = '';
-                const onLeaveNow = technicianLeaves.filter(leave => {
-                    const start = parseDateString(leave.startDate);
-                    const end = parseDateString(leave.endDate);
-                    return todayUTC >= start && todayUTC <= end;
-                });
-
-                if (onLeaveNow.length > 0) {
-                    onLeaveNow.forEach(leave => {
-                        const li = document.createElement('li');
-                        li.textContent = `${leave.name} (until ${leave.endDate})`;
-                        currentlyOnLeaveList.appendChild(li);
-                    });
-                } else {
-                    currentlyOnLeaveList.innerHTML = '<li>No technicians are currently on leave.</li>';
-                }
-
                 const allTechs = groupMembersData.flat().sort();
                 leaveHistoryTechFilter.innerHTML = '<option value="all">All Technicians</option>';
                 allTechs.forEach(tech => {
