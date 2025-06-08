@@ -1349,7 +1349,7 @@
                 if(printableScheduleTitle) printableScheduleTitle.textContent = `Planning - ${monthName.toUpperCase()}`;
 
                 let calendarHtml = '<table>';
-                calendarHtml += '<thead><tr><th>Lundi</th><th>Mardi</th><th>Mercredi</th><th>Jeudi</th><th>Vendredi</th><th>Samedi</th><th>Dimanche</th></tr></thead>';
+                calendarHtml += '<thead><tr><th>Lundi</th><th>Mardi</th><th>Mercredi</th><th>Jeudi</th><th>Vendredi</th><th>Sabado</th><th>Domingo</th></tr></thead>';
                 calendarHtml += '<tbody><tr>';
 
                 let adjustedFirstDay = (new Date(Date.UTC(year, month_0_indexed, 1)).getUTCDay() + 6) % 7;
@@ -1521,10 +1521,6 @@
             function populateAdminPanel() {
                 if (!adminPanelContent) return;
                 adminPanelContent.innerHTML = `
-                    <div id="adminOnLeaveSection" class="admin-section">
-                        <h4 class="admin-section-title" style="color: #67e8f9;">Current & Upcoming Leave</h4>
-                        <ul id="adminOnLeaveList" class="text-gray-200 selectable-text space-y-2"></ul>
-                    </div>
                     <div id="adminGroupManagementSection" class="admin-section">
                         <h4 class="admin-section-title">Manage Groups & Technicians</h4>
                         <div id="adminGroupContent"></div>
@@ -1536,6 +1532,10 @@
                             <select id="leaveTechSelector" class="w-full p-2.5 rounded-md"></select>
                          </div>
                          <div id="leaveDetailsForTech" class="mt-4 hidden"></div>
+                         <div id="adminOnLeaveSection" class="mt-8 pt-4 border-t border-white/10">
+                            <h5 class="admin-group-title" style="color: #67e8f9; text-align: center;">Current & Upcoming Leave</h5>
+                            <ul id="adminOnLeaveList" class="text-gray-200 selectable-text space-y-2"></ul>
+                        </div>
                     </div>
                      <div class="admin-section">
                         <h4 class="admin-section-title" style="color: #ef4444;">DANGER ZONE</h4>
@@ -1556,10 +1556,9 @@
                     const onLeaveUpcoming = technicianLeaves
                         .filter(leave => {
                             const end = parseDateString(leave.endDate);
-                            // Show leave if its end date is today or in the future
                             return end && end >= todayUTC;
                         })
-                        .sort((a,b) => parseDateString(a.startDate) - parseDateString(b.startDate)); // Sort by start date
+                        .sort((a,b) => parseDateString(a.startDate) - parseDateString(b.startDate)); 
 
                     if (onLeaveUpcoming.length > 0) {
                         onLeaveUpcoming.forEach(leave => {
