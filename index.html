@@ -593,7 +593,7 @@
                 PC POSITIONS
             </button>
             <button id="onLeaveButton" class="action-button" style="background-color: rgba(99, 102, 241, 0.5); border-color: rgba(79, 70, 229, 0.6);">
-                On Leave
+                On Leave & History
             </button>
             <button id="adminPanelButton" class="action-button" style="background-color: rgba(217, 119, 6, 0.5); border-color: rgba(146, 64, 14, 0.6);"> Admin Panel
             </button>
@@ -1047,10 +1047,10 @@
             }
             
             function isTechnicianOnLeave(techName, date) {
-                const checkDate = date.getTime();
+                const checkDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
                 return technicianLeaves.some(leave => {
-                    const leaveStart = parseDateString(leave.startDate).getTime();
-                    const leaveEnd = parseDateString(leave.endDate).getTime();
+                    const leaveStart = parseDateString(leave.startDate);
+                    const leaveEnd = parseDateString(leave.endDate);
                     return leave.name === techName && checkDate >= leaveStart && checkDate <= leaveEnd;
                 });
             }
@@ -1174,10 +1174,6 @@
                 updateOnDutyDashboard(); 
             }
         
-            /**
-             * MODIFIED FUNCTION
-             * Displays a modal with the list of technicians for a given day, including their assigned zone.
-             */
             function showGroupMembers(groupIndex, day, displayDate, holidayName = null) {
                 if (!groupMembersModalTitle || !groupMembersList) return;
 
@@ -1191,7 +1187,6 @@
 
                 groupMembersList.innerHTML = '';
                 
-                // --- Logic to calculate and display zones, adapted from generatePrintableSchedule ---
                 const workingGroupMembers = groupMembersData[groupIndex] || [];
                 if (workingGroupMembers.length === 0) {
                     const listItem = document.createElement('li');
@@ -1201,7 +1196,6 @@
                     return;
                 }
                 
-                // Calculate the number of shifts this group has had to determine the base zone.
                 let groupNthShiftForZoneCalc = 0; 
                 const daysSinceGlobalRef = Math.floor((dateOfClickedDay.getTime() - GLOBAL_REFERENCE_DATE.getTime()) / (1000 * 60 * 60 * 24));
                 if (daysSinceGlobalRef >= 0) {
@@ -1211,10 +1205,7 @@
                     }
                 }
                 
-                // Determine which set of zones to use based on group size
                 const currentZonesToUse = (workingGroupMembers.length === 4) ? ZONES : BASE_ZONES;
-
-                // A temporary history for this single calculation to prevent immediate zone repetition if needed.
                 let localTechnicianShiftHistory = {}; 
 
                 workingGroupMembers.forEach((memberName, memberIndexInGroup) => {
@@ -1226,13 +1217,11 @@
                     } else {
                         let assignedZone = "N/A";
                         
-                        // Calculate zone only if the shift calculation is valid
                         if (groupNthShiftForZoneCalc > 0) {
                             const groupShiftBaseZoneIndex = ((groupNthShiftForZoneCalc - 1) + groupIndex) % currentZonesToUse.length;
                             let potentialZoneIndex = (groupShiftBaseZoneIndex + memberIndexInGroup) % currentZonesToUse.length;
                             assignedZone = currentZonesToUse[potentialZoneIndex];
                             
-                            // This logic prevents a tech from having the same zone as the previous tech in the list for this day.
                             let lastZoneForThisTech = localTechnicianShiftHistory[memberName] ? localTechnicianShiftHistory[memberName].lastZone : null;
                             if (lastZoneForThisTech && assignedZone === lastZoneForThisTech) {
                                 potentialZoneIndex = (potentialZoneIndex + 1) % currentZonesToUse.length;
@@ -1241,7 +1230,6 @@
                             localTechnicianShiftHistory[memberName] = { lastZone: assignedZone };
                         }
 
-                        // Set the list item's HTML with the name and assigned zone
                         listItem.innerHTML = `${memberName} - <strong style="color: #A7F3D0; font-weight: 600;">${assignedZone}</strong>`;
                     }
                     groupMembersList.appendChild(listItem);
@@ -1268,7 +1256,6 @@
                     if(!currentDisplayDate) {
                         currentDisplayDate = new Date(Date.UTC(cycleStartDate.getUTCFullYear(), cycleStartDate.getUTCMonth(), 1));
                     }
-                    // Save user preference, not app data
                     localStorage.setItem(localStorageKeyDate, startDateInput.value);
                     localStorage.setItem(localStorageKeyGroup, newSelectedGroupIndex.toString());
                     generateSchedule(); 
@@ -1291,10 +1278,6 @@
                 }
             }
 
-            /**
-             * MODIFIED FUNCTION
-             * Updates the "On Duty Today" dashboard to include technician zone assignments.
-             */
             function updateOnDutyDashboard() {
                 if (!onDutyDashboardElement || !cycleStartDate) return;
 
@@ -1319,7 +1302,6 @@
                 if (members.length > 0) {
                     dashboardHTML += `<ul>`;
 
-                    // --- Zone Calculation Logic ---
                     let groupNthShiftForZoneCalc = 0; 
                     const daysSinceGlobalRef = Math.floor((effectiveScheduleDateForToday.getTime() - GLOBAL_REFERENCE_DATE.getTime()) / (1000 * 60 * 60 * 24));
                     if (daysSinceGlobalRef >= 0) {
@@ -1464,21 +1446,18 @@
                 updateLiveClock(); 
                 setInterval(updateLiveClock, 1000); 
 
-                // Listen for real-time updates from Firestore
                 window.onSnapshot(appDataDocRef, (doc) => {
                     if (doc.exists()) {
                         const data = doc.data();
                         groupNames = data.groupNames || defaultGroupNames;
                         groupMembersData = JSON.parse(data.groupMembersDataJSON || '[]'); 
                         technicianLeaves = data.technicianLeaves || [];
-                        leaveBalances = data.leaveBalances || {}; // NEW: Load leave balances
+                        leaveBalances = data.leaveBalances || {};
                     } else {
-                        // Document doesn't exist, so create it with default data.
                         console.log("No data found in Firestore, creating new document...");
-                        saveAdminChangesToFirestore(true); // Save default data
+                        saveAdminChangesToFirestore(true);
                     }
 
-                    // Once data is loaded (or created), populate the UI
                     populateGroupSelect(); 
                     updateLegend();
                     
@@ -1518,7 +1497,6 @@
             initializeApp();
 
             async function requestAdminPasswordAndOpenPanel() {
-                // Check if the user is already authenticated in this session
                 if (sessionStorage.getItem('isAdminAuthenticated') === 'true') {
                     populateAdminPanel();
                     openModal(adminPanelModal);
@@ -1526,29 +1504,20 @@
                 }
 
                 const enteredPass = prompt("Enter Admin Password:");
-
-                if (enteredPass === null) {
-                    return; // User cancelled the prompt.
-                }
+                if (enteredPass === null) return;
 
                 try {
-                    // This now calls your secure Netlify Function
                     const response = await fetch('/.netlify/functions/check-password', {
                         method: 'POST',
                         body: JSON.stringify({ password: enteredPass })
                     });
-
                     const result = await response.json();
 
                     if (response.ok && result.success) {
-                        // The server confirmed the password is correct
-                        // Set the flag in sessionStorage to remember the user for this session
                         sessionStorage.setItem('isAdminAuthenticated', 'true');
-                        
                         populateAdminPanel();
                         openModal(adminPanelModal);
                     } else {
-                        // The server said the password was wrong
                         alert("Incorrect password.");
                     }
                 } catch (error) {
@@ -1570,9 +1539,7 @@
                             <label for="leaveTechSelector" class="input-label-tag">Select Technician</label>
                             <select id="leaveTechSelector" class="w-full p-2.5 rounded-md"></select>
                          </div>
-                         <div id="leaveDetailsForTech" class="mt-4 hidden">
-                            <!-- Content will be populated by JS -->
-                         </div>
+                         <div id="leaveDetailsForTech" class="mt-4 hidden"></div>
                     </div>
                      <div class="admin-section">
                         <h4 class="admin-section-title" style="color: #ef4444;">DANGER ZONE</h4>
@@ -1719,11 +1686,9 @@
                     </div>
                 `;
 
-                // Populate History
                 const leaveList = document.getElementById('leaveList');
                 leaveList.innerHTML = '';
-                technicianLeaves.filter(leave => leave.name === techName).forEach((leave, index) => {
-                     // Find original index to allow removal
+                technicianLeaves.filter(leave => leave.name === techName).forEach((leave) => {
                     const originalIndex = technicianLeaves.findIndex(l => l.name === leave.name && l.startDate === leave.startDate && l.endDate === leave.endDate);
                     const item = document.createElement('div');
                     item.className = 'leave-item';
@@ -1734,19 +1699,17 @@
                     leaveList.appendChild(item);
                 });
 
-                // Attach event listener for adding leave
                 document.getElementById('addLeaveButton').onclick = () => {
                     const startDate = document.getElementById('leaveStartDate').value;
                     const endDate = document.getElementById('leaveEndDate').value;
                      if (techName && startDate && endDate && new Date(startDate) <= new Date(endDate)) {
                         technicianLeaves.push({ name: techName, startDate, endDate });
-                        displayLeaveDetailsForTechnician(techName); // Refresh view
+                        displayLeaveDetailsForTechnician(techName);
                     } else {
                         alert("Please fill all fields correctly. End date must be after or same as start date.");
                     }
                 };
-
-                 // Attach event listener to update in-memory balance on input change
+                
                 const balanceInput = document.getElementById(`balance-input-${techName.replace(/\s+/g, '-')}`);
                 balanceInput.onchange = () => {
                     leaveBalances[techName] = parseInt(balanceInput.value) || 0;
@@ -1758,14 +1721,14 @@
                 const balanceInput = document.getElementById(inputId);
                 let currentValue = parseInt(balanceInput.value) || 0;
                 balanceInput.value = currentValue + amount;
-                leaveBalances[techName] = parseInt(balanceInput.value); // Update in-memory object
+                leaveBalances[techName] = parseInt(balanceInput.value);
             };
 
             window.removeLeave = (index) => {
                 const techName = technicianLeaves[index].name;
                 technicianLeaves.splice(index, 1);
-                populateLeaveManagementUI(); // Re-populate main dropdown
-                displayLeaveDetailsForTechnician(techName); // Refresh the details view
+                populateLeaveManagementUI();
+                displayLeaveDetailsForTechnician(techName);
             };
 
             function renameTechnician(groupIndex, techIndex, newName) {
@@ -1773,7 +1736,6 @@
                     const oldName = groupMembersData[groupIndex][techIndex];
                     groupMembersData[groupIndex][techIndex] = newName.trim();
                     
-                    // Update name in leaveBalances and leave history
                     if(leaveBalances.hasOwnProperty(oldName)) {
                         leaveBalances[newName.trim()] = leaveBalances[oldName];
                         delete leaveBalances[oldName];
@@ -1783,7 +1745,6 @@
                             leave.name = newName.trim();
                         }
                     });
-
                     populateAdminPanel(); 
                 } else {
                     alert("Technician name cannot be empty.");
@@ -1792,18 +1753,9 @@
 
             function removeTechnician(groupIndex, techIndex) {
                 const techName = groupMembersData[groupIndex][techIndex];
-                
-                // Remove from group
                 groupMembersData[groupIndex].splice(techIndex, 1);
-
-                // Remove from leave balances
-                if(leaveBalances.hasOwnProperty(techName)) {
-                    delete leaveBalances[techName];
-                }
-
-                // Remove from leave history
+                if(leaveBalances.hasOwnProperty(techName)) delete leaveBalances[techName];
                 technicianLeaves = technicianLeaves.filter(leave => leave.name !== techName);
-
                 populateAdminPanel(); 
             }
 
@@ -1812,12 +1764,7 @@
                 if (newName) {
                     if (!groupMembersData[groupIndex]) groupMembersData[groupIndex] = [];
                     groupMembersData[groupIndex].push(newName);
-                    
-                    // Add to leave balances with default value
-                    if(!leaveBalances.hasOwnProperty(newName)) {
-                        leaveBalances[newName] = 0;
-                    }
-
+                    if(!leaveBalances.hasOwnProperty(newName)) leaveBalances[newName] = 0;
                     populateAdminPanel(); 
                     inputElement.value = ''; 
                 } else {
@@ -1834,8 +1781,6 @@
             }
 
             async function saveAdminChangesToFirestore(isInitialSetup = false) {
-                // Balances are already updated in memory by the input 'onchange' and '+/-' button events.
-                // We just need to save the current state of the objects.
                 const dataToSave = {
                     groupNames: groupNames,
                     groupMembersDataJSON: JSON.stringify(groupMembersData),
@@ -1854,7 +1799,6 @@
                     alert("There was an error saving your changes to the database.");
                 }
             }
-
 
             // Event Listeners
             if (startDateInput) startDateInput.addEventListener('change', handleInputsChange);
@@ -1951,15 +1895,14 @@
             }
 
             function populateOnLeaveModal() {
-                const today = new Date();
-                today.setHours(0,0,0,0);
+                const now = new Date();
+                const todayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
                 
-                // Currently on Leave
                 currentlyOnLeaveList.innerHTML = '';
                 const onLeaveNow = technicianLeaves.filter(leave => {
                     const start = parseDateString(leave.startDate);
                     const end = parseDateString(leave.endDate);
-                    return today >= start && today <= end;
+                    return todayUTC >= start && todayUTC <= end;
                 });
 
                 if (onLeaveNow.length > 0) {
@@ -1972,7 +1915,6 @@
                     currentlyOnLeaveList.innerHTML = '<li>No technicians are currently on leave.</li>';
                 }
 
-                // Populate History Filter
                 const allTechs = groupMembersData.flat().sort();
                 leaveHistoryTechFilter.innerHTML = '<option value="all">All Technicians</option>';
                 allTechs.forEach(tech => {
@@ -1982,7 +1924,7 @@
                     leaveHistoryTechFilter.appendChild(option);
                 });
 
-                displayLeaveHistory('all'); // Display all by default
+                displayLeaveHistory('all');
 
                 leaveHistoryTechFilter.onchange = (e) => displayLeaveHistory(e.target.value);
             }
@@ -1992,7 +1934,7 @@
                 const filteredLeaves = (filter === 'all' 
                     ? technicianLeaves 
                     : technicianLeaves.filter(leave => leave.name === filter)
-                ).sort((a,b) => parseDateString(b.startDate) - parseDateString(a.startDate)); // Sort descending
+                ).sort((a,b) => parseDateString(b.startDate) - parseDateString(a.startDate));
 
                  if (filteredLeaves.length > 0) {
                     filteredLeaves.forEach(leave => {
