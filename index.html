@@ -886,7 +886,7 @@
             const closeGroupMembersModalButton = document.getElementById('closeGroupMembersModal');
             const viewDispatchButtonInModal = document.getElementById('viewDispatchButtonInModal');
 
-            // NEW On Leave Modal elements
+            // On Leave Modal elements
             const onLeaveButton = document.getElementById('onLeaveButton');
             const onLeaveModal = document.getElementById('onLeaveModal');
             const closeOnLeaveModalButton = document.getElementById('closeOnLeaveModal');
@@ -919,10 +919,9 @@
             let groupNames = [...defaultGroupNames];
             let groupMembersData = defaultGroupMembersData.map(arr => [...arr]);
             let technicianLeaves = [];
-            let leaveBalances = {}; // NEW: To store leave balances
+            let leaveBalances = {}; 
 
             // --- Database Reference ---
-            // This points to a single document in Firestore where all our app data will be stored.
             const appDataDocRef = window.doc(window.db, "sita-data", "main-config");
 
 
@@ -1902,21 +1901,13 @@
                 const onLeaveNow = technicianLeaves.filter(leave => {
                     const start = parseDateString(leave.startDate);
                     const end = parseDateString(leave.endDate);
-                    return start && end && todayUTC >= start && todayUTC <= end;
+                    return todayUTC >= start && todayUTC <= end;
                 });
 
                 if (onLeaveNow.length > 0) {
                     onLeaveNow.forEach(leave => {
                         const li = document.createElement('li');
-                        const endDate = parseDateString(leave.endDate);
-                        if(endDate) {
-                            const returnDate = new Date(endDate);
-                            returnDate.setUTCDate(returnDate.getUTCDate() + 1); // Add one day to get the return date
-                            const returnDateString = returnDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-                            li.textContent = `${leave.name} (Returns on: ${returnDateString})`;
-                        } else {
-                            li.textContent = `${leave.name} (Invalid leave end date)`;
-                        }
+                        li.textContent = `${leave.name} (until ${leave.endDate})`;
                         currentlyOnLeaveList.appendChild(li);
                     });
                 } else {
