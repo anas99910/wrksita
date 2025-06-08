@@ -195,11 +195,11 @@
             font-size: 0.7rem; font-weight: 500; margin-bottom: 0.3rem; 
         }
         #groupMembersModalContent ul { list-style-type: none; padding: 0; }
-        #groupMembersModalContent li {
+        #groupMembersModalContent li, #onLeaveModalContent li {
             padding: 0.6rem 0.25rem; border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
             font-size: 0.9rem; color: #E5E7EB; 
         }
-        #groupMembersModalContent li:last-child { border-bottom: none; }
+        #groupMembersModalContent li:last-child, #onLeaveModalContent li:last-child { border-bottom: none; }
         #groupMembersModalContent .on-leave { text-decoration: line-through; color: #f87171; }
         #groupMembersModalContent .leave-icon { color: #f87171; margin-left: 0.25rem; }
 
@@ -257,27 +257,23 @@
         }
 
         /* Dashboard Panel Styles */
-        #onDutyDashboard, #onLeaveTodayPanel {
+        #onDutyDashboard {
             margin-bottom: 1rem; 
             padding: 1rem 1.5rem; 
-            color: #E5E7EB; 
+            color: #E5E7EB; /* Brighter base color */
             text-align: center; 
         }
-        #onDutyDashboard h3, #onLeaveTodayPanel h3 {
+        #onDutyDashboard h3 {
             font-size: 1.125rem; 
             font-weight: 500; 
             margin-bottom: 0.5rem; 
             color: #A7F3D0; 
              letter-spacing: 0.025em; 
         }
-        #onLeaveTodayPanel h3 {
-             color: #c4b5fd; /* Indigo-300 */
-        }
-
-        #onDutyDashboard p, #onLeaveTodayPanel p {
+        #onDutyDashboard p {
             font-size: 0.875rem; 
             margin-bottom: 0.35rem; 
-            color: #D1D5DB; 
+            color: #D1D5DB; /* Brighter than gray-400 */
         }
         #onDutyDashboard strong { 
             font-weight: 500; 
@@ -287,22 +283,18 @@
             color: #D1D5DB;
             font-weight: 400; 
         }
-        #onDutyDashboard ul, #onLeaveTodayPanel ul {
+        #onDutyDashboard ul {
             list-style-type: none;
             padding-left: 0; 
             margin-top: 0.5rem; 
             margin-bottom: 0.75rem; 
         }
-        #onDutyDashboard li, #onLeaveTodayPanel li {
+        #onDutyDashboard li {
             font-size: 0.875rem; 
             padding: 0.15rem 0; 
             color: #E5E7EB; 
         }
-        #onDutyDashboard .on-leave, #onLeaveTodayPanel .on-leave { 
-            text-decoration: line-through; 
-            color: #f87171; 
-            font-weight: 600; 
-        }
+        #onDutyDashboard .on-leave { text-decoration: line-through; color: #f87171; font-weight: 600; }
         #onDutyDashboard .holiday-text { 
             color: #FCD34D; 
             font-weight: 500;
@@ -315,7 +307,17 @@
             font-size: 0.9em; 
             opacity: 0.7;
         }
-        
+        #monthlyStatsBannerInDashboard { 
+            padding: 0.5rem;
+            margin-top: 0.75rem; 
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.75rem; 
+            color: #9CA3AF; 
+            background-color: rgba(0,0,0,0.15); 
+            backdrop-filter: blur(1px); 
+            -webkit-backdrop-filter: blur(1px);
+            border-radius: 0.375rem; 
+        }
         .section-title { 
             color: #9CA3AF; 
             font-size: 0.8rem; 
@@ -381,8 +383,8 @@
         .admin-add-technician button { background-color: rgba(16, 185, 129, 0.5); border-color: rgba(5, 150, 105, 0.6); }
         
         #leaveHistorySection .leave-form { display: grid; grid-template-columns: 1fr 1fr auto; gap: 0.75rem; align-items: end; }
-        #leaveList .leave-item { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background-color: rgba(0,0,0,0.15); border-radius: 0.375rem; margin-top: 0.5rem; }
-        #leaveList .leave-item button { background-color: rgba(239, 68, 68, 0.5); }
+        #leaveHistorySection .leave-item { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background-color: rgba(0,0,0,0.15); border-radius: 0.375rem; margin-top: 0.5rem; }
+        #leaveHistorySection .leave-item button { background-color: rgba(239, 68, 68, 0.5); }
         #leaveBalanceSection .balance-item { display: grid; grid-template-columns: 1fr auto auto auto; align-items: center; gap: 0.75rem; padding: 0.5rem; margin-top: 0.5rem; }
         #leaveBalanceSection .balance-item span { font-weight: 500; }
         #leaveBalanceSection .balance-item input { width: 60px; text-align: center; }
@@ -471,9 +473,9 @@
             .pm-indicator { font-size: 0.55rem; bottom: 1px; left: 2px;}
             .zone-details-table th, .zone-details-table td,
             .pc-positions-table th, .pc-positions-table td { font-size: 0.7rem; padding: 0.3rem; }
-            #onDutyDashboard, #onLeaveTodayPanel { padding: 1rem; margin-top:0.5rem; } 
-            #onDutyDashboard h3, #onLeaveTodayPanel h3 { font-size: 1.1rem; } 
-            #onDutyDashboard p, #onDutyDashboard li, #onLeaveTodayPanel p, #onLeaveTodayPanel li { font-size: 0.8rem; }
+            #onDutyDashboard { padding: 1rem; margin-top:0.5rem; } 
+            #onDutyDashboard h3 { font-size: 1.1rem; } 
+            #onDutyDashboard p, #onDutyDashboard li { font-size: 0.8rem; }
             #monthlyStatsBannerInDashboard { font-size: 0.65rem; padding: 0.4rem; }
             .section-title { font-size: 0.75rem; margin-top: 1rem; }
             #adminPanelModal .modal-content { max-width: 95%; }
@@ -520,9 +522,8 @@
             Loading current time...
         </div>
 
-        <div id="onDutyDashboard" class="frosted-glass-pane mx-auto max-w-3xl w-full"></div>
-        <div id="onLeaveTodayPanel" class="frosted-glass-pane mx-auto max-w-3xl w-full"></div>
-
+        <div id="onDutyDashboard" class="frosted-glass-pane mx-auto max-w-3xl w-full">
+            </div>
 
         <div class="container frosted-glass-pane mx-auto max-w-3xl w-full p-5 md:p-8 mb-8 mt-4">
             
@@ -590,6 +591,9 @@
             </button>
             <button id="pcPositionsButton" class="action-button"> 
                 PC POSITIONS
+            </button>
+            <button id="onLeaveButton" class="action-button" style="background-color: rgba(99, 102, 241, 0.5); border-color: rgba(79, 70, 229, 0.6);">
+                On Leave & History
             </button>
             <button id="adminPanelButton" class="action-button" style="background-color: rgba(217, 119, 6, 0.5); border-color: rgba(146, 64, 14, 0.6);"> Admin Panel
             </button>
@@ -794,6 +798,27 @@
         </div>
     </div>
     
+    <!-- On Leave & History Modal -->
+    <div id="onLeaveModal" class="modal fixed inset-0 z-[65] flex items-center justify-center bg-black/85 opacity-0 pointer-events-none p-4">
+        <div id="onLeaveModalContent" class="modal-content frosted-glass-pane w-full max-w-2xl mx-auto p-5 md:p-6 max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4 pb-3 border-b border-white/12">
+                <h3 class="text-lg font-semibold text-indigo-300 uppercase-text">On Leave & History</h3>
+                <button id="closeOnLeaveModal" class="text-gray-400 hover:text-red-400 text-2xl font-bold">&times;</button>
+            </div>
+            
+            <div id="currentlyOnLeaveSection" class="mb-6">
+                <h4 class="text-md font-semibold text-indigo-200 uppercase-text mb-3">Currently On Leave</h4>
+                <ul id="currentlyOnLeaveList" class="text-gray-200 selectable-text space-y-2"></ul>
+            </div>
+
+            <div id="fullLeaveHistorySection" class="pt-4 border-t border-white/10">
+                 <h4 class="text-md font-semibold text-indigo-200 uppercase-text mb-3">Full Leave History</h4>
+                 <select id="leaveHistoryTechFilter" class="w-full p-2.5 rounded-md mb-4"></select>
+                 <ul id="leaveHistoryList" class="text-gray-200 selectable-text space-y-2"></ul>
+            </div>
+        </div>
+    </div>
+
     <!-- Printable Schedule Modal -->
     <div id="printableScheduleModal" class="modal fixed inset-0 z-[80] flex items-center justify-center bg-black/85 opacity-0 pointer-events-none p-4">
         <div class="modal-content frosted-glass-pane w-11/12 max-w-7xl mx-auto p-5 md:p-6 max-h-[90vh] flex flex-col">
@@ -843,7 +868,6 @@
             const closePmZonesModalButton = document.getElementById('closePmZonesModal');
             const resetToLiveButton = document.getElementById('resetToLiveButton');
             const onDutyDashboardElement = document.getElementById('onDutyDashboard'); 
-            const onLeaveTodayPanel = document.getElementById('onLeaveTodayPanel'); 
             const monthYearJumpInput = document.getElementById('monthYearJumpInput');
             const jumpToDateButton = document.getElementById('jumpToDateButton');
             const pcPositionsButton = document.getElementById('pcPositionsButton'); 
@@ -861,6 +885,15 @@
             const groupMembersList = document.getElementById('groupMembersList');
             const closeGroupMembersModalButton = document.getElementById('closeGroupMembersModal');
             const viewDispatchButtonInModal = document.getElementById('viewDispatchButtonInModal');
+
+            // NEW On Leave Modal elements
+            const onLeaveButton = document.getElementById('onLeaveButton');
+            const onLeaveModal = document.getElementById('onLeaveModal');
+            const closeOnLeaveModalButton = document.getElementById('closeOnLeaveModal');
+            const currentlyOnLeaveList = document.getElementById('currentlyOnLeaveList');
+            const leaveHistoryTechFilter = document.getElementById('leaveHistoryTechFilter');
+            const leaveHistoryList = document.getElementById('leaveHistoryList');
+
 
             // Printable Schedule Modal elements
             const printScheduleButton = document.getElementById('printScheduleButton');
@@ -886,9 +919,10 @@
             let groupNames = [...defaultGroupNames];
             let groupMembersData = defaultGroupMembersData.map(arr => [...arr]);
             let technicianLeaves = [];
-            let leaveBalances = {};
+            let leaveBalances = {}; // NEW: To store leave balances
 
             // --- Database Reference ---
+            // This points to a single document in Firestore where all our app data will be stored.
             const appDataDocRef = window.doc(window.db, "sita-data", "main-config");
 
 
@@ -998,7 +1032,7 @@
                 if (parts.length !== 3) return null;
                 const [year, month, day] = parts.map(Number);
                 if (isNaN(year) || isNaN(month) || isNaN(day)) return null; 
-                return new Date(Date.UTC(year, month - 1, day)); 
+                return new Date(Date.UTC(year, month - 1, day, 12)); // Use noon to avoid timezone issues 
             }
             
             function getHolidayInfo(date, year) {
@@ -1094,6 +1128,7 @@
                         dayCell.title = (dayCell.title ? dayCell.title + ' / ' : '') + 'Monthly PM';
                     }
                     
+                    // The event listener is updated to no longer pass the member list directly.
                     dayCell.addEventListener('click', () => showGroupMembers(actualWorkingGroupIndex, dayOfMonth, currentDisplayDate, holidayName));
 
                     if (isSelectedGroupWorkingThisDay) dayCell.classList.add('ring-2', 'ring-red-400', 'ring-offset-1', 'ring-selected-group'); 
@@ -1116,6 +1151,7 @@
                     const leaveIndicatorContainer = document.createElement('div');
                     leaveIndicatorContainer.className = 'day-cell-leave-container';
 
+                    // This part is still needed to show the red X on the calendar itself.
                     const workingGroupMembers = groupMembersData[actualWorkingGroupIndex] || [];
                     workingGroupMembers.forEach(name => {
                         if (isTechnicianOnLeave(name, currentDateInCalendar)) {
@@ -1136,7 +1172,6 @@
                 
                 const restdayCount = daysInMonth - workdayCount;
                 updateOnDutyDashboard(); 
-                updateOnLeaveTodayPanel();
             }
         
             function showGroupMembers(groupIndex, day, displayDate, holidayName = null) {
@@ -1307,33 +1342,8 @@
                 
                 onDutyDashboardElement.innerHTML = dashboardHTML;
             }
-            
-            function updateOnLeaveTodayPanel() {
-                if (!onLeaveTodayPanel) return;
 
-                const now = new Date();
-                const todayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-
-                const onLeaveNow = technicianLeaves.filter(leave => {
-                    const start = parseDateString(leave.startDate);
-                    const end = parseDateString(leave.endDate);
-                    return todayUTC >= start && todayUTC <= end;
-                });
-
-                if (onLeaveNow.length > 0) {
-                    let panelHTML = `<h3><span class="dashboard-icon">🏖️</span>On Leave Today</h3><ul>`;
-                    onLeaveNow.forEach(leave => {
-                        panelHTML += `<li>${leave.name} (until ${leave.endDate})</li>`;
-                    });
-                    panelHTML += `</ul>`;
-                    onLeaveTodayPanel.innerHTML = panelHTML;
-                    onLeaveTodayPanel.style.display = 'block';
-                } else {
-                    onLeaveTodayPanel.style.display = 'none';
-                }
-            }
-
-
+            // --- Printable Schedule Logic ---
             function generatePrintableSchedule() {
                 if (!currentDisplayDate || !cycleStartDate) {
                     printableContent.innerHTML = '<p class="text-black">Please generate a schedule first.</p>';
@@ -1426,6 +1436,7 @@
 
                 calendarHtml += '</tr></tbody></table>';
 
+                // Get the dispatch table HTML
                 const dispatchTableHTML = document.getElementById('dispatchTableSection').innerHTML;
 
                 printableContent.innerHTML = calendarHtml + `<div class="printable-dispatch-section">${dispatchTableHTML}</div>`;
@@ -1677,31 +1688,23 @@
 
                 const leaveList = document.getElementById('leaveList');
                 leaveList.innerHTML = '';
-                const techLeaveHistory = technicianLeaves.filter(leave => leave.name === techName)
-                    .sort((a,b) => parseDateString(b.startDate) - parseDateString(a.startDate));
-
-                if(techLeaveHistory.length > 0) {
-                    techLeaveHistory.forEach((leave) => {
-                        const originalIndex = technicianLeaves.findIndex(l => l.name === leave.name && l.startDate === leave.startDate && l.endDate === leave.endDate);
-                        const item = document.createElement('div');
-                        item.className = 'leave-item';
-                        item.innerHTML = `
-                            <span><strong>${leave.name}</strong> from ${leave.startDate} to ${leave.endDate}</span>
-                            <button class="action-button" onclick="removeLeave(${originalIndex})">Remove</button>
-                        `;
-                        leaveList.appendChild(item);
-                    });
-                } else {
-                    leaveList.innerHTML = '<li>No leave history for this technician.</li>';
-                }
-
+                technicianLeaves.filter(leave => leave.name === techName).forEach((leave) => {
+                    const originalIndex = technicianLeaves.findIndex(l => l.name === leave.name && l.startDate === leave.startDate && l.endDate === leave.endDate);
+                    const item = document.createElement('div');
+                    item.className = 'leave-item';
+                    item.innerHTML = `
+                        <span><strong>${leave.name}</strong> from ${leave.startDate} to ${leave.endDate}</span>
+                        <button class="action-button" onclick="removeLeave(${originalIndex})">Remove</button>
+                    `;
+                    leaveList.appendChild(item);
+                });
 
                 document.getElementById('addLeaveButton').onclick = () => {
                     const startDate = document.getElementById('leaveStartDate').value;
                     const endDate = document.getElementById('leaveEndDate').value;
                      if (techName && startDate && endDate && new Date(startDate) <= new Date(endDate)) {
                         technicianLeaves.push({ name: techName, startDate, endDate });
-                        displayLeaveDetailsForTechnician(techName); // Refresh view
+                        displayLeaveDetailsForTechnician(techName);
                     } else {
                         alert("Please fill all fields correctly. End date must be after or same as start date.");
                     }
@@ -1724,6 +1727,7 @@
             window.removeLeave = (index) => {
                 const techName = technicianLeaves[index].name;
                 technicianLeaves.splice(index, 1);
+                populateLeaveManagementUI();
                 displayLeaveDetailsForTechnician(techName);
             };
 
@@ -1785,7 +1789,7 @@
                 };
 
                 try {
-                    await window.setDoc(appDataDocRef, dataToSave, {merge: !isInitialSetup});
+                    await window.setDoc(appDataDocRef, dataToSave);
                     if (!isInitialSetup) {
                         alert("All changes saved to the database!");
                         closeModal(adminPanelModal);
@@ -1795,7 +1799,6 @@
                     alert("There was an error saving your changes to the database.");
                 }
             }
-
 
             // Event Listeners
             if (startDateInput) startDateInput.addEventListener('change', handleInputsChange);
@@ -1818,6 +1821,12 @@
             } 
             if (pmZonesButton) pmZonesButton.addEventListener('click', () => openModal(pmZonesModal));
             if (pcPositionsButton) pcPositionsButton.addEventListener('click', () => openModal(pcPositionsModal));
+            if(onLeaveButton) onLeaveButton.addEventListener('click', () => {
+                populateOnLeaveModal();
+                openModal(onLeaveModal);
+            });
+            if(closeOnLeaveModalButton) closeOnLeaveModalButton.addEventListener('click', () => closeModal(onLeaveModal));
+            if(onLeaveModal) onLeaveModal.addEventListener('click', (e) => { if(e.target === onLeaveModal) closeModal(onLeaveModal); });
 
             if (viewDispatchButtonInModal) { 
                  viewDispatchButtonInModal.addEventListener('click', () => {
@@ -1884,6 +1893,68 @@
                     }
                 });
             }
+
+            function populateOnLeaveModal() {
+                const now = new Date();
+                const todayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+                
+                currentlyOnLeaveList.innerHTML = '';
+                const onLeaveNow = technicianLeaves.filter(leave => {
+                    const start = parseDateString(leave.startDate);
+                    const end = parseDateString(leave.endDate);
+                    return start && end && todayUTC >= start && todayUTC <= end;
+                });
+
+                if (onLeaveNow.length > 0) {
+                    onLeaveNow.forEach(leave => {
+                        const li = document.createElement('li');
+                        const endDate = parseDateString(leave.endDate);
+                        if(endDate) {
+                            const returnDate = new Date(endDate);
+                            returnDate.setUTCDate(returnDate.getUTCDate() + 1); // Add one day to get the return date
+                            const returnDateString = returnDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+                            li.textContent = `${leave.name} (Returns on: ${returnDateString})`;
+                        } else {
+                            li.textContent = `${leave.name} (Invalid leave end date)`;
+                        }
+                        currentlyOnLeaveList.appendChild(li);
+                    });
+                } else {
+                    currentlyOnLeaveList.innerHTML = '<li>No technicians are currently on leave.</li>';
+                }
+
+                const allTechs = groupMembersData.flat().sort();
+                leaveHistoryTechFilter.innerHTML = '<option value="all">All Technicians</option>';
+                allTechs.forEach(tech => {
+                    const option = document.createElement('option');
+                    option.value = tech;
+                    option.textContent = tech;
+                    leaveHistoryTechFilter.appendChild(option);
+                });
+
+                displayLeaveHistory('all');
+
+                leaveHistoryTechFilter.onchange = (e) => displayLeaveHistory(e.target.value);
+            }
+
+            function displayLeaveHistory(filter) {
+                leaveHistoryList.innerHTML = '';
+                const filteredLeaves = (filter === 'all' 
+                    ? technicianLeaves 
+                    : technicianLeaves.filter(leave => leave.name === filter)
+                ).sort((a,b) => parseDateString(b.startDate) - parseDateString(a.startDate));
+
+                 if (filteredLeaves.length > 0) {
+                    filteredLeaves.forEach(leave => {
+                        const li = document.createElement('li');
+                        li.textContent = `${leave.name}: ${leave.startDate} to ${leave.endDate}`;
+                        leaveHistoryList.appendChild(li);
+                    });
+                } else {
+                    leaveHistoryList.innerHTML = '<li>No leave history found for this selection.</li>';
+                }
+            }
+
         });
     </script>
 
