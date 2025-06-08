@@ -43,6 +43,13 @@
         window.onSnapshot = onSnapshot;
     </script>
     <style>
+        /* ====== FIX START ====== */
+        /* This new rule prevents the white flash on mobile overscroll by ensuring the root element has a dark background. */
+        html {
+            background-color: #111111;
+        }
+        /* ====== FIX END ====== */
+
         body { 
             font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
             -webkit-font-smoothing: antialiased;
@@ -457,7 +464,11 @@
             }
         }
         @media (max-width: 767px) {
-            body { padding: 0.75rem; } 
+            /* ====== FIX START ====== */
+            /* This rule was removed as it was the primary cause of the white bar issue on mobile. */
+            /* body { padding: 0.75rem; } */
+            /* ====== FIX END ====== */
+            
             .container { padding: 1rem; } 
             .main-title { font-size: 1.5rem; margin-bottom: 0.5rem;} 
             .live-clock-main { font-size: 0.75rem; margin-bottom: 1rem; } 
@@ -691,7 +702,7 @@
                     <h4 class="text-base font-semibold text-emerald-300 uppercase-text mb-3">E-GATE TERMINALS</h4>
                     <div class="egate-terminal-title uppercase-text !text-emerald-400">TERMINAL I</div>
                     <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5 mb-3"> 
-                        <span class="egate-machine business-egate">💻💻 Business Class CMN3PFX001</span>
+                        <span class="egate-machine business-egate">�💻 Business Class CMN3PFX001</span>
                     </div>
                     <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5 mb-3"> 
                         <span class="egate-machine">💻💻 CMN3PFX008</span>
