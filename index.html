@@ -195,11 +195,11 @@
             font-size: 0.7rem; font-weight: 500; margin-bottom: 0.3rem; 
         }
         #groupMembersModalContent ul { list-style-type: none; padding: 0; }
-        #groupMembersModalContent li, #onLeaveModalContent li {
+        #groupMembersModalContent li, #onLeaveModalContent li, #adminOnLeaveList li {
             padding: 0.6rem 0.25rem; border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
             font-size: 0.9rem; color: #E5E7EB; 
         }
-        #groupMembersModalContent li:last-child, #onLeaveModalContent li:last-child { border-bottom: none; }
+        #groupMembersModalContent li:last-child, #onLeaveModalContent li:last-child, #adminOnLeaveList li:last-child { border-bottom: none; }
         #groupMembersModalContent .on-leave { text-decoration: line-through; color: #f87171; }
         #groupMembersModalContent .leave-icon { color: #f87171; margin-left: 0.25rem; }
 
@@ -1521,6 +1521,10 @@
             function populateAdminPanel() {
                 if (!adminPanelContent) return;
                 adminPanelContent.innerHTML = `
+                    <div id="adminOnLeaveSection" class="admin-section">
+                        <h4 class="admin-section-title" style="color: #67e8f9;">Currently On Leave</h4>
+                        <ul id="adminOnLeaveList" class="text-gray-200 selectable-text space-y-2"></ul>
+                    </div>
                     <div id="adminGroupManagementSection" class="admin-section">
                         <h4 class="admin-section-title">Manage Groups & Technicians</h4>
                         <div id="adminGroupContent"></div>
@@ -1541,6 +1545,31 @@
                         </div>
                     </div>
                 `;
+                
+                // Populate the new "Currently On Leave" section in the admin panel
+                const adminOnLeaveList = document.getElementById('adminOnLeaveList');
+                if (adminOnLeaveList) {
+                    const now = new Date();
+                    const todayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+
+                    adminOnLeaveList.innerHTML = '';
+                    const onLeaveNow = technicianLeaves.filter(leave => {
+                        const start = parseDateString(leave.startDate);
+                        const end = parseDateString(leave.endDate);
+                        return start && end && todayUTC >= start && todayUTC <= end;
+                    });
+
+                    if (onLeaveNow.length > 0) {
+                        onLeaveNow.forEach(leave => {
+                            const li = document.createElement('li');
+                            li.textContent = `${leave.name} (until ${leave.endDate})`;
+                            adminOnLeaveList.appendChild(li);
+                        });
+                    } else {
+                        adminOnLeaveList.innerHTML = '<li>No technicians are currently on leave.</li>';
+                    }
+                }
+
 
                 const adminGroupContent = document.getElementById('adminGroupContent');
                 groupNames.forEach((groupName, groupIndex) => {
@@ -1719,8 +1748,7 @@
             window.removeLeave = (index) => {
                 const techName = technicianLeaves[index].name;
                 technicianLeaves.splice(index, 1);
-                populateLeaveManagementUI();
-                displayLeaveDetailsForTechnician(techName);
+                populateAdminPanel();
             };
 
             function renameTechnician(groupIndex, techIndex, newName) {
