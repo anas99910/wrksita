@@ -986,7 +986,7 @@
                 const selectedGroupWorkdayLegend = document.createElement('div');
                 selectedGroupWorkdayLegend.className = 'flex items-center gap-1.5';
                 selectedGroupWorkdayLegend.innerHTML = `<div class="w-3 h-3 rounded-sm bg-transparent ring-2 ring-red-400"></div><span>Your Group</span>`;
-                legendContainer.appendChild(selectedGroupWorkdayLegend);
+                legendContainer.appendChild(todayLegend);
                 
                 const holidayLegendItem = document.createElement('div');
                 holidayLegendItem.className = 'flex items-center gap-1.5';
@@ -1522,7 +1522,7 @@
                 if (!adminPanelContent) return;
                 adminPanelContent.innerHTML = `
                     <div id="adminOnLeaveSection" class="admin-section">
-                        <h4 class="admin-section-title" style="color: #67e8f9;">Currently On Leave</h4>
+                        <h4 class="admin-section-title" style="color: #67e8f9;">Current & Upcoming Leave</h4>
                         <ul id="adminOnLeaveList" class="text-gray-200 selectable-text space-y-2"></ul>
                     </div>
                     <div id="adminGroupManagementSection" class="admin-section">
@@ -1553,20 +1553,22 @@
                     const todayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
 
                     adminOnLeaveList.innerHTML = '';
-                    const onLeaveNow = technicianLeaves.filter(leave => {
-                        const start = parseDateString(leave.startDate);
-                        const end = parseDateString(leave.endDate);
-                        return start && end && todayUTC >= start && todayUTC <= end;
-                    });
+                    const onLeaveUpcoming = technicianLeaves
+                        .filter(leave => {
+                            const end = parseDateString(leave.endDate);
+                            // Show leave if its end date is today or in the future
+                            return end && end >= todayUTC;
+                        })
+                        .sort((a,b) => parseDateString(a.startDate) - parseDateString(b.startDate)); // Sort by start date
 
-                    if (onLeaveNow.length > 0) {
-                        onLeaveNow.forEach(leave => {
+                    if (onLeaveUpcoming.length > 0) {
+                        onLeaveUpcoming.forEach(leave => {
                             const li = document.createElement('li');
-                            li.textContent = `${leave.name} (until ${leave.endDate})`;
+                            li.textContent = `${leave.name} from ${leave.startDate} to ${leave.endDate}`;
                             adminOnLeaveList.appendChild(li);
                         });
                     } else {
-                        adminOnLeaveList.innerHTML = '<li>No technicians are currently on leave.</li>';
+                        adminOnLeaveList.innerHTML = '<li>No technicians are currently or scheduled to be on leave.</li>';
                     }
                 }
 
