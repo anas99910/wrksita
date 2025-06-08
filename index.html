@@ -811,11 +811,6 @@
                 <ul id="currentlyOnLeaveList" class="text-gray-200 selectable-text space-y-2"></ul>
             </div>
 
-            <div id="fullLeaveHistorySection" class="pt-4 border-t border-white/10">
-                 <h4 class="text-md font-semibold text-indigo-200 uppercase-text mb-3">Full Leave History</h4>
-                 <select id="leaveHistoryTechFilter" class="w-full p-2.5 rounded-md mb-4"></select>
-                 <ul id="leaveHistoryList" class="text-gray-200 selectable-text space-y-2"></ul>
-            </div>
         </div>
     </div>
 
@@ -886,13 +881,11 @@
             const closeGroupMembersModalButton = document.getElementById('closeGroupMembersModal');
             const viewDispatchButtonInModal = document.getElementById('viewDispatchButtonInModal');
 
-            // NEW On Leave Modal elements
+            // On Leave Modal elements
             const onLeaveButton = document.getElementById('onLeaveButton');
             const onLeaveModal = document.getElementById('onLeaveModal');
             const closeOnLeaveModalButton = document.getElementById('closeOnLeaveModal');
             const currentlyOnLeaveList = document.getElementById('currentlyOnLeaveList');
-            const leaveHistoryTechFilter = document.getElementById('leaveHistoryTechFilter');
-            const leaveHistoryList = document.getElementById('leaveHistoryList');
 
 
             // Printable Schedule Modal elements
@@ -919,10 +912,9 @@
             let groupNames = [...defaultGroupNames];
             let groupMembersData = defaultGroupMembersData.map(arr => [...arr]);
             let technicianLeaves = [];
-            let leaveBalances = {}; // NEW: To store leave balances
+            let leaveBalances = {}; 
 
             // --- Database Reference ---
-            // This points to a single document in Firestore where all our app data will be stored.
             const appDataDocRef = window.doc(window.db, "sita-data", "main-config");
 
 
@@ -1920,38 +1912,7 @@
                         currentlyOnLeaveList.appendChild(li);
                     });
                 } else {
-                    currentlyOnLeaveList.innerHTML = '<li>No technicians are currently on leave.</li>';
-                }
-
-                const allTechs = groupMembersData.flat().sort();
-                leaveHistoryTechFilter.innerHTML = '<option value="all">All Technicians</option>';
-                allTechs.forEach(tech => {
-                    const option = document.createElement('option');
-                    option.value = tech;
-                    option.textContent = tech;
-                    leaveHistoryTechFilter.appendChild(option);
-                });
-
-                displayLeaveHistory('all');
-
-                leaveHistoryTechFilter.onchange = (e) => displayLeaveHistory(e.target.value);
-            }
-
-            function displayLeaveHistory(filter) {
-                leaveHistoryList.innerHTML = '';
-                const filteredLeaves = (filter === 'all' 
-                    ? technicianLeaves 
-                    : technicianLeaves.filter(leave => leave.name === filter)
-                ).sort((a,b) => parseDateString(b.startDate) - parseDateString(a.startDate));
-
-                 if (filteredLeaves.length > 0) {
-                    filteredLeaves.forEach(leave => {
-                        const li = document.createElement('li');
-                        li.textContent = `${leave.name}: ${leave.startDate} to ${leave.endDate}`;
-                        leaveHistoryList.appendChild(li);
-                    });
-                } else {
-                    leaveHistoryList.innerHTML = '<li>No leave history found for this selection.</li>';
+                    currentlyOnLeaveList.innerHTML = '';
                 }
             }
 
