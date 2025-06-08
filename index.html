@@ -7,6 +7,9 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📅</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
 
     <!-- Firebase SDKs -->
     <script type="module">
@@ -48,6 +51,10 @@
             background-attachment: fixed;
             user-select: none;
             -webkit-user-select: none;
+        }
+        .main-title {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 0.1em;
         }
         input, select, textarea, .selectable-text {
             user-select: auto;
@@ -593,7 +600,7 @@
                 PC POSITIONS
             </button>
             <button id="onLeaveButton" class="action-button" style="background-color: rgba(99, 102, 241, 0.5); border-color: rgba(79, 70, 229, 0.6);">
-                On Leave & History
+                ON LEAVE
             </button>
             <button id="adminPanelButton" class="action-button" style="background-color: rgba(217, 119, 6, 0.5); border-color: rgba(146, 64, 14, 0.6);"> Admin Panel
             </button>
@@ -802,7 +809,7 @@
     <div id="onLeaveModal" class="modal fixed inset-0 z-[65] flex items-center justify-center bg-black/85 opacity-0 pointer-events-none p-4">
         <div id="onLeaveModalContent" class="modal-content frosted-glass-pane w-full max-w-2xl mx-auto p-5 md:p-6 max-h-[85vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4 pb-3 border-b border-white/12">
-                <h3 class="text-lg font-semibold text-indigo-300 uppercase-text">Full Leave History</h3>
+                <h3 class="text-lg font-semibold text-indigo-300 uppercase-text">ON LEAVE</h3>
                 <button id="closeOnLeaveModal" class="text-gray-400 hover:text-red-400 text-2xl font-bold">&times;</button>
             </div>
             
