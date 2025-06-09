@@ -456,6 +456,18 @@
         .printable-content .zone-details-table .zone-b-bg { background-color: #bfdbfe; color: #1e40af; }
         .printable-content .zone-details-table .zone-c-bg { background-color: #fde68a; color: #78350f; }
 
+        /* New CSS for group highlighting */
+        .group-highlight-ring {
+            box-shadow: 0 0 0 3px rgba(255, 255, 0, 0.7); /* Yellow ring */
+            position: relative;
+            z-index: 10; /* Bring highlighted cell to front */
+        }
+        .group-highlight-legend-active {
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            transform: scale(1.05);
+        }
 
         @media (hover: hover) and (pointer: fine) {
             .day-cell-base:hover {
@@ -751,7 +763,7 @@
                     <tbody class="text-gray-300">
                         <tr> <td>CMN1TDE001</td> <td>CMN1CKB001</td> <td>CMN1CKB033</td> <td>CMN1GTT015</td> <td>CMN1GTT031</td> </tr>
                         <tr> <td>CMN1TDE002</td> <td>CMN1CKB002</td> <td>CMN1CKB034</td> <td>CMN1GTT016</td> <td>CMN1GTT032</td> </tr>
-                        <tr> <td>CMN1TDE003</td> <td>CMN1CKB003</td> <td>CMN1CKB035</td> <td>CMN1GTT017</td> <td>CMN1GTT033</td> </tr>
+                        <tr> <td>CMN1TDE003</td> <td>CMN1CKB003</td> <td>CMN1CKB035</td> <td>CMN1GTT017</td> <td>CMN1GTT033</td></tr>
                         <tr> <td>CMN1TDE004</td> <td>CMN1CKB004</td> <td>CMN1CKB036</td> <td>CMN1GTT018</td> <td>CMN1GTT034</td> </tr>
                         <tr> <td>CMN1TDE005</td> <td>CMN1CKB005</td> <td>CMN1CKB037</td> <td>CMN1GTT019</td> <td>CMN1GTT035</td> </tr>
                         <tr> <td>CMN1TDE006</td> <td>CMN1CKB006</td> <td>CMN1CKB038</td> <td>CMN1GTT020</td> <td>CMN1GTT036</td> </tr>
@@ -759,7 +771,7 @@
                         <tr> <td></td>           <td>CMN1CKB008</td> <td>CMN1CKB040</td> <td>CMN1GTT022</td> <td>CMN1GTT038</td> </tr>
                         <tr> <td></td>           <td>CMN1CKB009</td> <td>CMN1CKB041</td> <td>CMN1GTT023</td> <td>CMN1GTT039</td> </tr>
                         <tr> <td></td>           <td>CMN1CKB010</td> <td>CMN1CKB042</td> <td>CMN1GTT024</td> <td>CMN1GTT040</td> </tr>
-                        <tr> <td></td>           <td>CMN1CKB011</td> <td>CMN1CKB043</td> <td>CMN1GTT025</td> <td>CMN1GTT041</td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB011</td> <td>CMN1CKB043</td> <td>CMN1GTT025</td> <td>CMN1GTT041</td></tr>
                         <tr> <td></td>           <td>CMN1CKB012</td> <td>CMN1CKB044</td> <td>CMN1GTT026</td> <td>CMN1GTT042</td> </tr>
                         <tr> <td></td>           <td>CMN1CKB013</td> <td>CMN1CKB045</td> <td>CMN1GTT027</td> <td>CMN1GTT043</td> </tr>
                         <tr> <td></td>           <td>CMN1CKB014</td> <td>CMN1CKB046</td> <td>CMN1GTT028</td> <td>CMN1GTT044</td> </tr>
@@ -972,6 +984,7 @@
             let cycleStartDate; // This will be the user's selected start date for the calendar view
             let currentDisplayDate; // The month currently displayed in the calendar
             let selectedGroupIndex = 0; // The group selected by the user for the calendar view
+            let highlightedGroupIndex = null; // NEW: To store the index of the currently highlighted group in the calendar
             const isMobile = window.innerWidth <= 767; 
             // technicianShiftHistory is not used globally, but rather locally within functions for zone assignment.
 
@@ -1023,9 +1036,10 @@
                 leaveLegendItem.innerHTML = `<span style="color: #f87171;">❌</span><span>On Leave</span>`;
                 legendContainer.appendChild(leaveLegendItem);
 
-                groupColors.forEach((colorInfo) => {
+                groupColors.forEach((colorInfo, index) => { // Added index to get group index
                     const groupLegendItem = document.createElement('div');
-                    groupLegendItem.className = 'flex items-center gap-1.5';
+                    groupLegendItem.className = 'flex items-center gap-1.5 cursor-pointer legend-group-item'; // Added class and cursor
+                    groupLegendItem.dataset.groupIndex = index; // Store group index
                     const colorBox = document.createElement('div');
                     colorBox.className = `w-3 h-3 rounded-sm border`;
                     colorBox.style.backgroundColor = `rgba(${colorInfo.rgb}, 0.6)`; 
@@ -1034,7 +1048,33 @@
                     groupNameSpan.textContent = `${colorInfo.name}`; 
                     groupLegendItem.appendChild(colorBox);
                     groupLegendItem.appendChild(groupNameSpan);
+                    
+                    // Add click listener for highlighting
+                    groupLegendItem.addEventListener('click', () => {
+                        if (highlightedGroupIndex === index) {
+                            highlightedGroupIndex = null; // Toggle off if already selected
+                        } else {
+                            highlightedGroupIndex = index; // Set as highlighted
+                        }
+                        generateSchedule(); // Re-render calendar to apply/remove highlight
+                        updateLegendHighlight(); // Update legend visual
+                    });
+                    
                     legendContainer.appendChild(groupLegendItem);
+                });
+                updateLegendHighlight(); // Initial highlight update
+            }
+
+            // NEW: Function to update legend item highlight
+            function updateLegendHighlight() {
+                const legendItems = document.querySelectorAll('.legend-group-item');
+                legendItems.forEach(item => {
+                    const index = parseInt(item.dataset.groupIndex);
+                    if (index === highlightedGroupIndex) {
+                        item.classList.add('group-highlight-legend-active');
+                    } else {
+                        item.classList.remove('group-highlight-legend-active');
+                    }
                 });
             }
             
@@ -1155,6 +1195,12 @@
                         dayCell.classList.add('ring-2', 'ring-yellow-400', 'ring-offset-1', 'ring-today', '!font-bold'); 
                         dayCell.style.backgroundColor = `rgba(${groupColor.rgb}, ${isMobile ? 0.9 : 0.7})`; 
                     }
+
+                    // NEW: Apply highlight if this cell's group matches the highlightedGroupIndex
+                    if (highlightedGroupIndex !== null && actualWorkingGroupIndex === highlightedGroupIndex) {
+                        dayCell.classList.add('group-highlight-ring');
+                    }
+
                     const dayNumberDiv = document.createElement('div');
                     dayNumberDiv.className = 'day-cell-number font-medium';
                     dayNumberDiv.textContent = dayOfMonth;
