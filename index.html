@@ -77,7 +77,7 @@
             color: #D1D5DB; 
         }
         select { 
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%239CA3AF' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E"); 
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%239CA3AF' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3Csvg%3E"); 
             background-repeat: no-repeat; 
             background-position: right 0.75rem center; 
             background-size: 1.25em 1.25em; 
@@ -540,9 +540,6 @@
             Loading current time...
         </div>
 
-        <div id="onDutyDashboard" class="frosted-glass-pane mx-auto max-w-3xl w-full">
-            </div>
-
         <div class="container frosted-glass-pane mx-auto max-w-3xl w-full p-5 md:p-8 mb-8 mt-4">
             
             <div id="monthlyStatsBanner" class="hidden"></div>
@@ -741,7 +738,6 @@
                          <tr>
                             <th>enregist transit</th>
                             <th>enregistrement</th>
-                            <th>enregistrement</th>
                             <th>embarq E</th>
                             <th>embarq F</th>
                         </tr>
@@ -879,7 +875,7 @@
             const pmZonesModal = document.getElementById('pmZonesModal');
             const closePmZonesModalButton = document.getElementById('closePmZonesModal');
             const resetToLiveButton = document.getElementById('resetToLiveButton');
-            const onDutyDashboardElement = document.getElementById('onDutyDashboard'); 
+            // const onDutyDashboardElement = document.getElementById('onDutyDashboard'); // Dashboard element removed
             const monthYearJumpInput = document.getElementById('monthYearJumpInput');
             const jumpToDateButton = document.getElementById('jumpToDateButton');
             const pcPositionsButton = document.getElementById('pcPositionsButton'); 
@@ -959,19 +955,19 @@
             const OFFICE_ZONE = 'Office';
             const ZONES = ['Zone A', 'Zone B', 'Zone C', 'Office']; 
             
-            const GLOBAL_REFERENCE_DATE = new Date(Date.UTC(2025, 5, 3)); 
-            const GLOBAL_REFERENCE_GROUP_INDEX = 4; 
-            const SHIFT_START_HOUR_MOROCCO = 9;
+            const GLOBAL_REFERENCE_DATE = new Date(Date.UTC(2025, 5, 3)); // June 3, 2025 (Tuesday)
+            const GLOBAL_REFERENCE_GROUP_INDEX = 4; // Mehdi BELKOUCHI GRP (Index 4)
+            const SHIFT_START_HOUR_MOROCCO = 9; // 9 AM Morocco time for shift change
 
 
             const localStorageKeyDate = 'workRestSchedule_startDate';
             const localStorageKeyGroup = 'workRestSchedule_selectedGroup';
 
-            let cycleStartDate; 
-            let currentDisplayDate; 
-            let selectedGroupIndex = 0; 
+            let cycleStartDate; // This will be the user's selected start date for the calendar view
+            let currentDisplayDate; // The month currently displayed in the calendar
+            let selectedGroupIndex = 0; // The group selected by the user for the calendar view
             const isMobile = window.innerWidth <= 767; 
-            let technicianShiftHistory = {}; 
+            // technicianShiftHistory is not used globally, but rather locally within functions for zone assignment.
 
 
             function updateLiveClock() { 
@@ -1066,12 +1062,13 @@
             }
 
             function getEffectiveShiftStartDate(dateToCheck) {
-                const moroccoTimeOffset = 1; 
+                const moroccoTimeOffset = 1; // Assuming Morocco is UTC+1 (WEST)
                 const currentUTCHour = dateToCheck.getUTCHours();
                 const currentMoroccoHour = (currentUTCHour + moroccoTimeOffset + 24) % 24;
 
                 let effectiveDate = new Date(Date.UTC(dateToCheck.getUTCFullYear(), dateToCheck.getUTCMonth(), dateToCheck.getUTCDate()));
                 if (currentMoroccoHour < SHIFT_START_HOUR_MOROCCO) {
+                    // If before shift start hour, effective date is yesterday
                     effectiveDate.setUTCDate(effectiveDate.getUTCDate() - 1);
                 }
                 return effectiveDate;
@@ -1102,15 +1099,16 @@
                 }
                 const todayUTCForHighlight = new Date(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
                 
-                technicianShiftHistory = {}; 
+                // technicianShiftHistory is not used globally, but locally in showGroupMembers.
 
                 for (let dayOfMonth = 1; dayOfMonth <= daysInMonth; dayOfMonth++) {
                     const currentDateInCalendar = new Date(Date.UTC(targetYear, targetMonth_0_indexed, dayOfMonth));
                     
+                    // Calculate the group for the calendar cell based on the user's selected cycleStartDate and selectedGroupIndex
                     const diffInDaysFromCycleStart = Math.floor((currentDateInCalendar.getTime() - cycleStartDate.getTime()) / (1000 * 60 * 60 * 24));
                     const workingGroupOffset = ((diffInDaysFromCycleStart % 5) + 5) % 5; 
                     const actualWorkingGroupIndex = (selectedGroupIndex + workingGroupOffset) % 5; 
-                    const isSelectedGroupWorkingThisDay = (actualWorkingGroupIndex === selectedGroupIndex);
+                    const isSelectedGroupWorkingThisDay = (actualWorkingGroupIndex === selectedGroupIndex); // Highlight if this is the user's selected group
                     if (isSelectedGroupWorkingThisDay) workdayCount++;
                     
                     const workingGroupNameInCell = groupAbbreviations[actualWorkingGroupIndex]; 
@@ -1130,6 +1128,7 @@
                         dayCell.appendChild(holidayIcon);
                     }
 
+                    // PM indicator for last 5 days of the month (excluding the last day itself if it's month end)
                     if (dayOfMonth >= daysInMonth - 4) { 
                         const pmIndicator = document.createElement('span');
                         pmIndicator.className = 'pm-indicator';
@@ -1141,7 +1140,10 @@
                     // The event listener is updated to no longer pass the member list directly.
                     dayCell.addEventListener('click', () => showGroupMembers(actualWorkingGroupIndex, dayOfMonth, currentDisplayDate, holidayName));
 
-                    if (isSelectedGroupWorkingThisDay) dayCell.classList.add('ring-2', 'ring-red-400', 'ring-offset-1', 'ring-selected-group'); 
+                    // REMOVED: Highlighting the user's selected group's working days
+                    // if (isSelectedGroupWorkingThisDay) dayCell.classList.add('ring-2', 'ring-red-400', 'ring-offset-1', 'ring-selected-group'); 
+                    
+                    // Highlight today's date (yellow ring)
                     if (currentDateInCalendar.getTime() === todayUTCForHighlight.getTime()) {
                         dayCell.classList.remove('ring-red-400', 'ring-selected-group'); 
                         dayCell.classList.add('ring-2', 'ring-yellow-400', 'ring-offset-1', 'ring-today', '!font-bold'); 
@@ -1181,7 +1183,7 @@
                 }
                 
                 const restdayCount = daysInMonth - workdayCount;
-                updateOnDutyDashboard(); 
+                // updateOnDutyDashboard(); // Dashboard removed, no need to call this
             }
         
             function showGroupMembers(groupIndex, day, displayDate, holidayName = null) {
@@ -1206,17 +1208,20 @@
                     return;
                 }
                 
+                // Calculate how many 5-day shifts have passed for the group since the global reference.
+                // This determines the starting point of zone rotation for the group on this specific day.
                 let groupNthShiftForZoneCalc = 0; 
                 const daysSinceGlobalRef = Math.floor((dateOfClickedDay.getTime() - GLOBAL_REFERENCE_DATE.getTime()) / (1000 * 60 * 60 * 24));
                 if (daysSinceGlobalRef >= 0) {
+                    // Calculate the offset of this group's starting day in the 5-day cycle relative to the GLOBAL_REFERENCE_GROUP_INDEX
                     const groupOffsetFromGlobalRefStart = (groupIndex - GLOBAL_REFERENCE_GROUP_INDEX + 5) % 5;
+                    // If enough days have passed to align with this group's start, calculate its shift number
                     if (daysSinceGlobalRef >= groupOffsetFromGlobalRefStart) {
                         groupNthShiftForZoneCalc = Math.floor((daysSinceGlobalRef - groupOffsetFromGlobalRefStart) / 5) + 1;
                     }
                 }
                 
                 const currentZonesToUse = (workingGroupMembers.length === 4) ? ZONES : BASE_ZONES;
-                let localTechnicianShiftHistory = {}; 
 
                 workingGroupMembers.forEach((memberName, memberIndexInGroup) => {
                     const onLeave = isTechnicianOnLeave(memberName, dateOfClickedDay);
@@ -1228,16 +1233,10 @@
                         let assignedZone = "N/A";
                         
                         if (groupNthShiftForZoneCalc > 0) {
+                            // Determine the base zone for this group's current shift
                             const groupShiftBaseZoneIndex = ((groupNthShiftForZoneCalc - 1) + groupIndex) % currentZonesToUse.length;
-                            let potentialZoneIndex = (groupShiftBaseZoneIndex + memberIndexInGroup) % currentZonesToUse.length;
-                            assignedZone = currentZonesToUse[potentialZoneIndex];
-                            
-                            let lastZoneForThisTech = localTechnicianShiftHistory[memberName] ? localTechnicianShiftHistory[memberName].lastZone : null;
-                            if (lastZoneForThisTech && assignedZone === lastZoneForThisTech) {
-                                potentialZoneIndex = (potentialZoneIndex + 1) % currentZonesToUse.length;
-                                assignedZone = currentZonesToUse[potentialZoneIndex];
-                            }
-                            localTechnicianShiftHistory[memberName] = { lastZone: assignedZone };
+                            // Assign a zone to the member based on their index within the group and the base zone
+                            assignedZone = currentZonesToUse[(groupShiftBaseZoneIndex + memberIndexInGroup) % currentZonesToUse.length];
                         }
 
                         listItem.innerHTML = `${memberName} - <strong style="color: #A7F3D0; font-weight: 600;">${assignedZone}</strong>`;
@@ -1288,70 +1287,7 @@
                 }
             }
 
-            function updateOnDutyDashboard() {
-                if (!onDutyDashboardElement || !cycleStartDate) return;
-
-                const today = new Date();
-                const effectiveScheduleDateForToday = getEffectiveShiftStartDate(today);
-
-                const diffInDays = Math.floor((effectiveScheduleDateForToday.getTime() - cycleStartDate.getTime()) / (1000 * 60 * 60 * 24));
-                const workingGroupOffset = ((diffInDays % 5) + 5) % 5;
-                const groupWorkingTodayIndex = (selectedGroupIndex + workingGroupOffset) % 5;
-                
-                const groupName = groupNames[groupWorkingTodayIndex];
-                const members = groupMembersData[groupWorkingTodayIndex] || [];
-                
-                let dashboardHTML = `<h3><span class="dashboard-icon">👥</span>On Duty Today</h3>`;
-                dashboardHTML += `<p><strong class="working-group-label">Working Group:</strong> <strong>${groupName.replace(' GRP', '')}</strong></p>`;
-
-                const holidayToday = getHolidayInfo(effectiveScheduleDateForToday, effectiveScheduleDateForToday.getUTCFullYear()); 
-                if (holidayToday) {
-                    dashboardHTML += `<p class="holiday-text"><span class="dashboard-icon">⭐</span>Today is a Holiday: ${holidayToday}</p>`;
-                }
-
-                if (members.length > 0) {
-                    dashboardHTML += `<ul>`;
-
-                    let groupNthShiftForZoneCalc = 0; 
-                    const daysSinceGlobalRef = Math.floor((effectiveScheduleDateForToday.getTime() - GLOBAL_REFERENCE_DATE.getTime()) / (1000 * 60 * 60 * 24));
-                    if (daysSinceGlobalRef >= 0) {
-                        const groupOffsetFromGlobalRefStart = (groupWorkingTodayIndex - GLOBAL_REFERENCE_GROUP_INDEX + 5) % 5;
-                        if (daysSinceGlobalRef >= groupOffsetFromGlobalRefStart) {
-                            groupNthShiftForZoneCalc = Math.floor((daysSinceGlobalRef - groupOffsetFromGlobalRefStart) / 5) + 1;
-                        }
-                    }
-                    
-                    const currentZonesToUse = (members.length === 4) ? ZONES : BASE_ZONES;
-                    let localTechnicianShiftHistory = {};
-
-                    members.forEach((memberName, memberIndexInGroup) => {
-                        const onLeave = isTechnicianOnLeave(memberName, effectiveScheduleDateForToday);
-                        if (onLeave) {
-                            dashboardHTML += `<li class="on-leave">${memberName} - ❌ Congé</li>`;
-                        } else {
-                            let assignedZone = "N/A";
-                            if (groupNthShiftForZoneCalc > 0) {
-                                const groupShiftBaseZoneIndex = ((groupNthShiftForZoneCalc - 1) + groupWorkingTodayIndex) % currentZonesToUse.length;
-                                let potentialZoneIndex = (groupShiftBaseZoneIndex + memberIndexInGroup) % currentZonesToUse.length;
-                                assignedZone = currentZonesToUse[potentialZoneIndex];
-                                
-                                let lastZoneForThisTech = localTechnicianShiftHistory[memberName] ? localTechnicianShiftHistory[memberName].lastZone : null;
-                                if (lastZoneForThisTech && assignedZone === lastZoneForThisTech) {
-                                    potentialZoneIndex = (potentialZoneIndex + 1) % currentZonesToUse.length;
-                                    assignedZone = currentZonesToUse[potentialZoneIndex];
-                                }
-                                localTechnicianShiftHistory[memberName] = { lastZone: assignedZone };
-                            }
-                            dashboardHTML += `<li>${memberName} - <strong style="color: #A7F3D0; font-weight: 600;">${assignedZone}</strong></li>`;
-                        }
-                    });
-                    dashboardHTML += `</ul>`;
-                } else {
-                    dashboardHTML += `<p>No member data for this group.</p>`;
-                }
-                
-                onDutyDashboardElement.innerHTML = dashboardHTML;
-            }
+            // Removed `updateOnDutyDashboard` function completely
 
             // --- Printable Schedule Logic ---
             function generatePrintableSchedule() {
@@ -1360,7 +1296,8 @@
                     return;
                 }
                 
-                const localTechnicianShiftHistory = {};
+                // technicianShiftHistory is not used globally, but locally in showGroupMembers.
+
                 const year = currentDisplayDate.getUTCFullYear();
                 const month_0_indexed = currentDisplayDate.getUTCMonth();
                 const monthName = currentDisplayDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
@@ -1370,6 +1307,7 @@
                 calendarHtml += '<thead><tr><th>Lundi</th><th>Mardi</th><th>Mercredi</th><th>Jeudi</th><th>Vendredi</th><th>Sabado</th><th>Domingo</th></tr></thead>';
                 calendarHtml += '<tbody><tr>';
 
+                // Adjust first day of week to start on Monday (0-indexed for Monday, 6 for Sunday)
                 let adjustedFirstDay = (new Date(Date.UTC(year, month_0_indexed, 1)).getUTCDay() + 6) % 7;
                 for (let i = 0; i < adjustedFirstDay; i++) {
                     calendarHtml += '<td class="day-cell day-off"></td>';
@@ -1378,9 +1316,10 @@
                 const daysInMonth = new Date(Date.UTC(year, month_0_indexed + 1, 0)).getUTCDate();
                 for (let day = 1; day <= daysInMonth; day++) {
                     const currentDate = new Date(Date.UTC(year, month_0_indexed, day));
+                    // Adjust day of week for Monday start (0-indexed for Monday)
                     let dayOfWeek = (currentDate.getUTCDay() + 6) % 7;
 
-                    if (dayOfWeek === 0 && day !== 1) calendarHtml += '</tr><tr>';
+                    if (dayOfWeek === 0 && day !== 1) calendarHtml += '</tr><tr>'; // Start new row on Monday
                     
                     const diffInDaysFromCycleStart = Math.floor((currentDate.getTime() - cycleStartDate.getTime()) / (1000 * 60 * 60 * 24));
                     const workingGroupOffset = ((diffInDaysFromCycleStart % 5) + 5) % 5;
@@ -1393,7 +1332,7 @@
                     const holidayName = getHolidayInfo(currentDate, year);
                     if (holidayName) calendarHtml += `<strong style="color: #c026d3;">${holidayName.toUpperCase()}</strong>`;
                     
-                    if (day >= daysInMonth - 4) {
+                    if (day >= daysInMonth - 4) { // Last 5 days for PM
                         calendarHtml += `<div class="printable-pm-indicator">🧹 PM</div>`;
                     }
                     
@@ -1417,16 +1356,8 @@
                             let zoneClass = "na";
                             
                             if (groupNthShiftForZoneCalc > 0) {
-                                let lastZoneForThisTech = localTechnicianShiftHistory[memberName] ? localTechnicianShiftHistory[memberName].lastZone : null;
                                 const groupShiftBaseZoneIndex = ((groupNthShiftForZoneCalc - 1) + actualWorkingGroupIndex) % currentZonesToUse.length;
-                                let potentialZoneIndex = (groupShiftBaseZoneIndex + memberIndexInGroup) % currentZonesToUse.length;
-                                assignedZone = currentZonesToUse[potentialZoneIndex];
-                                
-                                if (lastZoneForThisTech && assignedZone === lastZoneForThisTech) {
-                                    potentialZoneIndex = (potentialZoneIndex + 1) % currentZonesToUse.length;
-                                    assignedZone = currentZonesToUse[potentialZoneIndex];
-                                }
-                                localTechnicianShiftHistory[memberName] = { lastZone: assignedZone };
+                                assignedZone = currentZonesToUse[(groupShiftBaseZoneIndex + memberIndexInGroup) % currentZonesToUse.length];
                             }
                             
                             if (assignedZone) {
@@ -1439,6 +1370,7 @@
                     calendarHtml += '</td>';
                 }
 
+                // Fill empty cells at the end of the last week
                 let lastDayOfWeek = (new Date(Date.UTC(year, month_0_indexed, daysInMonth)).getUTCDay() + 6) % 7;
                 for (let i = lastDayOfWeek; i < 6; i++) {
                     calendarHtml += '<td class="day-cell day-off"></td>';
@@ -1488,19 +1420,21 @@
                             currentDisplayDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), 1));
                         }
                     } else {
+                        // If no saved settings, initialize to show the current "live" schedule for the calendar
                         const today = new Date();
                         const effectiveScheduleDateForToday = getEffectiveShiftStartDate(today);
                         const diffInMilliseconds = effectiveScheduleDateForToday.getTime() - GLOBAL_REFERENCE_DATE.getTime();
                         const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
                         const dayInCycleForReferenceGroup = (diffInDays % 5 + 5) % 5;
                         const groupWorkingTodayIndex = (GLOBAL_REFERENCE_GROUP_INDEX + dayInCycleForReferenceGroup) % 5;
-                        selectedGroupIndex = groupWorkingTodayIndex;
+                        selectedGroupIndex = groupWorkingTodayIndex; // User's selected group is set to the one on duty
                         if (groupSelect) groupSelect.value = selectedGroupIndex;
-                        cycleStartDate = new Date(effectiveScheduleDateForToday); 
+                        cycleStartDate = new Date(effectiveScheduleDateForToday); // Cycle starts with this group on this date
                         if (startDateInput) startDateInput.value = effectiveScheduleDateForToday.toISOString().split('T')[0];
                         currentDisplayDate = new Date(Date.UTC(today.getUTCFullYear(), today.getMonth(), 1)); 
                     }
                     generateSchedule(); 
+                    // updateOnDutyDashboard(); // Dashboard removed, no need to call this
                 });
             }
             
@@ -1767,7 +1701,7 @@
             window.removeLeave = (index) => {
                 const techName = technicianLeaves[index].name;
                 technicianLeaves.splice(index, 1);
-                populateAdminPanel();
+                populateAdminPanel(); // Re-populate to reflect changes
             };
 
             function renameTechnician(groupIndex, techIndex, newName) {
@@ -1822,7 +1756,7 @@
             async function saveAdminChangesToFirestore(isInitialSetup = false) {
                 const dataToSave = {
                     groupNames: groupNames,
-                    groupMembersDataJSON: JSON.stringify(groupMembersData),
+                    groupMembersDataJSON: JSON.stringify(groupMembersData), // Store as JSON string
                     technicianLeaves: technicianLeaves,
                     leaveBalances: leaveBalances
                 };
@@ -1887,7 +1821,18 @@
             if (resetToLiveButton) {
                 resetToLiveButton.addEventListener('click', () => {
                     const now = new Date();
-                    currentDisplayDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), 1));
+                    // Reset selectedGroupIndex and cycleStartDate to align with the current live schedule
+                    const effectiveScheduleDateForToday = getEffectiveShiftStartDate(now);
+                    const diffInMilliseconds = effectiveScheduleDateForToday.getTime() - GLOBAL_REFERENCE_DATE.getTime();
+                    const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
+                    const dayInCycleForReferenceGroup = (diffInDays % 5 + 5) % 5;
+                    const groupWorkingTodayIndex = (GLOBAL_REFERENCE_GROUP_INDEX + dayInCycleForReferenceGroup) % 5;
+                    selectedGroupIndex = groupWorkingTodayIndex;
+                    if (groupSelect) groupSelect.value = selectedGroupIndex;
+                    cycleStartDate = new Date(effectiveScheduleDateForToday);
+                    if (startDateInput) startDateInput.value = effectiveScheduleDateForToday.toISOString().split('T')[0];
+
+                    currentDisplayDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), 1)); // Jump to current month
                     generateSchedule();
                 });
             }
