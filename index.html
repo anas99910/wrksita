@@ -756,10 +756,10 @@
                         <tr> <td>CMN1TDE005</td> <td>CMN1CKB005</td> <td>CMN1CKB037</td> <td>CMN1GTT019</td> <td>CMN1GTT035</td> </tr>
                         <tr> <td>CMN1TDE006</td> <td>CMN1CKB006</td> <td>CMN1CKB038</td> <td>CMN1GTT020</td> <td>CMN1GTT036</td> </tr>
                         <tr> <td>CMN1TDE007</td> <td>CMN1CKB007</td> <td>CMN1CKB039</td> <td>CMN1GTT021</td> <td>CMN1GTT037</td> </tr>
-                        <tr> <td>CMN1TDE008</td> <td>CMN1CKB008</td> <td>CMN1CKB040</td> <td>CMN1GTT022</td> <td>CMN1GTT038</td> </tr>
-                        <tr> <td>CMN1TDE009</td> <td>CMN1CKB009</td> <td>CMN1CKB041</td> <td>CMN1GTT023</td> <td>CMN1GTT039</td> </tr>
-                        <tr> <td>CMN1TDE010</td> <td>CMN1CKB010</td> <td>CMN1CKB042</td> <td>CMN1GTT024</td> <td>CMN1GTT040</td> </tr>
-                        <tr> <td>CMN1TDE011</td> <td>CMN1CKB011</td> <td>CMN1CKB043</td> <td>CMN1GTT025</td> <td>CMN1GTT041</td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB008</td> <td>CMN1CKB040</td> <td>CMN1GTT022</td> <td>CMN1GTT038</td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB009</td> <td>CMN1CKB041</td> <td>CMN1GTT023</td> <td>CMN1GTT039</td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB010</td> <td>CMN1CKB042</td> <td>CMN1GTT024</td> <td>CMN1GTT040</td> </tr>
+                        <tr> <td></td>           <td>CMN1CKB011</td> <td>CMN1CKB043</td> <td>CMN1GTT025</td> <td>CMN1GTT041</td> </tr>
                         <tr> <td></td>           <td>CMN1CKB012</td> <td>CMN1CKB044</td> <td>CMN1GTT026</td> <td>CMN1GTT042</td> </tr>
                         <tr> <td></td>           <td>CMN1CKB013</td> <td>CMN1CKB045</td> <td>CMN1GTT027</td> <td>CMN1GTT043</td> </tr>
                         <tr> <td></td>           <td>CMN1CKB014</td> <td>CMN1CKB046</td> <td>CMN1GTT028</td> <td>CMN1GTT044</td> </tr>
@@ -1311,7 +1311,7 @@
                 
                 let dashboardHTML = `
                     <h3 class="text-lg font-semibold text-center text-emerald-300 uppercase-text mb-2">
-                        <span class="dashboard-icon">👥</span>Today's Duty: ${effectiveScheduleDateForToday.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}
+                        <span class="dashboard-icon">👥</span>On Duty Today
                     </h3>
                     <p class="text-md font-medium text-gray-200 mb-2">
                         <strong class="working-group-label">Working Group:</strong> <span class="text-white">${groupName.replace(' GRP', '')}</span>
