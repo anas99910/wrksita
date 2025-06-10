@@ -1390,30 +1390,18 @@
                 });
             }
 
-            // ====== TIMEZONE BUG FIX START ======
-            // This function was rewritten to prevent a timezone bug that occurred between
-            // midnight local time and midnight UTC. The original function incorrectly
-            // created a date based on UTC parts of a local date object, which could
-            // result in rolling the date back an extra day.
             function getEffectiveShiftDate(dateToCheck) {
-                // dateToCheck is a local Date object from new Date()
+                const moroccoTimeOffset = 1; // Assuming Morocco is UTC+1 (WEST)
+                const currentUTCHour = dateToCheck.getUTCHours();
+                const currentMoroccoHour = (currentUTCHour + moroccoTimeOffset + 24) % 24;
 
-                // Create a new Date object based on the local year, month, and day of the input date.
-                // This correctly captures the "local" day, even if the UTC day has not yet rolled over.
-                let effectiveDate = new Date(dateToCheck.getFullYear(), dateToCheck.getMonth(), dateToCheck.getDate());
-
-                // Check if the current local time is before the 9 AM shift change.
-                if (dateToCheck.getHours() < SHIFT_START_HOUR_MOROCCO) {
-                    // If it is, the effective work day is considered the *previous* day.
-                    effectiveDate.setDate(effectiveDate.getDate() - 1);
+                let effectiveDate = new Date(Date.UTC(dateToCheck.getUTCFullYear(), dateToCheck.getUTCMonth(), dateToCheck.getUTCDate()));
+                if (currentMoroccoHour < SHIFT_START_HOUR_MOROCCO) {
+                    // If before shift start hour, effective date is yesterday
+                    effectiveDate.setUTCDate(effectiveDate.getUTCDate() - 1);
                 }
-                
-                // Return a new Date object set to UTC midnight for this effective date.
-                // This ensures all subsequent calculations that use this date (like comparing against the 
-                // GLOBAL_REFERENCE_DATE) are done consistently in the same timezone (UTC).
-                return new Date(Date.UTC(effectiveDate.getFullYear(), effectiveDate.getMonth(), effectiveDate.getDate()));
+                return effectiveDate;
             }
-            // ====== TIMEZONE BUG FIX END ======
 
             function generateSchedule() { 
                 if (messageArea) messageArea.textContent = ''; 
@@ -1440,7 +1428,7 @@
                 }
                 const todayUTCForHighlight = new Date(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
                 
-                // technicianShiftHistory is not used globally, but rather locally in showGroupMembers.
+                // technicianShiftHistory is not used globally, but locally in showGroupMembers.
 
                 for (let dayOfMonth = 1; dayOfMonth <= daysInMonth; dayOfMonth++) {
                     const currentDateInCalendar = new Date(Date.UTC(targetYear, targetMonth_0_indexed, dayOfMonth));
