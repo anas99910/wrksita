@@ -469,6 +469,41 @@
             transform: scale(1.05);
         }
 
+        /* NEW: Styles for technician cards */
+        .technician-card {
+            background-color: rgba(35, 35, 35, 0.6); /* Frosted glass */
+            backdrop-filter: blur(8px) saturate(110%);
+            -webkit-backdrop-filter: blur(8px) saturate(110%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .technician-card-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #A7F3D0; /* Green tone */
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.5rem;
+        }
+        .technician-card ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .technician-card li {
+            font-size: 0.85rem;
+            color: #D1D5DB;
+            padding: 0.2rem 0;
+        }
+        .technician-card strong {
+            color: #E5E7EB;
+            font-weight: 500;
+        }
+
+
         @media (hover: hover) and (pointer: fine) {
             .day-cell-base:hover {
                 transform: translateY(-2px);
@@ -688,31 +723,12 @@
                 </div>
                 
                 <h4 class="text-md font-semibold text-emerald-200 uppercase-text mb-3 text-center pt-4 border-t border-white/10">Techniciens & Maintenance</h4>
-                <table class="text-gray-300"> 
-                    <thead>
-                        <tr>
-                            <th>Technicien</th><th>ENREGISTREMENT T1</th><th>EMBARQUEMENT T1</th><th>TRANSIT T1</th><th>ENREGISTREMENT T2</th><th>EMBARQUEMENT T2</th><th>TRANSIT T2</th><th>OPERATION LITIGE</th><th>E-GATE (Maintenance)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>Youssef CHARMOUH</td><td>1-2-3-4-5</td><td>E1-E2</td><td>1-2</td><td>1-2-3</td><td>A1</td><td></td><td></td><td>T1 ECO 1, T1 ECO 2</td></tr>
-                        <tr><td>Mehdi ASKARI</td><td>6-7-8-9-10</td><td></td><td>3-4</td><td>4-5-6</td><td>A2</td><td></td><td></td><td></td></tr>
-                        <tr><td>Soufiane BELFAKIR</td><td>11-12-13-14-15</td><td>E3</td><td>5-6</td><td>7-8-9</td><td>A3</td><td></td><td></td><td>T1 ECO 3</td></tr>
-                        <tr><td>Ahmed FARBOUSSI</td><td>16-17-18-19-20</td><td>E4</td><td>7-8</td><td>10-11-12</td><td>A4</td><td></td><td></td><td>T1 ECO 4</td></tr>
-                        <tr><td>Reda ALLOUCH</td><td>21-22-23-24-25</td><td>E5</td><td>9-10</td><td>13-14-15</td><td>A5</td><td></td><td></td><td>T1 ECO 5</td></tr>
-                        <tr><td>Seddik IDOUAKRIM</td><td>26-27-28-29-30</td><td>E6</td><td>11</td><td>16-17-18</td><td>A6</td><td></td><td></td><td>T1 BUS 1</td></tr>
-                        <tr><td>Ahmed AMARSAL</td><td>31-32-33-34-35</td><td>E7</td><td></td><td>19-20-21</td><td>A7</td><td></td><td>1-2</td><td>T1 BUS 2</td></tr>
-                        <tr><td>Mohamed MASKAOUI</td><td>36-37-38-39-40</td><td>E8</td><td></td><td>22-23-24</td><td>A8</td><td></td><td>3-4</td><td></td></tr>
-                        <tr><td>Ayoub SADIKI</td><td>41-42-43-44-45</td><td>F1</td><td></td><td>25-26-27</td><td>A9</td><td></td><td>5-6</td><td>T2 ECO 1, T2 ECO 2</td></tr>
-                        <tr><td>Mehdi BELKOUCHI</td><td>46-47-48-49-50</td><td>F2</td><td></td><td>28-29-30</td><td>A10</td><td></td><td>PC RAM 1-2</td><td>T2 ECO 3</td></tr>
-                        <tr><td>Ayoub CHAAOUBI</td><td>51-52-53-54-55</td><td>F3</td><td></td><td>31-32-33</td><td>B11</td><td></td><td>PC RAM 3-4</td><td>T2 ECO 4</td></tr>
-                        <tr><td>Zakaria BOURHRISS</td><td>56-57-58-59-60</td><td>F4</td><td></td><td>34-35-36</td><td>B12</td><td></td><td>SWISSPORT 1-2</td><td>T2 ECO 5</td></tr>
-                        <tr><td>Mouad KAOUTAR</td><td>61-62-63-64-65</td><td>F5</td><td></td><td>37-38-39-40</td><td>B13</td><td></td><td></td><td>T2 BUS 1</td></tr>
-                        <tr><td>Anas BENCHICHE</td><td>66-67-68-69-70</td><td>F6</td><td></td><td></td><td>D1</td><td></td><td>RAM SWISSPORT</td><td>T2 BUS 2</td></tr>
-                        <tr><td>Younes Ch</td><td>71-72-73-74-75-76-77</td><td>F7</td><td></td><td></td><td>D2-D3-D4-D5</td><td></td><td></td><td></td></tr>
-                        <tr><td>Kamal BOURROU</td><td>78-79-80-81-82-83-84</td><td>F8</td><td></td><td></td><td>D6-D7-D8-D9</td><td></td><td></td><td></td></tr>
-                    </tbody>
-                </table>
+                <!-- NEW: Container for dynamically generated technician cards -->
+                <div id="technicianCardsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Technician cards will be inserted here by JavaScript -->
+                </div>
+                <!-- END NEW -->
+
                 <div class="egate-section border-white/12">
                     <h4 class="text-base font-semibold text-emerald-300 uppercase-text mb-3">E-GATE TERMINALS</h4>
                     <div class="egate-terminal-title uppercase-text !text-emerald-400">TERMINAL I</div>
@@ -731,7 +747,7 @@
                      <div class="flex flex-wrap justify-center items-center gap-1 sm:gap-1.5"> 
                         <span class="egate-machine">💻💻 CMN3PFX006</span>
                         <span class="egate-machine">💻💻 CMN3PFX005</span>
-                        <span class="egate-machine">💻💻 CMN3PFX007</span>
+                        <span class="egate-machine">�💻 CMN3PFX007</span>
                     </div>
                 </div>
             </div>
@@ -905,6 +921,7 @@
             const adminPanelContent = document.getElementById('adminPanelContent');
             const saveAdminChangesButton = document.getElementById('saveAdminChangesButton');
             const closeAdminPanelButtonSecondary = document.getElementById('closeAdminPanelButtonSecondary');
+            const technicianCardsContainer = document.getElementById('technicianCardsContainer'); // NEW: Technician cards container
             
             const groupMembersModal = document.getElementById('groupMembersModal');
             const groupMembersModalTitle = document.getElementById('groupMembersModalTitle');
@@ -946,7 +963,175 @@
             let technicianLeaves = [];
             let leaveBalances = {}; 
 
-            // --- Database Reference ---
+            // NEW: Structured data for Technician details to be displayed in cards
+            const technicianDetailsData = [
+                {
+                    name: "Youssef CHARMOUH",
+                    duties: [
+                        "ENREGISTREMENT T1: 1-2-3-4-5",
+                        "EMBARQUEMENT T1: E1-E2",
+                        "TRANSIT T1: 1-2",
+                        "ENREGISTREMENT T2: 1-2-3",
+                        "EMBARQUEMENT T2: A1",
+                        "E-GATE (Maintenance): T1 ECO 1, T1 ECO 2"
+                    ]
+                },
+                {
+                    name: "Mehdi ASKARI",
+                    duties: [
+                        "ENREGISTREMENT T1: 6-7-8-9-10",
+                        "TRANSIT T1: 3-4",
+                        "ENREGISTREMENT T2: 4-5-6",
+                        "EMBARQUEMENT T2: A2"
+                    ]
+                },
+                {
+                    name: "Soufiane BELFAKIR",
+                    duties: [
+                        "ENREGISTREMENT T1: 11-12-13-14-15",
+                        "EMBARQUEMENT T1: E3",
+                        "TRANSIT T1: 5-6",
+                        "ENREGISTREMENT T2: 7-8-9",
+                        "EMBARQUEMENT T2: A3",
+                        "E-GATE (Maintenance): T1 ECO 3"
+                    ]
+                },
+                {
+                    name: "Ahmed FARBOUSSI",
+                    duties: [
+                        "ENREGISTREMENT T1: 16-17-18-19-20",
+                        "EMBARQUEMENT T1: E4",
+                        "TRANSIT T1: 7-8",
+                        "ENREGISTREMENT T2: 10-11-12",
+                        "EMBARQUEMENT T2: A4",
+                        "E-GATE (Maintenance): T1 ECO 4"
+                    ]
+                },
+                {
+                    name: "Reda ALLOUCH",
+                    duties: [
+                        "ENREGISTREMENT T1: 21-22-23-24-25",
+                        "EMBARQUEMENT T1: E5",
+                        "TRANSIT T1: 9-10",
+                        "ENREGISTREMENT T2: 13-14-15",
+                        "EMBARQUEMENT T2: A5",
+                        "E-GATE (Maintenance): T1 ECO 5"
+                    ]
+                },
+                {
+                    name: "Seddik IDOUAKRIM",
+                    duties: [
+                        "ENREGISTREMENT T1: 26-27-28-29-30",
+                        "EMBARQUEMENT T1: E6",
+                        "TRANSIT T1: 11",
+                        "ENREGISTREMENT T2: 16-17-18",
+                        "EMBARQUEMENT T2: A6",
+                        "E-GATE (Maintenance): T1 BUS 1"
+                    ]
+                },
+                {
+                    name: "Ahmed AMARSAL",
+                    duties: [
+                        "ENREGISTREMENT T1: 31-32-33-34-35",
+                        "EMBARQUEMENT T1: E7",
+                        "ENREGISTREMENT T2: 19-20-21",
+                        "EMBARQUEMENT T2: A7",
+                        "OPERATION LITIGE: 1-2",
+                        "E-GATE (Maintenance): T1 BUS 2"
+                    ]
+                },
+                {
+                    name: "Mohamed MASKAOUI",
+                    duties: [
+                        "ENREGISTREMENT T1: 36-37-38-39-40",
+                        "EMBARQUEMENT T1: E8",
+                        "ENREGISTREMENT T2: 22-23-24",
+                        "EMBARQUEMENT T2: A8",
+                        "OPERATION LITIGE: 3-4"
+                    ]
+                },
+                {
+                    name: "Ayoub SADIKI",
+                    duties: [
+                        "ENREGISTREMENT T1: 41-42-43-44-45",
+                        "EMBARQUEMENT T1: F1",
+                        "ENREGISTREMENT T2: 25-26-27",
+                        "EMBARQUEMENT T2: A9",
+                        "OPERATION LITIGE: 5-6",
+                        "E-GATE (Maintenance): T2 ECO 1, T2 ECO 2"
+                    ]
+                },
+                {
+                    name: "Mehdi BELKOUCHI",
+                    duties: [
+                        "ENREGISTREMENT T1: 46-47-48-49-50",
+                        "EMBARQUEMENT T1: F2",
+                        "ENREGISTREMENT T2: 28-29-30",
+                        "EMBARQUEMENT T2: A10",
+                        "OPERATION LITIGE: PC RAM 1-2",
+                        "E-GATE (Maintenance): T2 ECO 3"
+                    ]
+                },
+                {
+                    name: "Ayoub CHAAOUBI",
+                    duties: [
+                        "ENREGISTREMENT T1: 51-52-53-54-55",
+                        "EMBARQUEMENT T1: F3",
+                        "ENREGISTREMENT T2: 31-32-33",
+                        "EMBARQUEMENT T2: B11",
+                        "OPERATION LITIGE: PC RAM 3-4",
+                        "E-GATE (Maintenance): T2 ECO 4"
+                    ]
+                },
+                {
+                    name: "Zakaria BOURHRISS",
+                    duties: [
+                        "ENREGISTREMENT T1: 56-57-58-59-60",
+                        "EMBARQUEMENT T1: F4",
+                        "ENREGISTREMENT T2: 34-35-36",
+                        "EMBARQUEMENT T2: B12",
+                        "OPERATION LITIGE: SWISSPORT 1-2",
+                        "E-GATE (Maintenance): T2 ECO 5"
+                    ]
+                },
+                {
+                    name: "Mouad KAOUTAR",
+                    duties: [
+                        "ENREGISTREMENT T1: 61-62-63-64-65",
+                        "EMBARQUEMENT T1: F5",
+                        "ENREGISTREMENT T2: 37-38-39-40",
+                        "EMBARQUEMENT T2: B13",
+                        "E-GATE (Maintenance): T2 BUS 1"
+                    ]
+                },
+                {
+                    name: "Anas BENCHICHE",
+                    duties: [
+                        "ENREGISTREMENT T1: 66-67-68-69-70",
+                        "EMBARQUEMENT T1: F6",
+                        "EMBARQUEMENT T2: D1",
+                        "OPERATION LITIGE: RAM SWISSPORT",
+                        "E-GATE (Maintenance): T2 BUS 2"
+                    ]
+                },
+                {
+                    name: "Younes Ch",
+                    duties: [
+                        "ENREGISTREMENT T1: 71-72-73-74-75-76-77",
+                        "EMBARQUEMENT T1: F7",
+                        "EMBARQUEMENT T2: D2-D3-D4-D5"
+                    ]
+                },
+                {
+                    name: "Kamal BOURROU",
+                    duties: [
+                        "ENREGISTREMENT T1: 78-79-80-81-82-83-84",
+                        "EMBARQUEMENT T1: F8",
+                        "EMBARQUEMENT T2: D6-D7-D8-D9"
+                    ]
+                }
+            ];
+            
             const appDataDocRef = window.doc(window.db, "sita-data", "main-config");
 
 
@@ -1424,6 +1609,39 @@
                 setTimeout(updateTodayDashboard, timeToNextUpdateMs);
             }
 
+            // NEW: Function to populate technician cards
+            function populateTechnicianCards() {
+                if (!technicianCardsContainer) return;
+
+                technicianCardsContainer.innerHTML = ''; // Clear existing content
+
+                technicianDetailsData.forEach(tech => {
+                    const card = document.createElement('div');
+                    card.className = 'technician-card';
+
+                    const nameHeader = document.createElement('h5');
+                    nameHeader.className = 'technician-card-name';
+                    nameHeader.textContent = tech.name;
+                    card.appendChild(nameHeader);
+
+                    const dutiesList = document.createElement('ul');
+                    tech.duties.forEach(duty => {
+                        const listItem = document.createElement('li');
+                        // Split duty string at ':' to bold the label
+                        const parts = duty.split(':');
+                        if (parts.length > 1) {
+                            listItem.innerHTML = `<strong>${parts[0].trim()}:</strong> ${parts.slice(1).join(':').trim()}`;
+                        } else {
+                            listItem.textContent = duty;
+                        }
+                        dutiesList.appendChild(listItem);
+                    });
+                    card.appendChild(dutiesList);
+
+                    technicianCardsContainer.appendChild(card);
+                });
+            }
+
 
             // --- Printable Schedule Logic ---
             function generatePrintableSchedule() {
@@ -1538,6 +1756,7 @@
 
                     populateGroupSelect(); 
                     updateLegend();
+                    populateTechnicianCards(); // NEW: Call to populate technician cards
                     
                     const savedStartDateString = localStorage.getItem(localStorageKeyDate);
                     const savedGroupIndexString = localStorage.getItem(localStorageKeyGroup);
@@ -1928,7 +2147,10 @@
                     }
                 });
             } 
-            if (pmZonesButton) pmZonesButton.addEventListener('click', () => openModal(pmZonesModal));
+            if (pmZonesButton) pmZonesButton.addEventListener('click', () => {
+                populateTechnicianCards(); // Ensure cards are populated when modal opens
+                openModal(pmZonesModal);
+            });
             if (pcPositionsButton) pcPositionsButton.addEventListener('click', () => openModal(pcPositionsModal));
             if(onLeaveButton) onLeaveButton.addEventListener('click', () => {
                 populateOnLeaveModal();
@@ -1961,7 +2183,7 @@
                     const effectiveScheduleDateForToday = getEffectiveShiftDate(now);
                     const diffInMilliseconds = effectiveScheduleDateForToday.getTime() - GLOBAL_REFERENCE_DATE.getTime();
                     const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
-                    const dayInCycleForReferenceGroup = (diffInDays % 5 + 5) % 5;
+                    const dayInCycleForReferenceGroup = (GLOBAL_REFERENCE_GROUP_INDEX + dayInDays % 5 + 5) % 5;
                     const groupWorkingTodayIndex = (GLOBAL_REFERENCE_GROUP_INDEX + dayInCycleForReferenceGroup) % 5;
                     selectedGroupIndex = groupWorkingTodayIndex;
                     if (groupSelect) groupSelect.value = selectedGroupIndex;
