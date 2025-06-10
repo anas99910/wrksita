@@ -526,6 +526,51 @@
         .leave-delete-btn:hover {
             color: #F87171; /* Red-400 */
         }
+        #leaveBalanceSection {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .balance-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .balance-item span {
+             font-weight: 600;
+             color: #E5E7EB;
+        }
+        .balance-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .balance-btn {
+            background-color: #4A4458;
+            color: #C7C0E0;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid #635C7C;
+            font-size: 1.25rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .balance-btn:hover {
+             background-color: #635C7C;
+        }
+        .balance-input {
+            width: 70px;
+            text-align: center;
+            font-size: 1rem;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+        }
 
         @media (min-width: 640px) {
             .leave-form-grid {
@@ -559,12 +604,12 @@
         }
         .admin-technician-item .tech-name-wrapper { flex-grow: 1; min-width: 150px; }
         .admin-technician-item .tech-actions-wrapper { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
-        .admin-technician-item input[type="text"], .admin-add-technician input[type="text"], #leaveBalanceSection input[type="number"] {
+        .admin-technician-item input[type="text"], .admin-add-technician input[type="text"] {
             width: 100%; padding: 0.3rem 0.5rem; font-size: 0.85rem;
             background-color: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1);
             color: #E5E7EB; border-radius: 0.25rem;
         }
-        .admin-technician-item button, .balance-btn {
+        .admin-technician-item button {
             padding: 0.25rem 0.5rem; font-size: 0.7rem;
             background-color: rgba(239, 68, 68, 0.5); 
             border-color: rgba(185, 28, 28, 0.6); 
@@ -1718,7 +1763,7 @@
                     return;
                 }
                 
-                // technicianShiftHistory is not used globally, but locally in showGroupMembers.
+                // technicianShiftHistory is not used globally, but rather locally in showGroupMembers.
 
                 const year = currentDisplayDate.getUTCFullYear();
                 const month_0_indexed = currentDisplayDate.getUTCMonth();
@@ -2013,7 +2058,7 @@
                 // 1. Build the HTML structure
                 container.innerHTML = `
                     <div class="leave-form-card">
-                        <h5 class="leave-section-title">Add New Leave Record</h5>
+                        <h5 class="leave-section-title">Leave Records & Balances</h5>
                         <div class="leave-form-grid">
                             <div class="full-width">
                                 <label for="leaveTechSelect">Technician</label>
@@ -2022,7 +2067,18 @@
                                     ${allTechs.map(tech => `<option value="${tech}">${tech}</option>`).join('')}
                                 </select>
                             </div>
-                            <div class="date-inputs">
+                            <div id="leaveBalanceSection" class="full-width hidden">
+                                <label>Leave Balance</label>
+                                <div class="balance-item">
+                                    <span id="balanceTechName"></span>
+                                    <div class="balance-controls">
+                                        <button class="balance-btn" id="balanceMinusBtn">-</button>
+                                        <input type="number" id="balanceInput" class="balance-input">
+                                        <button class="balance-btn" id="balancePlusBtn">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="date-inputs">
                                 <div>
                                     <label for="leaveStartDate">Start Date</label>
                                     <input type="date" id="leaveStartDate" class="p-2 rounded-md">
@@ -2052,16 +2108,35 @@
                 `;
 
                 // 2. Add Event Listeners
-                document.getElementById('addLeaveButton').addEventListener('click', () => {
-                    const techSelect = document.getElementById('leaveTechSelect');
-                    const startDateInput = document.getElementById('leaveStartDate');
-                    const endDateInput = document.getElementById('leaveEndDate');
-                    const reasonInput = document.getElementById('leaveReason');
+                const techSelect = document.getElementById('leaveTechSelect');
+                techSelect.addEventListener('change', (e) => {
+                    const techName = e.target.value;
+                    const balanceSection = document.getElementById('leaveBalanceSection');
+                    if (techName) {
+                        document.getElementById('balanceTechName').textContent = techName;
+                        const balanceInput = document.getElementById('balanceInput');
+                        balanceInput.value = leaveBalances[techName] || 0;
+                        balanceSection.classList.remove('hidden');
+                    } else {
+                        balanceSection.classList.add('hidden');
+                    }
+                });
 
+                document.getElementById('balanceMinusBtn').addEventListener('click', () => updateBalance(-1));
+                document.getElementById('balancePlusBtn').addEventListener('click', () => updateBalance(1));
+                document.getElementById('balanceInput').addEventListener('change', (e) => {
+                     const techName = document.getElementById('leaveTechSelect').value;
+                     if(techName) {
+                        leaveBalances[techName] = parseInt(e.target.value) || 0;
+                     }
+                });
+
+
+                document.getElementById('addLeaveButton').addEventListener('click', () => {
                     const techName = techSelect.value;
-                    const startDate = startDateInput.value;
-                    const endDate = endDateInput.value;
-                    const reason = reasonInput.value.trim();
+                    const startDate = document.getElementById('leaveStartDate').value;
+                    const endDate = document.getElementById('leaveEndDate').value;
+                    const reason = document.getElementById('leaveReason').value.trim();
 
                     if (!techName || !startDate || !endDate) {
                         alert("Please select a technician and provide both a start and end date.");
@@ -2073,13 +2148,12 @@
                     }
 
                     technicianLeaves.push({ name: techName, startDate, endDate, reason });
-                    renderLeaveList(); // Re-render the list with the new entry
+                    renderLeaveList(); 
 
-                    // Clear form
-                    techSelect.value = '';
-                    startDateInput.value = '';
-                    endDateInput.value = '';
-                    reasonInput.value = '';
+                    // Do not clear the technician selection, only the date and reason
+                    document.getElementById('leaveStartDate').value = '';
+                    document.getElementById('leaveEndDate').value = '';
+                    document.getElementById('leaveReason').value = '';
                 });
 
                 document.getElementById('leaveSearchInput').addEventListener('keyup', (e) => {
@@ -2088,6 +2162,16 @@
 
                 // 3. Initial Render
                 renderLeaveList();
+            }
+
+            function updateBalance(amount) {
+                 const techName = document.getElementById('leaveTechSelect').value;
+                 if(!techName) return;
+                 const balanceInput = document.getElementById('balanceInput');
+                 let currentValue = parseInt(balanceInput.value) || 0;
+                 const newValue = currentValue + amount;
+                 balanceInput.value = newValue;
+                 leaveBalances[techName] = newValue;
             }
 
             function renderLeaveList(filterText = '') {
