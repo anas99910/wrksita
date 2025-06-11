@@ -1907,6 +1907,10 @@
             
             initializeApp();
 
+            // ====== PASSWORD CHECK FIX START ======
+            // This function has been reverted to use the fetch() API to securely
+            // check the password against a Netlify serverless function, instead of
+            // an insecure hardcoded password in the client-side code.
             async function requestAdminPasswordAndOpenPanel() {
                 if (sessionStorage.getItem('isAdminAuthenticated') === 'true') {
                     populateAdminPanel();
@@ -1917,15 +1921,32 @@
                 const enteredPass = prompt("Enter Admin Password:");
                 if (enteredPass === null) return;
 
-                // This is a simple, client-side check. For real security, this should be a server call.
-                if (enteredPass === "112233") {
-                     sessionStorage.setItem('isAdminAuthenticated', 'true');
-                     populateAdminPanel();
-                     openModal(adminPanelModal);
-                } else {
-                    alert("Incorrect password.");
+                try {
+                    // This fetch call sends the entered password to your Netlify function
+                    // The path must match the name of your function file.
+                    const response = await fetch('/.netlify/functions/check-password', {
+                        method: 'POST',
+                        body: JSON.stringify({ password: enteredPass })
+                    });
+                    const result = await response.json();
+
+                    // If the server responds with success:true, the password was correct.
+                    if (response.ok && result.success) {
+                        sessionStorage.setItem('isAdminAuthenticated', 'true');
+                        populateAdminPanel();
+                        openModal(adminPanelModal);
+                    } else {
+                        // If the server responds with an error or success:false
+                        alert("Incorrect password.");
+                    }
+                } catch (error) {
+                    // This handles network errors or if the function can't be reached.
+                    console.error('Error checking password:', error);
+                    alert('There was a problem contacting the server. Please try again.');
                 }
             }
+            // ====== PASSWORD CHECK FIX END ======
+
 
             function populateAdminPanel() {
                 if (!adminPanelContent) return;
