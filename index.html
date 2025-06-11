@@ -595,7 +595,7 @@
             margin-bottom: 1rem; text-align: center;
         }
         .admin-group-title {
-            font-size: 1.1rem; font-weight: 600; color: #A7F3D0; margin-bottom: 0.75rem;
+            font-size: 1.1rem; font-weight: 600; color: #A7F3D0; /* margin-bottom: 0.75rem; */
         }
         .admin-technician-item {
             display: flex; align-items: center; flex-wrap: wrap;
@@ -1975,10 +1975,29 @@
                 adminGroupContent.innerHTML = ''; // Clear previous content
                 groupNames.forEach((groupName, groupIndex) => {
                     const groupSection = document.createElement('div');
-                    const title = document.createElement('h5');
-                    title.className = 'admin-group-title';
-                    title.textContent = groupName;
-                    groupSection.appendChild(title);
+                    groupSection.style.marginBottom = '1rem';
+                    
+                    // MODIFICATION START: Add editable group name
+                    const groupTitleContainer = document.createElement('div');
+                    groupTitleContainer.className = 'flex items-center gap-2 mb-3 p-2 rounded-md';
+                    groupTitleContainer.style.backgroundColor = 'rgba(75, 85, 99, 0.2)';
+
+                    const groupNameInput = document.createElement('input');
+                    groupNameInput.type = 'text';
+                    groupNameInput.value = groupName;
+                    groupNameInput.className = 'admin-group-title flex-grow bg-transparent p-0 border-0 focus:ring-0 w-full';
+                    groupNameInput.style.marginBottom = '0'; // Override margin from class
+                    groupTitleContainer.appendChild(groupNameInput);
+
+                    const renameGroupBtn = document.createElement('button');
+                    renameGroupBtn.textContent = 'Rename';
+                    renameGroupBtn.className = 'action-button rename-btn px-3 py-1 text-xs flex-shrink-0';
+                    renameGroupBtn.onclick = () => renameGroup(groupIndex, groupNameInput);
+                    groupTitleContainer.appendChild(renameGroupBtn);
+
+                    groupSection.appendChild(groupTitleContainer);
+                    // MODIFICATION END
+
                     const ul = document.createElement('ul');
                     
                     (groupMembersData[groupIndex] || []).forEach((techName, techIndex) => {
@@ -2247,7 +2266,19 @@
             };
 
             // ====== REWORKED LEAVE MANAGEMENT FUNCTIONS END ======
-
+            
+            // MODIFICATION START: Added renameGroup function
+            function renameGroup(groupIndex, inputElement) {
+                const newName = inputElement.value.trim();
+                if (newName && newName !== "") {
+                    groupNames[groupIndex] = newName;
+                    populateAdminPanel(); // Re-render the panel to update other parts like transfer dropdowns
+                } else {
+                    alert("Group name cannot be empty.");
+                    inputElement.value = groupNames[groupIndex]; // Revert on failure
+                }
+            }
+            // MODIFICATION END
 
             function renameTechnician(groupIndex, techIndex, newName) {
                 if (newName && newName.trim() !== "") {
