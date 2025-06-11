@@ -582,79 +582,6 @@
         }
         /* ====== NEW LEAVE MANAGEMENT STYLES END ====== */
         
-        /* ====== CUSTOM ALERT STYLES START ====== */
-        #customAlertModal {
-            position: fixed;
-            inset: 0;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: rgba(0,0,0,0.8);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s ease;
-        }
-        #customAlertModal.visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .custom-alert-content {
-            background-color: #2D2D35;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            width: 90%;
-            max-width: 400px;
-            color: #E5E7EB;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            transform: scale(0.95);
-            transition: transform 0.2s ease;
-        }
-        #customAlertModal.visible .custom-alert-content {
-            transform: scale(1);
-        }
-        .custom-alert-title {
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-        }
-        .custom-alert-message {
-            font-size: 0.9rem;
-            color: #D1D5DB;
-            margin-bottom: 1.5rem;
-        }
-        .custom-alert-input {
-            width: 100%;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            background-color: rgba(0,0,0,0.35);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            color: #D1D5DB;
-            margin-bottom: 1.5rem;
-        }
-        .custom-alert-buttons {
-            display: flex;
-            justify-content: flex-end;
-            gap: 0.75rem;
-        }
-        .custom-alert-button {
-            padding: 0.6rem 1.2rem;
-            border-radius: 0.5rem;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-        }
-        .custom-alert-ok {
-            background-color: #3B82F6;
-            color: white;
-        }
-        .custom-alert-cancel {
-             background-color: #4A4458;
-             color: #C7C0E0;
-        }
-        /* ====== CUSTOM ALERT STYLES END ====== */
-
         /* Admin Panel Specific Styles */
         #adminPanelModal .modal-content { max-width: 900px; }
         .admin-section {
@@ -921,19 +848,6 @@
             <button id="printScheduleButton" class="action-button" style="background-color: rgba(107, 114, 128, 0.5); border-color: rgba(75, 85, 99, 0.6);">Print Schedule</button>
         </div>
     </div>
-    
-    <!-- ====== CUSTOM ALERT MODAL START ====== -->
-    <div id="customAlertModal">
-        <div class="custom-alert-content">
-            <h4 id="customAlertTitle" class="custom-alert-title"></h4>
-            <p id="customAlertMessage" class="custom-alert-message"></p>
-            <input type="password" id="customAlertInput" class="custom-alert-input" style="display: none;">
-            <div id="customAlertButtons" class="custom-alert-buttons">
-                <!-- Buttons will be added here by JS -->
-            </div>
-        </div>
-    </div>
-    <!-- ====== CUSTOM ALERT MODAL END ====== -->
 
     <div id="pmZonesModal" class="modal fixed inset-0 z-50 flex items-center justify-center bg-black/85 opacity-0 pointer-events-none p-4"> 
         <div class="modal-content frosted-glass-pane w-11/12 md:max-w-4xl lg:max-w-5xl mx-auto p-5 md:p-6 max-h-[90vh] overflow-y-auto">
@@ -1552,7 +1466,7 @@
                 if (monthNameDisplay) monthNameDisplay.textContent = ''; 
                 
                 if (!groupSelect || !startDateInput || !cycleStartDate) {
-                    if(messageArea) showCustomAlert('Please configure the schedule first.');
+                    if(messageArea) messageArea.textContent = 'PLEASE CONFIGURE THE SCHEDULE FIRST.';
                     return;
                 }
 
@@ -1993,55 +1907,10 @@
             
             initializeApp();
 
-            // ====== CUSTOM ALERT & PROMPT FUNCTIONS START ======
-            function showCustomAlert(options) {
-                const modal = document.getElementById('customAlertModal');
-                const titleEl = document.getElementById('customAlertTitle');
-                const messageEl = document.getElementById('customAlertMessage');
-                const inputEl = document.getElementById('customAlertInput');
-                const buttonsEl = document.getElementById('customAlertButtons');
-
-                titleEl.textContent = options.title || "Alert";
-                messageEl.textContent = options.message || "";
-                buttonsEl.innerHTML = ''; // Clear previous buttons
-
-                if (options.type === 'prompt') {
-                    inputEl.style.display = 'block';
-                    inputEl.value = '';
-                    inputEl.placeholder = options.placeholder || '';
-                } else {
-                    inputEl.style.display = 'none';
-                }
-
-                return new Promise((resolve) => {
-                    const okButton = document.createElement('button');
-                    okButton.textContent = 'OK';
-                    okButton.className = 'custom-alert-button custom-alert-ok';
-                    okButton.onclick = () => {
-                        modal.classList.remove('visible');
-                        resolve(options.type === 'prompt' ? inputEl.value : true);
-                    };
-                    
-                    buttonsEl.appendChild(okButton);
-
-                    if (options.type === 'prompt' || options.type === 'confirm') {
-                        const cancelButton = document.createElement('button');
-                        cancelButton.textContent = 'Cancel';
-                        cancelButton.className = 'custom-alert-button custom-alert-cancel';
-                        cancelButton.onclick = () => {
-                             modal.classList.remove('visible');
-                             resolve(null); // Resolve with null for cancellation
-                        };
-                        buttonsEl.appendChild(cancelButton);
-                    }
-                    
-                    modal.classList.add('visible');
-                    if (options.type === 'prompt') {
-                        inputEl.focus();
-                    }
-                });
-            }
-            
+            // ====== PASSWORD CHECK FIX START ======
+            // This function has been reverted to use the fetch() API to securely
+            // check the password against a Netlify serverless function, instead of
+            // an insecure hardcoded password in the client-side code.
             async function requestAdminPasswordAndOpenPanel() {
                 if (sessionStorage.getItem('isAdminAuthenticated') === 'true') {
                     populateAdminPanel();
@@ -2049,34 +1918,34 @@
                     return;
                 }
 
-                const enteredPass = await showCustomAlert({
-                    title: "Admin Access",
-                    message: "Please enter the admin password:",
-                    type: "prompt",
-                    placeholder: "Password"
-                });
-                
-                if (enteredPass === null) return; // User cancelled
+                const enteredPass = prompt("Enter Admin Password:");
+                if (enteredPass === null) return;
 
                 try {
+                    // This fetch call sends the entered password to your Netlify function
+                    // The path must match the name of your function file.
                     const response = await fetch('/.netlify/functions/check-password', {
                         method: 'POST',
                         body: JSON.stringify({ password: enteredPass })
                     });
                     const result = await response.json();
 
+                    // If the server responds with success:true, the password was correct.
                     if (response.ok && result.success) {
                         sessionStorage.setItem('isAdminAuthenticated', 'true');
                         populateAdminPanel();
                         openModal(adminPanelModal);
                     } else {
-                        showCustomAlert({ title: "Access Denied", message: "The password you entered is incorrect."});
+                        // If the server responds with an error or success:false
+                        alert("Incorrect password.");
                     }
                 } catch (error) {
+                    // This handles network errors or if the function can't be reached.
                     console.error('Error checking password:', error);
-                    showCustomAlert({ title: "Server Error", message: "There was a problem contacting the server. Please try again."});
+                    alert('There was a problem contacting the server. Please try again.');
                 }
             }
+            // ====== PASSWORD CHECK FIX END ======
 
 
             function populateAdminPanel() {
@@ -2172,19 +2041,14 @@
                 // Populate NEW Leave Management UI
                 populateLeaveManagementUI();
 
-                document.getElementById('factoryResetButton').addEventListener('click', async () => {
-                     const confirmed = await showCustomAlert({
-                        title: "Confirm Reset",
-                        message: "DANGER: Are you sure you want to reset all data? This cannot be undone.",
-                        type: 'confirm'
-                     });
-                     if (confirmed) {
+                document.getElementById('factoryResetButton').addEventListener('click', () => {
+                     if (confirm("DANGER: Are you absolutely sure you want to reset all groups and leave data to the default settings? This cannot be undone and will affect all users.")) {
                         groupNames = [...defaultGroupNames]; 
                         groupMembersData = defaultGroupMembersData.map(arr => [...arr]);
                         technicianLeaves = [];
                         leaveBalances = {};
                         saveAdminChangesToFirestore(true);
-                        showCustomAlert({ title: "Success", message: "Application data has been reset to defaults."});
+                        alert("Application data has been reset to defaults.");
                      }
                 });
             }
@@ -2296,11 +2160,11 @@
                     const reason = document.getElementById('leaveReason').value.trim();
 
                     if (!techName || !startDate || !endDate) {
-                        showCustomAlert({title: "Input Error", message: "Please select a technician and provide both a start and end date."});
+                        alert("Please select a technician and provide both a start and end date.");
                         return;
                     }
                     if (new Date(startDate) > new Date(endDate)) {
-                        showCustomAlert({title: "Input Error", message: "End date cannot be before the start date."});
+                        alert("End date cannot be before the start date.");
                         return;
                     }
 
@@ -2401,7 +2265,7 @@
                     });
                     populateAdminPanel(); 
                 } else {
-                    showCustomAlert({title: "Input Error", message: "Technician name cannot be empty."});
+                    alert("Technician name cannot be empty.");
                 }
             }
 
@@ -2422,7 +2286,7 @@
                     populateAdminPanel(); 
                     inputElement.value = ''; 
                 } else {
-                    showCustomAlert({title: "Input Error", message: "Please enter a name for the new technician."});
+                    alert("Please enter a name for the new technician.");
                 }
             }
 
@@ -2445,12 +2309,12 @@
                 try {
                     await window.setDoc(appDataDocRef, dataToSave);
                     if (!isInitialSetup) {
-                        showCustomAlert({title: "Success", message: "All changes saved to the database!"});
+                        alert("All changes saved to the database!");
                         closeModal(adminPanelModal);
                     }
                 } catch (error) {
                     console.error("Error writing document: ", error);
-                    showCustomAlert({title: "Database Error", message: "There was an error saving your changes to the database."});
+                    alert("There was an error saving your changes to the database.");
                 }
             }
 
@@ -2551,10 +2415,10 @@
                             link.click();
                         }).catch(err => {
                             console.error("Failed to generate image:", err);
-                             showCustomAlert({title: "Image Error", message: "Sorry, there was an error generating the image."});
+                            alert("Sorry, there was an error generating the image.");
                         });
                     } else {
-                         showCustomAlert({title: "Library Missing", message: "Could not download image. The html2canvas library is missing."});
+                        alert('Could not download image. The html2canvas library is missing.');
                     }
                 });
             }
