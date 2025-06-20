@@ -234,23 +234,18 @@
             text-shadow: 0 1px 2px rgba(0,0,0,0.4);
         }
         .day-cell-number { font-size: 1rem; margin-bottom: 0.125rem; }
-        .day-cell-group-name { font-size: 0.55rem; line-height: 1.1; letter-spacing: 0.025em; }
+        .day-cell-group-name { 
+            font-size: 0.55rem; 
+            line-height: 1.1; 
+            letter-spacing: 0.025em; 
+            transition: color 0.2s; /* Add transition for color change */
+        }
+        .day-cell-group-name.on-leave-indicator {
+            color: #f87171; /* Red color for leave */
+            font-weight: 700;
+        }
         .ring-selected-group { ring-offset-color: rgba(35,35,35,0.6); } 
         .ring-today { ring-offset-color: rgba(35,35,35,0.6); }
-        .day-cell-leave-container {
-            margin-top: 0.25rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-        }
-        .day-cell-leave-item {
-            font-size: 0.6rem; /* 9.6px */
-            line-height: 1;
-            color: #f87171; /* brighter red */
-            font-weight: 600;
-            text-shadow: 0 0 2px rgba(0,0,0,0.5);
-        }
         
         .holiday-indicator {
             position: absolute;
@@ -602,7 +597,8 @@
             justify-content: space-between; padding: 0.6rem 0;
             font-size: 0.9rem; gap: 0.5rem;
         }
-        .admin-technician-item .tech-name-wrapper { flex-grow: 1; min-width: 150px; }
+        .admin-technician-item .tech-name-wrapper { flex-grow: 1; min-width: 150px; display: flex; align-items: center; gap: 0.5rem;}
+        .admin-technician-item .helpdesk-icon { color: #93c5fd; } /* Light blue for helpdesk icon */
         .admin-technician-item .tech-actions-wrapper { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
         .admin-technician-item input[type="text"], .admin-add-technician input[type="text"] {
             width: 100%; padding: 0.3rem 0.5rem; font-size: 0.85rem;
@@ -617,8 +613,20 @@
         .admin-technician-item button.rename-btn { background-color: rgba(59, 130, 246, 0.5); border-color: rgba(37, 99, 235, 0.6); }
         .admin-technician-item button.transfer-btn { background-color: rgba(139, 92, 246, 0.5); border-color: rgba(109, 40, 217, 0.6); }
         .admin-technician-item .transfer-select { padding: 0.3rem 0.5rem; font-size: 0.8rem; min-width: 120px; }
-        .admin-add-technician { margin-top: 0.75rem; display: flex; gap: 0.5rem; }
+        .admin-add-technician { margin-top: 0.75rem; display: flex; gap: 0.5rem; align-items: stretch; }
         .admin-add-technician button { background-color: rgba(16, 185, 129, 0.5); border-color: rgba(5, 150, 105, 0.6); }
+        .admin-add-technician input { flex-grow: 1; }
+        .admin-add-technician .role-toggle-btn { 
+            background-color: rgba(75, 85, 99, 0.5);
+            border-color: rgba(107, 114, 128, 0.4);
+            color: #D1D5DB;
+            padding: 0 0.75rem;
+        }
+        .admin-add-technician .role-toggle-btn.toggled {
+            background-color: rgba(59, 130, 246, 0.5);
+            border-color: rgba(37, 99, 235, 0.6);
+            color: #fff;
+        }
         
 
         /* --- UPDATED Printable Schedule Modal Styles --- */
@@ -1272,15 +1280,15 @@
             // --- Data Management ---
             const defaultGroupNames = [ "K.MOUAD GRP", "Y.CHARMOUH GRP", "A.FARBOSI GRP", "A.AMARSAL GRP", "M.BELKOUCHI GRP" ];
             const defaultGroupMembersData = [
-                ["Mouad KAOUTAR", "Anas BENCHICHE", "Younes Ch", "Kamal BOURROU"], 
-                ["Youssef CHARMOUH", "Mehdi ASKARI", "Soufiane BELFAKIR"],       
-                ["Ahmed FARBOUSSI", "Reda ALLOUCH", "Seddik IDOUAKRIM"],         
-                ["Ahmed AMARSAL", "Mohamed MASKAOUI", "Ayoub SADIKI"],           
-                ["Mehdi BELKOUCHI", "Ayoub CHAAOUBI", "Zakaria BOURHRISS"]       
+                [{name: "Mouad KAOUTAR", role: "tech"}, {name: "Anas BENCHICHE", role: "tech"}, {name: "Younes Ch", role: "tech"}, {name: "Kamal BOURROU", role: "tech"}], 
+                [{name: "Youssef CHARMOUH", role: "tech"}, {name: "Mehdi ASKARI", role: "tech"}, {name: "Soufiane BELFAKIR", role: "tech"}],       
+                [{name: "Ahmed FARBOUSSI", role: "tech"}, {name: "Reda ALLOUCH", role: "tech"}, {name: "Seddik IDOUAKRIM", role: "tech"}],         
+                [{name: "Ahmed AMARSAL", role: "tech"}, {name: "Mohamed MASKAOUI", role: "tech"}, {name: "Ayoub SADIKI", role: "tech"}],           
+                [{name: "Mehdi BELKOUCHI", role: "tech"}, {name: "Ayoub CHAAOUBI", role: "tech"}, {name: "Zakaria BOURHRISS", role: "tech"}]       
             ];
             
             let groupNames = [...defaultGroupNames];
-            let groupMembersData = defaultGroupMembersData.map(arr => [...arr]);
+            let groupMembersData = JSON.parse(JSON.stringify(defaultGroupMembersData));
             let technicianLeaves = [];
             let leaveBalances = {}; 
 
@@ -1310,6 +1318,7 @@
             const BASE_ZONES = ['Zone A', 'Zone B', 'Zone C'];
             const OFFICE_ZONE = 'Office';
             const ZONES = ['Zone A', 'Zone B', 'Zone C', 'Office']; 
+            const HELPDESK_ZONE = 'Help Desk';
             
             const GLOBAL_REFERENCE_DATE = new Date(Date.UTC(2025, 5, 3)); // June 3, 2025 (Tuesday)
             const GLOBAL_REFERENCE_GROUP_INDEX = 4; // Mehdi BELKOUCHI GRP (Index 4)
@@ -1324,7 +1333,6 @@
             let selectedGroupIndex = 0; // The group selected by the user for the calendar view
             let highlightedGroupIndex = null; // NEW: To store the index of the currently highlighted group in the calendar
             const isMobile = window.innerWidth <= 767; 
-            // technicianShiftHistory is not used globally, but rather locally within functions for zone assignment.
 
 
             function updateLiveClock() { 
@@ -1403,7 +1411,6 @@
                 updateLegendHighlight(); // Initial highlight update
             }
 
-            // NEW: Function to update legend item highlight
             function updateLegendHighlight() {
                 const legendItems = document.querySelectorAll('.legend-group-item');
                 legendItems.forEach(item => {
@@ -1416,41 +1423,25 @@
                 });
             }
             
-            // ====== BUG FIX START: Robust Date Parsing ======
-            // This function is updated to handle multiple date formats and normalizes
-            // the date to the beginning of the day (midnight UTC) to ensure that the
-            // start date of a leave period is always included correctly.
             function parseDateString(dateInput) {
                 if (!dateInput) return null;
-
-                // Case 1: It's a Firestore Timestamp object. Convert it to a JS Date.
                 if (typeof dateInput.toDate === 'function') {
                     const jsDate = dateInput.toDate();
-                    // FIX: Normalize to midnight UTC for accurate start-of-day comparison.
                     return new Date(Date.UTC(jsDate.getUTCFullYear(), jsDate.getUTCMonth(), jsDate.getUTCDate(), 0, 0, 0, 0));
                 }
-
-                // Case 2: It's already a JS Date object.
                 if (dateInput instanceof Date) {
-                    // FIX: Normalize to midnight UTC for accurate start-of-day comparison.
                     return new Date(Date.UTC(dateInput.getUTCFullYear(), dateInput.getUTCMonth(), dateInput.getUTCDate(), 0, 0, 0, 0));
                 }
-
-                // Case 3: It's a string "YYYY-MM-DD".
                 if (typeof dateInput === 'string') {
                     const parts = dateInput.split('-');
                     if (parts.length !== 3) return null;
                     const [year, month, day] = parts.map(Number);
                     if (isNaN(year) || isNaN(month) || isNaN(day)) return null;
-                     // FIX: Normalize to midnight UTC for accurate start-of-day comparison.
                     return new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
                 }
-
-                // If it's none of the above, we can't parse it.
                 console.error("Could not parse date:", dateInput);
                 return null;
             }
-            // ====== BUG FIX END ======
             
             function getHolidayInfo(date, year) {
                 const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
@@ -1468,38 +1459,18 @@
                 return technicianLeaves.some(leave => {
                     const leaveStart = parseDateString(leave.startDate);
                     const leaveEnd = parseDateString(leave.endDate);
-                    // Ensure dates are valid before comparing
-                    if (!leaveStart || !leaveEnd) {
-                        return false;
-                    }
+                    if (!leaveStart || !leaveEnd) return false;
                     return leave.name === techName && checkDate >= leaveStart && checkDate <= leaveEnd;
                 });
             }
 
-            // ====== TIMEZONE BUG FIX START ======
-            // This function was rewritten to prevent a timezone bug that occurred between
-            // midnight local time and midnight UTC. The original function incorrectly
-            // created a date based on UTC parts of a local date object, which could
-            // result in rolling the date back an extra day.
             function getEffectiveShiftDate(dateToCheck) {
-                // dateToCheck is a local Date object from new Date()
-
-                // Create a new Date object based on the local year, month, and day of the input date.
-                // This correctly captures the "local" day, even if the UTC day has not yet rolled over.
                 let effectiveDate = new Date(dateToCheck.getFullYear(), dateToCheck.getMonth(), dateToCheck.getDate());
-
-                // Check if the current local time is before the 9 AM shift change.
                 if (dateToCheck.getHours() < SHIFT_START_HOUR_MOROCCO) {
-                    // If it is, the effective work day is considered the *previous* day.
                     effectiveDate.setDate(effectiveDate.getDate() - 1);
                 }
-                
-                // Return a new Date object set to UTC midnight for this effective date.
-                // This ensures all subsequent calculations that use this date (like comparing against the 
-                // GLOBAL_REFERENCE_DATE) are done consistently in the same timezone (UTC).
                 return new Date(Date.UTC(effectiveDate.getFullYear(), effectiveDate.getMonth(), effectiveDate.getDate()));
             }
-            // ====== TIMEZONE BUG FIX END ======
 
             function generateSchedule() { 
                 if (messageArea) messageArea.textContent = ''; 
@@ -1518,25 +1489,20 @@
                 if (monthNameDisplay) monthNameDisplay.textContent = currentDisplayDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }).toUpperCase();
                 const daysInMonth = new Date(Date.UTC(targetYear, targetMonth_0_indexed + 1, 0)).getUTCDate();
                 const firstDayOfWeek = new Date(Date.UTC(targetYear, targetMonth_0_indexed, 1)).getUTCDay(); 
-                let workdayCount = 0; 
+                
                 for (let i = 0; i < firstDayOfWeek; i++) {
                     const emptyCell = document.createElement('div');
                     emptyCell.className = "bg-transparent rounded-md"; 
                     if (calendarGrid) calendarGrid.appendChild(emptyCell);
                 }
                 const todayUTCForHighlight = new Date(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
-                
-                // technicianShiftHistory is not used globally, but rather locally in showGroupMembers.
 
                 for (let dayOfMonth = 1; dayOfMonth <= daysInMonth; dayOfMonth++) {
                     const currentDateInCalendar = new Date(Date.UTC(targetYear, targetMonth_0_indexed, dayOfMonth));
                     
-                    // Calculate the group for the calendar cell based on the user's selected cycleStartDate and selectedGroupIndex
                     const diffInDaysFromCycleStart = Math.floor((currentDateInCalendar.getTime() - cycleStartDate.getTime()) / (1000 * 60 * 60 * 24));
                     const workingGroupOffset = ((diffInDaysFromCycleStart % 5) + 5) % 5; 
                     const actualWorkingGroupIndex = (selectedGroupIndex + workingGroupOffset) % 5; 
-                    const isSelectedGroupWorkingThisDay = (actualWorkingGroupIndex === selectedGroupIndex); // Highlight if this is the user's selected group
-                    if (isSelectedGroupWorkingThisDay) workdayCount++;
                     
                     const workingGroupNameInCell = groupAbbreviations[actualWorkingGroupIndex]; 
                     const dayCell = document.createElement('div');
@@ -1555,7 +1521,6 @@
                         dayCell.appendChild(holidayIcon);
                     }
 
-                    // PM indicator for last 5 days of the month (excluding the last day itself if it's month end)
                     if (dayOfMonth >= daysInMonth - 4) { 
                         const pmIndicator = document.createElement('span');
                         pmIndicator.className = 'pm-indicator';
@@ -1564,20 +1529,13 @@
                         dayCell.title = (dayCell.title ? dayCell.title + ' / ' : '') + 'Monthly PM';
                     }
                     
-                    // The event listener is updated to no longer pass the member list directly.
                     dayCell.addEventListener('click', () => showGroupMembers(actualWorkingGroupIndex, dayOfMonth, currentDisplayDate, holidayName));
-
-                    // REMOVED: Highlighting the user's selected group's working days
-                    // if (isSelectedGroupWorkingThisDay) dayCell.classList.add('ring-2', 'ring-red-400', 'ring-offset-1', 'ring-selected-group'); 
                     
-                    // Highlight today's date (yellow ring)
                     if (currentDateInCalendar.getTime() === todayUTCForHighlight.getTime()) {
-                        dayCell.classList.remove('ring-red-400', 'ring-selected-group'); 
                         dayCell.classList.add('ring-2', 'ring-yellow-400', 'ring-offset-1', 'ring-today', '!font-bold'); 
                         dayCell.style.backgroundColor = `rgba(${groupColor.rgb}, ${isMobile ? 0.9 : 0.7})`; 
                     }
 
-                    // NEW: Apply highlight if this cell's group matches the highlightedGroupIndex
                     if (highlightedGroupIndex !== null && actualWorkingGroupIndex === highlightedGroupIndex) {
                         dayCell.classList.add('group-highlight-ring');
                     }
@@ -1590,33 +1548,19 @@
                     statusDiv.className = 'day-cell-group-name font-medium uppercase-text tracking-tighter'; 
                     statusDiv.textContent = workingGroupNameInCell; 
                     
+                    // CLEANUP: New logic for leave indicator
+                    const workingGroupMembers = groupMembersData[actualWorkingGroupIndex] || [];
+                    const isAnyoneOnLeave = workingGroupMembers.some(member => isTechnicianOnLeave(member.name, currentDateInCalendar));
+                    if (isAnyoneOnLeave) {
+                        statusDiv.classList.add('on-leave-indicator');
+                        dayCell.title = (dayCell.title ? dayCell.title + ' / ' : '') + 'Someone on leave';
+                    }
+                    
                     dayCell.appendChild(dayNumberDiv);
                     dayCell.appendChild(statusDiv);
                     
-                    const leaveIndicatorContainer = document.createElement('div');
-                    leaveIndicatorContainer.className = 'day-cell-leave-container';
-
-                    // This part is still needed to show the red X on the calendar itself.
-                    const workingGroupMembers = groupMembersData[actualWorkingGroupIndex] || [];
-                    workingGroupMembers.forEach(name => {
-                        if (isTechnicianOnLeave(name, currentDateInCalendar)) {
-                            const leaveIndicator = document.createElement('div');
-                            leaveIndicator.className = 'day-cell-leave-item';
-                            leaveIndicator.textContent = `❌ ${name.split(' ')[0]}`;
-                            leaveIndicator.title = `${name} on leave`;
-                            leaveIndicatorContainer.appendChild(leaveIndicator);
-                        }
-                    });
-
-                    if (leaveIndicatorContainer.hasChildNodes()) {
-                        dayCell.appendChild(leaveIndicatorContainer);
-                    }
-                    
                     if (calendarGrid) calendarGrid.appendChild(dayCell);
                 }
-                
-                const restdayCount = daysInMonth - workdayCount;
-                // updateOnDutyDashboard(); // Dashboard removed, no need to call this
             }
     
             function showGroupMembers(groupIndex, day, displayDate, holidayName = null) {
@@ -1641,38 +1585,40 @@
                     return;
                 }
                 
-                // Calculate how many 5-day shifts have passed for the group since the global reference.
-                // This determines the starting point of zone rotation for the group on this specific day.
                 let groupNthShiftForZoneCalc = 0; 
                 const daysSinceGlobalRef = Math.floor((dateOfClickedDay.getTime() - GLOBAL_REFERENCE_DATE.getTime()) / (1000 * 60 * 60 * 24));
                 if (daysSinceGlobalRef >= 0) {
-                    // Calculate the offset of this group's starting day in the 5-day cycle relative to the GLOBAL_REFERENCE_GROUP_INDEX
                     const groupOffsetFromGlobalRefStart = (groupIndex - GLOBAL_REFERENCE_GROUP_INDEX + 5) % 5;
-                    // If enough days have passed to align with this group's start, calculate its shift number
                     if (daysSinceGlobalRef >= groupOffsetFromGlobalRefStart) {
                         groupNthShiftForZoneCalc = Math.floor((daysSinceGlobalRef - groupOffsetFromGlobalRefStart) / 5) + 1;
                     }
                 }
                 
-                const currentZonesToUse = (workingGroupMembers.length === 4) ? ZONES : BASE_ZONES;
+                // Filter out helpdesk roles before calculating rotating zones
+                const rotatingTechs = workingGroupMembers.filter(m => m.role !== 'helpdesk');
+                const currentZonesToUse = (rotatingTechs.length === 4) ? ZONES : BASE_ZONES;
 
-                workingGroupMembers.forEach((memberName, memberIndexInGroup) => {
-                    const onLeave = isTechnicianOnLeave(memberName, dateOfClickedDay);
+                workingGroupMembers.forEach((member) => {
+                    const onLeave = isTechnicianOnLeave(member.name, dateOfClickedDay);
                     const listItem = document.createElement('li');
 
                     if (onLeave) {
-                        listItem.innerHTML = `<span class="on-leave">${memberName}</span><span class="leave-icon">❌ Congé</span>`;
+                        listItem.innerHTML = `<span class="on-leave">${member.name}</span><span class="leave-icon">❌ Congé</span>`;
                     } else {
                         let assignedZone = "N/A";
-                        
-                        if (groupNthShiftForZoneCalc > 0) {
-                            // Determine the base zone for this group's current shift
-                            const groupShiftBaseZoneIndex = ((groupNthShiftForZoneCalc - 1) + groupIndex) % currentZonesToUse.length;
-                            // Assign a zone to the member based on their index within the group and the base zone
-                            assignedZone = currentZonesToUse[(groupShiftBaseZoneIndex + memberIndexInGroup) % currentZonesToUse.length];
+                        // HELP DESK FEATURE: Assign fixed zone for helpdesk role
+                        if (member.role === 'helpdesk') {
+                            assignedZone = HELPDESK_ZONE;
+                        } else if (groupNthShiftForZoneCalc > 0) {
+                             // Find the index of the current tech within the *rotating* members list
+                            const memberIndexInGroup = rotatingTechs.findIndex(t => t.name === member.name);
+                            if (memberIndexInGroup !== -1) {
+                                const groupShiftBaseZoneIndex = ((groupNthShiftForZoneCalc - 1) + groupIndex) % currentZonesToUse.length;
+                                assignedZone = currentZonesToUse[(groupShiftBaseZoneIndex + memberIndexInGroup) % currentZonesToUse.length];
+                            }
                         }
 
-                        listItem.innerHTML = `${memberName} - <strong style="color: #A7F3D0; font-weight: 600;">${assignedZone}</strong>`;
+                        listItem.innerHTML = `${member.name} - <strong style="color: #A7F3D0; font-weight: 600;">${assignedZone}</strong>`;
                     }
                     groupMembersList.appendChild(listItem);
                 });
@@ -1720,11 +1666,10 @@
                 }
             }
 
-            // ====== UPDATED DASHBOARD FUNCTION START ======
             function updateTodayDashboard() {
                 if (!todayDashboardElement) return;
 
-                const now = new Date(); // Current live date and time
+                const now = new Date();
                 const effectiveScheduleDateForToday = getEffectiveShiftDate(now); 
 
                 const diffDaysFromGlobalRef = Math.floor((effectiveScheduleDateForToday.getTime() - GLOBAL_REFERENCE_DATE.getTime()) / (1000 * 60 * 60 * 24));
@@ -1758,20 +1703,27 @@
                         }
                     }
                     
-                    const currentZonesToUse = (members.length === 4) ? ZONES : BASE_ZONES;
+                    const rotatingTechs = members.filter(m => m.role !== 'helpdesk');
+                    const currentZonesToUse = (rotatingTechs.length === 4) ? ZONES : BASE_ZONES;
 
-                    members.forEach((memberName, memberIndexInGroup) => {
-                        const onLeave = isTechnicianOnLeave(memberName, effectiveScheduleDateForToday);
+                    members.forEach((member) => {
+                        const onLeave = isTechnicianOnLeave(member.name, effectiveScheduleDateForToday);
                         let assignedZone = "N/A";
-                        if (groupNthShiftForZoneCalc > 0) {
-                            const groupShiftBaseZoneIndex = ((groupNthShiftForZoneCalc - 1) + actualGroupOnDutyIndex) % currentZonesToUse.length;
-                            assignedZone = currentZonesToUse[(groupShiftBaseZoneIndex + memberIndexInGroup) % currentZonesToUse.length];
+                        
+                        if (member.role === 'helpdesk') {
+                             assignedZone = HELPDESK_ZONE;
+                        } else if (groupNthShiftForZoneCalc > 0) {
+                            const memberIndexInGroup = rotatingTechs.findIndex(t => t.name === member.name);
+                             if (memberIndexInGroup !== -1) {
+                                const groupShiftBaseZoneIndex = ((groupNthShiftForZoneCalc - 1) + actualGroupOnDutyIndex) % currentZonesToUse.length;
+                                assignedZone = currentZonesToUse[(groupShiftBaseZoneIndex + memberIndexInGroup) % currentZonesToUse.length];
+                            }
                         }
                         
                         if (onLeave) {
-                            dashboardHTML += `<li class="dashboard-tech-item on-leave"><span>❌ ${memberName}</span> <strong>On Leave</strong></li>`;
+                            dashboardHTML += `<li class="dashboard-tech-item on-leave"><span>❌ ${member.name}</span> <strong>On Leave</strong></li>`;
                         } else {
-                            dashboardHTML += `<li class="dashboard-tech-item"><span>${memberName}</span> <strong>${assignedZone}</strong></li>`;
+                            dashboardHTML += `<li class="dashboard-tech-item"><span>${member.name}</span> <strong>${assignedZone}</strong></li>`;
                         }
                     });
                     dashboardHTML += `</ul>`;
@@ -1781,21 +1733,9 @@
                 
                 todayDashboardElement.innerHTML = dashboardHTML;
 
-                const nowInMinutes = now.getHours() * 60 + now.getMinutes();
-                const shiftChangeTimeInMinutes = SHIFT_START_HOUR_MOROCCO * 60;
-                let timeToNextUpdateMs;
-                if (nowInMinutes < shiftChangeTimeInMinutes && (now.getHours() * 60 + (now.getMinutes() + 1)) >= shiftChangeTimeInMinutes) {
-                    const nextShiftChange = new Date(now);
-                    nextShiftChange.setHours(SHIFT_START_HOUR_MOROCCO, 0, 0, 0);
-                    timeToNextUpdateMs = nextShiftChange.getTime() - now.getTime();
-                } else {
-                    timeToNextUpdateMs = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
-                    if (timeToNextUpdateMs <= 0) timeToNextUpdateMs += 60 * 1000;
-                }
+                const timeToNextUpdateMs = 60000 - (new Date().getSeconds() * 1000 + new Date().getMilliseconds());
                 setTimeout(updateTodayDashboard, timeToNextUpdateMs);
             }
-            // ====== UPDATED DASHBOARD FUNCTION END ======
-
 
             // --- Printable Schedule Logic ---
             function generatePrintableSchedule() {
@@ -1804,8 +1744,6 @@
                     return;
                 }
                 
-                // technicianShiftHistory is not used globally, but rather locally in showGroupMembers.
-
                 const year = currentDisplayDate.getUTCFullYear();
                 const month_0_indexed = currentDisplayDate.getUTCMonth();
                 const monthName = currentDisplayDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
@@ -1815,7 +1753,6 @@
                 calendarHtml += '<thead><tr><th>Lundi</th><th>Mardi</th><th>Mercredi</th><th>Jeudi</th><th>Vendredi</th><th>Sabado</th><th>Domingo</th></tr></thead>';
                 calendarHtml += '<tbody><tr>';
 
-                // Adjust first day of week to start on Monday (0-indexed for Monday, 6 for Sunday)
                 let adjustedFirstDay = (new Date(Date.UTC(year, month_0_indexed, 1)).getUTCDay() + 6) % 7;
                 for (let i = 0; i < adjustedFirstDay; i++) {
                     calendarHtml += '<td class="day-cell day-off"></td>';
@@ -1824,10 +1761,9 @@
                 const daysInMonth = new Date(Date.UTC(year, month_0_indexed + 1, 0)).getUTCDate();
                 for (let day = 1; day <= daysInMonth; day++) {
                     const currentDate = new Date(Date.UTC(year, month_0_indexed, day));
-                    // Adjust day of week for Monday start (0-indexed for Monday)
                     let dayOfWeek = (currentDate.getUTCDay() + 6) % 7;
 
-                    if (dayOfWeek === 0 && day !== 1) calendarHtml += '</tr><tr>'; // Start new row on Monday
+                    if (dayOfWeek === 0 && day !== 1) calendarHtml += '</tr><tr>';
                     
                     const diffInDaysFromCycleStart = Math.floor((currentDate.getTime() - cycleStartDate.getTime()) / (1000 * 60 * 60 * 24));
                     const workingGroupOffset = ((diffInDaysFromCycleStart % 5) + 5) % 5;
@@ -1840,11 +1776,12 @@
                     const holidayName = getHolidayInfo(currentDate, year);
                     if (holidayName) calendarHtml += `<strong style="color: #c026d3;">${holidayName.toUpperCase()}</strong>`;
                     
-                    if (day >= daysInMonth - 4) { // Last 5 days for PM
+                    if (day >= daysInMonth - 4) {
                         calendarHtml += `<div class="printable-pm-indicator">🧹 PM</div>`;
                     }
                     
-                    const currentZonesToUse = (workingGroupMembers.length === 4) ? ZONES : BASE_ZONES;
+                    const rotatingTechs = workingGroupMembers.filter(m => m.role !== 'helpdesk');
+                    const currentZonesToUse = (rotatingTechs.length === 4) ? ZONES : BASE_ZONES;
 
                     let groupNthShiftForZoneCalc = 0; 
                     const daysSinceGlobalRef = Math.floor((currentDate.getTime() - GLOBAL_REFERENCE_DATE.getTime()) / (1000 * 60 * 60 * 24));
@@ -1855,41 +1792,56 @@
                         }
                     }
                     
-                    workingGroupMembers.forEach((memberName, memberIndexInGroup) => {
-                        const onLeave = isTechnicianOnLeave(memberName, currentDate);
+                    workingGroupMembers.forEach((member) => {
+                        const onLeave = isTechnicianOnLeave(member.name, currentDate);
                         if (onLeave) {
-                            calendarHtml += `<span class="technician-info on-leave">${memberName} - ❌ Congé</span>`;
+                            calendarHtml += `<span class="technician-info on-leave">${member.name} - ❌ Congé</span>`;
                         } else {
                             let assignedZone = "N/A";
                             let zoneClass = "na";
-                            
-                            if (groupNthShiftForZoneCalc > 0) {
-                                const groupShiftBaseZoneIndex = ((groupNthShiftForZoneCalc - 1) + actualWorkingGroupIndex) % currentZonesToUse.length;
-                                assignedZone = currentZonesToUse[(groupShiftBaseZoneIndex + memberIndexInGroup) % currentZonesToUse.length];
+
+                            if (member.role === 'helpdesk') {
+                                assignedZone = HELPDESK_ZONE;
+                                zoneClass = 'office'; // Use a neutral color
+                            } else if (groupNthShiftForZoneCalc > 0) {
+                                const memberIndexInGroup = rotatingTechs.findIndex(t => t.name === member.name);
+                                if(memberIndexInGroup !== -1) {
+                                    const groupShiftBaseZoneIndex = ((groupNthShiftForZoneCalc - 1) + actualWorkingGroupIndex) % currentZonesToUse.length;
+                                    assignedZone = currentZonesToUse[(groupShiftBaseZoneIndex + memberIndexInGroup) % currentZonesToUse.length];
+                                }
                             }
                             
                             if (assignedZone) {
                                 zoneClass = assignedZone.toLowerCase().replace(' ', '-');
                             }
                             
-                            calendarHtml += `<span class="technician-info ${zoneClass}">${memberName} - <strong>${assignedZone || 'N/A'}</strong></span>`;
+                            calendarHtml += `<span class="technician-info ${zoneClass}">${member.name} - <strong>${assignedZone || 'N/A'}</strong></span>`;
                         }
                     });
                     calendarHtml += '</td>';
                 }
 
-                // Fill empty cells at the end of the last week
                 let lastDayOfWeek = (new Date(Date.UTC(year, month_0_indexed, daysInMonth)).getUTCDay() + 6) % 7;
                 for (let i = lastDayOfWeek; i < 6; i++) {
                     calendarHtml += '<td class="day-cell day-off"></td>';
                 }
 
                 calendarHtml += '</tr></tbody></table>';
-
-                // Get the dispatch table HTML
                 const dispatchTableHTML = document.getElementById('dispatchTableSection').innerHTML;
-
                 printableContent.innerHTML = calendarHtml + `<div class="printable-dispatch-section">${dispatchTableHTML}</div>`;
+            }
+
+            // Data Migration function to convert old string data to new object format
+            function migrateDataFormat() {
+                groupMembersData = groupMembersData.map(group => {
+                    if (!group) return [];
+                    return group.map(member => {
+                        if (typeof member === 'string') {
+                            return { name: member, role: 'tech' }; // Default to 'tech' role
+                        }
+                        return member; // Already in the correct format
+                    });
+                });
             }
             
             async function initializeApp() { 
@@ -1899,14 +1851,20 @@
                 window.onSnapshot(appDataDocRef, (doc) => {
                     if (doc.exists()) {
                         const data = doc.data();
-                        groupNames = data.groupNames || defaultGroupNames;
+                        groupNames = data.groupNames || [...defaultGroupNames];
                         groupMembersData = JSON.parse(data.groupMembersDataJSON || '[]'); 
                         technicianLeaves = data.technicianLeaves || [];
                         leaveBalances = data.leaveBalances || {};
                     } else {
-                        console.log("No data found in Firestore, creating new document...");
-                        saveAdminChangesToFirestore(true);
+                        console.log("No data found in Firestore, using default config...");
+                        groupNames = [...defaultGroupNames];
+                        groupMembersData = JSON.parse(JSON.stringify(defaultGroupMembersData));
+                        technicianLeaves = [];
+                        leaveBalances = {};
+                        saveAdminChangesToFirestore(true); // Save defaults if no doc exists
                     }
+                    
+                    migrateDataFormat(); // Ensure data is in the new object format
 
                     populateGroupSelect(); 
                     updateLegend();
@@ -1928,71 +1886,56 @@
                             currentDisplayDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), 1));
                         }
                     } else {
-                        // If no saved settings, initialize to show the current "live" schedule for the calendar
                         const today = new Date();
                         const effectiveScheduleDateForToday = getEffectiveShiftDate(today);
                         const diffInMilliseconds = effectiveScheduleDateForToday.getTime() - GLOBAL_REFERENCE_DATE.getTime();
                         const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
                         const dayInCycleForReferenceGroup = (diffInDays % 5 + 5) % 5;
                         const groupWorkingTodayIndex = (GLOBAL_REFERENCE_GROUP_INDEX + dayInCycleForReferenceGroup) % 5;
-                        selectedGroupIndex = groupWorkingTodayIndex; // User's selected group is set to the one on duty
+                        selectedGroupIndex = groupWorkingTodayIndex; 
                         if (groupSelect) groupSelect.value = selectedGroupIndex;
-                        cycleStartDate = new Date(effectiveScheduleDateForToday); // Cycle starts with this group on this date
+                        cycleStartDate = new Date(effectiveScheduleDateForToday); 
                         if (startDateInput) startDateInput.value = effectiveScheduleDateForToday.toISOString().split('T')[0];
                         currentDisplayDate = new Date(Date.UTC(today.getUTCFullYear(), today.getMonth(), 1)); 
                     }
                     generateSchedule(); 
-                    updateTodayDashboard(); // Call the new dashboard update function
+                    updateTodayDashboard(); 
                 });
             }
             
             initializeApp();
 
-            // ====== PASSWORD CHECK FIX START ======
-            // This function has been reverted to use the fetch() API to securely
-            // check the password against a Netlify serverless function, instead of
-            // an insecure hardcoded password in the client-side code.
             async function requestAdminPasswordAndOpenPanel() {
                 if (sessionStorage.getItem('isAdminAuthenticated') === 'true') {
                     populateAdminPanel();
                     openModal(adminPanelModal);
                     return;
                 }
-
                 const enteredPass = prompt("Enter Admin Password:");
                 if (enteredPass === null) return;
-
                 try {
-                    // This fetch call sends the entered password to your Netlify function
-                    // The path must match the name of your function file.
                     const response = await fetch('/.netlify/functions/check-password', {
                         method: 'POST',
                         body: JSON.stringify({ password: enteredPass })
                     });
                     const result = await response.json();
-
-                    // If the server responds with success:true, the password was correct.
                     if (response.ok && result.success) {
                         sessionStorage.setItem('isAdminAuthenticated', 'true');
                         populateAdminPanel();
                         openModal(adminPanelModal);
                     } else {
-                        // If the server responds with an error or success:false
                         alert("Incorrect password.");
                     }
                 } catch (error) {
-                    // This handles network errors or if the function can't be reached.
                     console.error('Error checking password:', error);
                     alert('There was a problem contacting the server. Please try again.');
                 }
             }
-            // ====== PASSWORD CHECK FIX END ======
 
 
             function populateAdminPanel() {
                 if (!adminPanelContent) return;
                 
-                // MODIFICATION: Removed Danger Zone from here
                 adminPanelContent.innerHTML = `
                     <div id="adminGroupManagementSection" class="admin-section">
                         <h4 class="admin-section-title">Manage Groups & Technicians</h4>
@@ -2006,9 +1949,8 @@
                     </div>
                 `;
                 
-                // Populate Group Management
                 const adminGroupContent = document.getElementById('adminGroupContent');
-                adminGroupContent.innerHTML = ''; // Clear previous content
+                adminGroupContent.innerHTML = '';
                 groupNames.forEach((groupName, groupIndex) => {
                     const groupSection = document.createElement('div');
                     groupSection.style.marginBottom = '1rem';
@@ -2021,7 +1963,7 @@
                     groupNameInput.type = 'text';
                     groupNameInput.value = groupName;
                     groupNameInput.className = 'admin-group-title flex-grow bg-transparent p-0 border-0 focus:ring-0 w-full';
-                    groupNameInput.style.marginBottom = '0'; // Override margin from class
+                    groupNameInput.style.marginBottom = '0';
                     groupTitleContainer.appendChild(groupNameInput);
 
                     const renameGroupBtn = document.createElement('button');
@@ -2034,25 +1976,34 @@
 
                     const ul = document.createElement('ul');
                     
-                    (groupMembersData[groupIndex] || []).forEach((techName, techIndex) => {
+                    (groupMembersData[groupIndex] || []).forEach((tech, techIndex) => {
                         const li = document.createElement('li');
                         li.className = 'admin-technician-item';
                         const nameWrapper = document.createElement('div');
                         nameWrapper.className = 'tech-name-wrapper';
+
+                        // HELP DESK FEATURE: Add icon for helpdesk role
+                        if (tech.role === 'helpdesk') {
+                            nameWrapper.innerHTML = `<i class="fas fa-headset helpdesk-icon" title="Help Desk"></i>`;
+                        }
+                        
                         const nameInput = document.createElement('input');
                         nameInput.type = 'text';
-                        nameInput.value = techName;
+                        nameInput.value = tech.name;
                         nameWrapper.appendChild(nameInput);
+
                         const actionsWrapper = document.createElement('div');
                         actionsWrapper.className = 'tech-actions-wrapper';
                         const renameButton = document.createElement('button');
                         renameButton.textContent = 'Rename';
                         renameButton.className = 'action-button rename-btn';
                         renameButton.onclick = () => renameTechnician(groupIndex, techIndex, nameInput.value);
+                        
                         const removeButton = document.createElement('button');
                         removeButton.textContent = 'Remove';
                         removeButton.className = 'action-button'; 
                         removeButton.onclick = () => removeTechnician(groupIndex, techIndex);
+                        
                         const transferSelect = document.createElement('select');
                         transferSelect.className = 'transfer-select rounded-md';
                         groupNames.forEach((name, i) => {
@@ -2066,10 +2017,8 @@
                         const transferButton = document.createElement('button');
                         transferButton.textContent = 'Transfer';
                         transferButton.className = 'action-button transfer-btn';
-                        // =========================================================================
-                        // ====== BUG FIX: Corrected the variable from sourceGroupIndex to groupIndex ======
-                        // =========================================================================
                         transferButton.onclick = () => transferTechnician(groupIndex, techIndex, parseInt(transferSelect.value));
+                        
                         actionsWrapper.appendChild(renameButton);
                         actionsWrapper.appendChild(removeButton);
                         actionsWrapper.appendChild(transferSelect);
@@ -2079,30 +2028,46 @@
                         ul.appendChild(li);
                     });
                     groupSection.appendChild(ul);
+                    
+                    // HELP DESK FEATURE: Add role toggle button
                     const addDiv = document.createElement('div');
                     addDiv.className = 'admin-add-technician';
                     const addInput = document.createElement('input');
                     addInput.type = 'text';
                     addInput.placeholder = 'New Technician Name';
+                    
+                    const roleToggleButton = document.createElement('button');
+                    roleToggleButton.className = 'action-button role-toggle-btn';
+                    roleToggleButton.innerHTML = `<i class="fas fa-user"></i>`;
+                    roleToggleButton.title = 'Toggle role (Technician / Help Desk)';
+                    roleToggleButton.onclick = () => {
+                        roleToggleButton.classList.toggle('toggled');
+                        const icon = roleToggleButton.querySelector('i');
+                        if (roleToggleButton.classList.contains('toggled')) {
+                            icon.className = 'fas fa-headset';
+                        } else {
+                            icon.className = 'fas fa-user';
+                        }
+                    };
+
                     const addButton = document.createElement('button');
-                    addButton.textContent = 'Add Tech';
+                    addButton.textContent = 'Add';
                     addButton.className = 'action-button';
-                    addButton.onclick = () => addTechnician(groupIndex, addInput);
+                    addButton.onclick = () => addTechnician(groupIndex, addInput, roleToggleButton);
+
                     addDiv.appendChild(addInput);
+                    addDiv.appendChild(roleToggleButton);
                     addDiv.appendChild(addButton);
                     groupSection.appendChild(addDiv);
                     adminGroupContent.appendChild(groupSection);
                 });
                 
-                // Populate NEW Leave Management UI
                 populateLeaveManagementUI();
             }
 
-            // ====== REWORKED LEAVE MANAGEMENT FUNCTIONS START ======
-
             function findGroupForTechnician(techName) {
                 for (let i = 0; i < groupMembersData.length; i++) {
-                    if (groupMembersData[i].includes(techName)) {
+                     if (groupMembersData[i].some(member => member.name === techName)) {
                         return groupAbbreviations[i];
                     }
                 }
@@ -2119,9 +2084,8 @@
                 const container = document.getElementById('leaveManagementContent');
                 if (!container) return;
 
-                const allTechs = groupMembersData.flat().sort();
+                const allTechs = groupMembersData.flat().map(t => t.name).sort();
 
-                // 1. Build the HTML structure
                 container.innerHTML = `
                     <div class="leave-form-card">
                         <h5 class="leave-section-title">Leave Records & Balances</h5>
@@ -2173,11 +2137,8 @@
                     </div>
                 `;
 
-                // 2. Add Event Listeners & Date Input Restrictions
-
-                // FIX: Prevent booking leave in the past and ensure end date is valid.
                 const today = new Date();
-                const todayString = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+                const todayString = today.toISOString().split('T')[0];
                 const leaveStartDateInput = document.getElementById('leaveStartDate');
                 const leaveEndDateInput = document.getElementById('leaveEndDate');
 
@@ -2186,10 +2147,8 @@
 
                 if (leaveStartDateInput && leaveEndDateInput) {
                     leaveStartDateInput.addEventListener('change', () => {
-                        // When start date changes, set the minimum for the end date
                         if (leaveStartDateInput.value) {
                             leaveEndDateInput.min = leaveStartDateInput.value;
-                            // If end date is now before the new start date, clear it
                             if (leaveEndDateInput.value < leaveStartDateInput.value) {
                                 leaveEndDateInput.value = '';
                             }
@@ -2238,13 +2197,9 @@
 
                     technicianLeaves.push({ name: techName, startDate, endDate, reason });
                     renderLeaveList(); 
-                    
-                    // ===== FIX: Force calendar and dashboard to re-render with new leave data =====
                     generateSchedule();
                     updateTodayDashboard();
-                    // =============================================================================
-
-                    // Do not clear the technician selection, only the date and reason
+                    
                     document.getElementById('leaveStartDate').value = '';
                     document.getElementById('leaveEndDate').value = '';
                     document.getElementById('leaveReason').value = '';
@@ -2254,7 +2209,6 @@
                     renderLeaveList(e.target.value);
                 });
 
-                // 3. Initial Render
                 renderLeaveList();
             }
 
@@ -2279,10 +2233,10 @@
                     const nameMatch = leave.name.toLowerCase().includes(lowerCaseFilter);
                     const reasonMatch = leave.reason && leave.reason.toLowerCase().includes(lowerCaseFilter);
                     return nameMatch || reasonMatch;
-                }).sort((a, b) => parseDateString(b.startDate) - parseDateString(a.startDate)); // Sort newest first
+                }).sort((a, b) => parseDateString(b.startDate) - parseDateString(a.startDate));
 
                 listTitle.textContent = `Current Leave Records (${filteredLeaves.length})`;
-                listContainer.innerHTML = ''; // Clear previous list
+                listContainer.innerHTML = '';
 
                 if (filteredLeaves.length === 0) {
                     listContainer.innerHTML = '<p class="text-gray-400 text-center">No leave records found.</p>';
@@ -2315,33 +2269,27 @@
             window.removeLeave = (index) => {
                 if (index > -1 && index < technicianLeaves.length) {
                     technicianLeaves.splice(index, 1);
-                    renderLeaveList(document.getElementById('leaveSearchInput').value); // Re-render the list with the current filter
-                    // ===== FIX: Force calendar and dashboard to re-render after deleting leave =====
+                    renderLeaveList(document.getElementById('leaveSearchInput').value);
                     generateSchedule();
                     updateTodayDashboard();
-                    // =============================================================================
                 }
             };
-
-            // ====== REWORKED LEAVE MANAGEMENT FUNCTIONS END ======
             
-            // MODIFICATION START: Added renameGroup function
             function renameGroup(groupIndex, inputElement) {
                 const newName = inputElement.value.trim();
                 if (newName && newName !== "") {
                     groupNames[groupIndex] = newName;
-                    populateAdminPanel(); // Re-render the panel to update other parts like transfer dropdowns
+                    populateAdminPanel();
                 } else {
                     alert("Group name cannot be empty.");
-                    inputElement.value = groupNames[groupIndex]; // Revert on failure
+                    inputElement.value = groupNames[groupIndex];
                 }
             }
-            // MODIFICATION END
 
             function renameTechnician(groupIndex, techIndex, newName) {
                 if (newName && newName.trim() !== "") {
-                    const oldName = groupMembersData[groupIndex][techIndex];
-                    groupMembersData[groupIndex][techIndex] = newName.trim();
+                    const oldName = groupMembersData[groupIndex][techIndex].name;
+                    groupMembersData[groupIndex][techIndex].name = newName.trim();
                     
                     if(leaveBalances.hasOwnProperty(oldName)) {
                         leaveBalances[newName.trim()] = leaveBalances[oldName];
@@ -2359,18 +2307,22 @@
             }
 
             function removeTechnician(groupIndex, techIndex) {
-                const techName = groupMembersData[groupIndex][techIndex];
+                const techName = groupMembersData[groupIndex][techIndex].name;
                 groupMembersData[groupIndex].splice(techIndex, 1);
                 if(leaveBalances.hasOwnProperty(techName)) delete leaveBalances[techName];
                 technicianLeaves = technicianLeaves.filter(leave => leave.name !== techName);
                 populateAdminPanel(); 
             }
 
-            function addTechnician(groupIndex, inputElement) {
+            function addTechnician(groupIndex, inputElement, roleToggleButton) {
                 const newName = inputElement.value.trim();
                 if (newName) {
+                    const role = roleToggleButton.classList.contains('toggled') ? 'helpdesk' : 'tech';
+                    const newPerson = { name: newName, role: role };
+
                     if (!groupMembersData[groupIndex]) groupMembersData[groupIndex] = [];
-                    groupMembersData[groupIndex].push(newName);
+                    groupMembersData[groupIndex].push(newPerson);
+
                     if(!leaveBalances.hasOwnProperty(newName)) leaveBalances[newName] = 0;
                     populateAdminPanel(); 
                     inputElement.value = ''; 
@@ -2380,17 +2332,17 @@
             }
 
             function transferTechnician(sourceGroupIndex, techIndex, destinationGroupIndex) {
-                const techName = groupMembersData[sourceGroupIndex][techIndex];
+                const tech = groupMembersData[sourceGroupIndex][techIndex];
                 groupMembersData[sourceGroupIndex].splice(techIndex, 1);
                 if (!groupMembersData[destinationGroupIndex]) groupMembersData[destinationGroupIndex] = [];
-                groupMembersData[destinationGroupIndex].push(techName);
+                groupMembersData[destinationGroupIndex].push(tech);
                 populateAdminPanel();
             }
 
             async function saveAdminChangesToFirestore(isInitialSetup = false) {
                 const dataToSave = {
                     groupNames: groupNames,
-                    groupMembersDataJSON: JSON.stringify(groupMembersData), // Store as JSON string
+                    groupMembersDataJSON: JSON.stringify(groupMembersData),
                     technicianLeaves: technicianLeaves,
                     leaveBalances: leaveBalances
                 };
@@ -2455,7 +2407,6 @@
             if (resetToLiveButton) {
                 resetToLiveButton.addEventListener('click', () => {
                     const now = new Date();
-                    // Reset selectedGroupIndex and cycleStartDate to align with the current live schedule
                     const effectiveScheduleDateForToday = getEffectiveShiftDate(now);
                     const diffInMilliseconds = effectiveScheduleDateForToday.getTime() - GLOBAL_REFERENCE_DATE.getTime();
                     const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
@@ -2466,7 +2417,7 @@
                     cycleStartDate = new Date(effectiveScheduleDateForToday);
                     if (startDateInput) startDateInput.value = effectiveScheduleDateForToday.toISOString().split('T')[0];
 
-                    currentDisplayDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), 1)); // Jump to current month
+                    currentDisplayDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), 1));
                     generateSchedule();
                 });
             }
@@ -2476,23 +2427,21 @@
             if (closeAdminPanelButtonSecondary) closeAdminPanelButtonSecondary.addEventListener('click', () => closeModal(adminPanelModal));
             if (adminPanelModal) adminPanelModal.addEventListener('click', (event) => { if (event.target === adminPanelModal) closeModal(adminPanelModal); });
             if (saveAdminChangesButton) saveAdminChangesButton.addEventListener('click', () => saveAdminChangesToFirestore());
-
-            // MODIFICATION: Add event listener for factory reset button here since it's now static
+            
             if (factoryResetButton) {
                 factoryResetButton.addEventListener('click', () => {
                      if (confirm("DANGER: Are you absolutely sure you want to reset all groups and leave data to the default settings? This cannot be undone and will affect all users.")) {
                          groupNames = [...defaultGroupNames]; 
-                         groupMembersData = defaultGroupMembersData.map(arr => [...arr]);
+                         groupMembersData = JSON.parse(JSON.stringify(defaultGroupMembersData)); // Reset with new format
                          technicianLeaves = [];
                          leaveBalances = {};
                          saveAdminChangesToFirestore(true);
                          alert("Application data has been reset to defaults.");
-                         populateAdminPanel(); // Refresh the panel view
+                         populateAdminPanel();
                      }
                 });
             }
             
-            // New Printable Schedule Listeners
             if (printScheduleButton) {
                 printScheduleButton.addEventListener('click', () => {
                     generatePrintableSchedule();
@@ -2510,7 +2459,7 @@
                             scale: 2,
                             width: scheduleEl.scrollWidth,
                             height: scheduleEl.scrollHeight,
-                            backgroundColor: '#ffffff' // Explicitly set background to white for the canvas
+                            backgroundColor: '#ffffff'
                         };
                         html2canvas(scheduleEl, options).then(canvas => {
                             const link = document.createElement('a');
@@ -2528,7 +2477,7 @@
             }
 
             function populateOnLeaveModal() {
-                const allTechs = groupMembersData.flat().sort();
+                const allTechs = groupMembersData.flat().map(t => t.name).sort();
                 leaveHistoryTechFilter.innerHTML = '<option value="all">All Technicians</option>';
                 allTechs.forEach(tech => {
                     const option = document.createElement('option');
