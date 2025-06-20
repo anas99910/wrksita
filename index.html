@@ -234,18 +234,23 @@
             text-shadow: 0 1px 2px rgba(0,0,0,0.4);
         }
         .day-cell-number { font-size: 1rem; margin-bottom: 0.125rem; }
-        .day-cell-group-name { 
-            font-size: 0.55rem; 
-            line-height: 1.1; 
-            letter-spacing: 0.025em; 
-            transition: color 0.2s; /* Add transition for color change */
-        }
-        .day-cell-group-name.on-leave-indicator {
-            color: #f87171; /* Red color for leave */
-            font-weight: 700;
-        }
+        .day-cell-group-name { font-size: 0.55rem; line-height: 1.1; letter-spacing: 0.025em; }
         .ring-selected-group { ring-offset-color: rgba(35,35,35,0.6); } 
         .ring-today { ring-offset-color: rgba(35,35,35,0.6); }
+        .day-cell-leave-container {
+            margin-top: 0.25rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        .day-cell-leave-item {
+            font-size: 0.6rem; /* 9.6px */
+            line-height: 1;
+            color: #f87171; /* brighter red */
+            font-weight: 600;
+            text-shadow: 0 0 2px rgba(0,0,0,0.5);
+        }
         
         .holiday-indicator {
             position: absolute;
@@ -1548,16 +1553,27 @@
                     statusDiv.className = 'day-cell-group-name font-medium uppercase-text tracking-tighter'; 
                     statusDiv.textContent = workingGroupNameInCell; 
                     
-                    // CLEANUP: New logic for leave indicator
-                    const workingGroupMembers = groupMembersData[actualWorkingGroupIndex] || [];
-                    const isAnyoneOnLeave = workingGroupMembers.some(member => isTechnicianOnLeave(member.name, currentDateInCalendar));
-                    if (isAnyoneOnLeave) {
-                        statusDiv.classList.add('on-leave-indicator');
-                        dayCell.title = (dayCell.title ? dayCell.title + ' / ' : '') + 'Someone on leave';
-                    }
-                    
                     dayCell.appendChild(dayNumberDiv);
                     dayCell.appendChild(statusDiv);
+                    
+                    // Re-implement leave indicator with clean styling
+                    const leaveIndicatorContainer = document.createElement('div');
+                    leaveIndicatorContainer.className = 'day-cell-leave-container';
+
+                    const workingGroupMembers = groupMembersData[actualWorkingGroupIndex] || [];
+                    workingGroupMembers.forEach(member => {
+                        if (isTechnicianOnLeave(member.name, currentDateInCalendar)) {
+                            const leaveIndicator = document.createElement('div');
+                            leaveIndicator.className = 'day-cell-leave-item';
+                            leaveIndicator.textContent = `❌ ${member.name.split(' ')[0]}`;
+                            leaveIndicator.title = `${member.name} on leave`;
+                            leaveIndicatorContainer.appendChild(leaveIndicator);
+                        }
+                    });
+
+                    if (leaveIndicatorContainer.hasChildNodes()) {
+                        dayCell.appendChild(leaveIndicatorContainer);
+                    }
                     
                     if (calendarGrid) calendarGrid.appendChild(dayCell);
                 }
