@@ -1565,7 +1565,7 @@
                         if (isTechnicianOnLeave(member.name, currentDateInCalendar)) {
                             const leaveIndicator = document.createElement('div');
                             leaveIndicator.className = 'day-cell-leave-item';
-                            leaveIndicator.textContent = `❌ ${member.name.split(' ')[0]}`;
+                            leaveIndicator.textContent = `${member.name.split(' ')[0]}`; // CLEANER: Just the name in red
                             leaveIndicator.title = `${member.name} on leave`;
                             leaveIndicatorContainer.appendChild(leaveIndicator);
                         }
