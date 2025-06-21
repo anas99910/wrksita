@@ -189,6 +189,23 @@
             font-size: 0.75rem;
         }
 
+        /* PC Positions Modal Tabs */
+        .pc-tab-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: none;
+            color: #9CA3AF;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.2s, border-bottom-color 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+        .pc-tab-btn.active {
+            color: #38bdf8; /* sky-400 */
+            border-bottom-color: #38bdf8;
+        }
+
+
         /* Zone Colors for tables */
         .zone-details-table .zone-a-bg { background-color: rgba(16, 185, 129, 0.2); color: #A7F3D0; } 
         .zone-details-table .zone-b-bg { background-color: rgba(59, 130, 246, 0.2); color: #BFDBFE; } 
@@ -1080,65 +1097,255 @@
     </div>
 
     <div id="pcPositionsModal" class="modal fixed inset-0 z-[60] flex items-center justify-center bg-black/85 opacity-0 pointer-events-none p-4">
-        <div class="modal-content frosted-glass-pane w-11/12 md:max-w-4xl lg:max-w-6xl mx-auto p-5 md:p-6 max-h-[90vh] overflow-y-auto">
+        <div class="modal-content frosted-glass-pane w-11/12 md:max-w-4xl lg:max-w-7xl mx-auto p-5 md:p-6 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4 pb-3 border-b border-white/12">
                 <h3 class="text-lg font-semibold text-sky-300 uppercase-text selectable-text">PC POSITIONS</h3>
                 <button id="closePcPositionsModal" class="text-gray-400 hover:text-red-400 text-2xl font-bold">&times;</button>
             </div>
+            
+            <div class="border-b border-gray-600 mb-4">
+                <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                    <button data-tab="cmn-t1" class="pc-tab-btn active">CMN-T1</button>
+                    <button data-tab="cmn-t2" class="pc-tab-btn">CMN-T2</button>
+                    <button data-tab="cmn-t3" class="pc-tab-btn">CMN-T3</button>
+                    <button data-tab="ope-adm" class="pc-tab-btn">OPE/ADM/EGATE/BLS</button>
+                </nav>
+            </div>
+
             <div class="selectable-text overflow-x-auto">
-                <table class="pc-positions-table w-full text-left text-xs">
-                    <thead class="main-header">
-                        <tr>
-                            <th colspan="2" class="text-center">Nv 0</th>
-                            <th colspan="3" class="text-center">Nv 1</th>
-                        </tr>
-                    </thead>
-                    <thead class="sub-header">
-                         <tr>
-                            <th>enregist transit</th>
-                            <th>enregistrement</th>
-                            <th>embarq E</th>
-                            <th>embarq F</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-gray-300">
-                        <tr> <td>CMN1TDE001</td> <td>CMN1CKB001</td> <td>CMN1CKB033</td> <td>CMN1GTT015</td> <td>CMN1GTT031</td> </tr>
-                        <tr> <td>CMN1TDE002</td> <td>CMN1CKB002</td> <td>CMN1CKB034</td> <td>CMN1GTT016</td> <td>CMN1GTT032</td> </tr>
-                        <tr> <td>CMN1TDE003</td> <td>CMN1CKB003</td> <td>CMN1CKB035</td> <td>CMN1GTT017</td> <td>CMN1GTT033</td></tr>
-                        <tr> <td>CMN1TDE004</td> <td>CMN1CKB004</td> <td>CMN1CKB036</td> <td>CMN1GTT018</td> <td>CMN1GTT034</td> </tr>
-                        <tr> <td>CMN1TDE005</td> <td>CMN1CKB005</td> <td>CMN1CKB037</td> <td>CMN1GTT019</td> <td>CMN1GTT035</td> </tr>
-                        <tr> <td>CMN1TDE006</td> <td>CMN1CKB006</td> <td>CMN1CKB038</td> <td>CMN1GTT020</td> <td>CMN1GTT036</td> </tr>
-                        <tr> <td>CMN1TDE007</td> <td>CMN1CKB007</td> <td>CMN1CKB039</td> <td>CMN1GTT021</td> <td>CMN1GTT037</td> </tr>
-                        <tr> <td></td>          <td>CMN1CKB008</td> <td>CMN1CKB040</td> <td>CMN1GTT022</td> <td>CMN1GTT038</td> </tr>
-                        <tr> <td></td>          <td>CMN1CKB009</td> <td>CMN1CKB041</td> <td>CMN1GTT023</td> <td>CMN1GTT039</td> </tr>
-                        <tr> <td></td>          <td>CMN1CKB010</td> <td>CMN1CKB042</td> <td>CMN1GTT024</td> <td>CMN1GTT040</td> </tr>
-                        <tr> <td></td>          <td>CMN1CKB011</td> <td>CMN1CKB043</td> <td>CMN1GTT025</td> <td>CMN1GTT041</td></tr>
-                        <tr> <td></td>          <td>CMN1CKB012</td> <td>CMN1CKB044</td> <td>CMN1GTT026</td> <td>CMN1GTT042</td> </tr>
-                        <tr> <td></td>          <td>CMN1CKB013</td> <td>CMN1CKB045</td> <td>CMN1GTT027</td> <td>CMN1GTT043</td> </tr>
-                        <tr> <td></td>          <td>CMN1CKB014</td> <td>CMN1CKB046</td> <td>CMN1GTT028</td> <td>CMN1GTT044</td> </tr>
-                        <tr> <td></td>          <td>CMN1CKB015</td> <td>CMN1CKB047</td> <td>CMN1GTT029</td> <td>CMN1GTT045</td> </tr>
-                        <tr> <td></td>          <td>CMN1CKB016</td> <td>CMN1CKB048</td> <td>CMN1GTT030</td> <td></td> </tr>
-                        <tr> <td></td>          <td>CMN1CKB017</td> <td>CMN1CKB049</td> <td></td> <td></td> </tr>
-                        <tr> <td></td>          <td>CMN1CKB018</td> <td>CMN1CKB050</td> <td></td> <td></td> </tr>
-                        <tr> <td></td>          <td>CMN1CKB019</td> <td>CMN1CKB051</td> <td></td> <td></td> </tr>
-                        <tr> <td></td>          <td>CMN1CKB020</td> <td>CMN1CKB052</td> <td></td> <td></td> </tr>
-                        <tr> <td></td>          <td>CMN1CKB021</td> <td>CMN1CKB053</td> <td></td> <td></td> </tr>
-                        <tr> <td></td>          <td>CMN1CKB022</td> <td>CMN1CKB054</td> <td></td> <td></td> </tr>
-                        <tr> <td></td>          <td>CMN1CKB023</td> <td>CMN1CKB055</td> <td></td> <td></td> </tr>
-                        <tr> <td></td>          <td>CMN1CKB024</td> <td>CMN1CKB056</td> <td></td> <td></td> </tr>
-                        <tr> <td></td>          <td>CMN1CKB025</td> <td>CMN1CKB057</td> <td></td> <td></td> </tr>
-                        <tr> <td></td>          <td>CMN1CKB026</td> <td>CMN1CKB058</td> <td></td> <td></td> </tr>
-                        <tr> <td></td>          <td>CMN1CKB027</td> <td>CMN1CKB059</td> <td>CMN1CKB076</td><td></td> </tr>
-                        <tr> <td></td>          <td>CMN1CKB028</td> <td>CMN1CKB060</td> <td>CMN1CKB068</td> <td>CMN1GTT077</td> </tr>
-                        <tr> <td></td>          <td>CMN1CKB029</td> <td>CMN1CKB061</td> <td>CMN1CKB069</td> <td>CMN1GTT078</td> </tr>
-                        <tr> <td></td>          <td>CMN1CKB030</td> <td>CMN1CKB062</td> <td>CMN1CKB070</td> <td>CMN1GTT079</td> </tr>
-                        <tr> <td></td>          <td>CMN1CKB031</td> <td>CMN1CKB063</td> <td>CMN1CKB071</td> <td>CMN1GTT080</td> </tr>
-                        <tr> <td></td>          <td>CMN1CKB032</td> <td>CMN1CKB064</td> <td>CMN1CKB072</td> <td>CMN1GTT081</td> </tr>
-                        <tr><td>Hors Gabari</td> <td>CMN1CKB085</td> <td>CMN1CKB065</td> <td>CMN1CKB073</td> <td>CMN1GTT082</td> </tr>
-                        <tr> <td></td>          <td></td>          <td>CMN1CKB066</td> <td>CMN1CKB074</td> <td>CMN1GTT083</td> </tr>
-                        <tr> <td></td>          <td></td>          <td>CMN1CKB067</td> <td>CMN1CKB075</td> <td>CMN1GTT084</td> </tr>
-                    </tbody>
-                </table>
+                <!-- CMN-T1 Tab -->
+                <div id="tab-cmn-t1" class="pc-tab-content">
+                    <table class="pc-positions-table w-full text-left text-xs">
+                        <thead class="main-header">
+                            <tr>
+                                <th colspan="2" class="text-center">Nivo 0</th>
+                                <th colspan="3" class="text-center">Nivo 1</th>
+                            </tr>
+                        </thead>
+                        <thead class="sub-header">
+                            <tr>
+                                <th>enregist transit</th>
+                                <th>enregistrement</th>
+                                <th>enregistrement</th>
+                                <th>embarq E</th>
+                                <th>embarq F</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-300">
+                            <tr><td>CMN1TDE001</td><td>CMN1CKB001</td><td>CMN1CKB033</td><td>CMN1GTT015</td><td>CMN1GTT031</td></tr>
+                            <tr><td>CMN1TDE002</td><td>CMN1CKB002</td><td>CMN1CKB034</td><td>CMN1GTT016</td><td>CMN1GTT032</td></tr>
+                            <tr><td>CMN1TDE003</td><td>CMN1CKB003</td><td>CMN1CKB035</td><td>CMN1GTT017</td><td>CMN1GTT033</td></tr>
+                            <tr><td>CMN1TDE004</td><td>CMN1CKB004</td><td>CMN1CKB036</td><td>CMN1GTT018</td><td>CMN1GTT034</td></tr>
+                            <tr><td>CMN1TDE005</td><td>CMN1CKB005</td><td>CMN1CKB037</td><td>CMN1GTT019</td><td>CMN1GTT035</td></tr>
+                            <tr><td>CMN1TDE006</td><td>CMN1CKB006</td><td>CMN1CKB038</td><td>CMN1GTT020</td><td>CMN1GTT036</td></tr>
+                            <tr><td>CMN1TDE007</td><td>CMN1CKB007</td><td>CMN1CKB039</td><td>CMN1GTT021</td><td>CMN1GTT037</td></tr>
+                            <tr><td>CMN1TDE008</td><td>CMN1CKB008</td><td>CMN1CKB040</td><td>CMN1GTT022</td><td>CMN1GTT038</td></tr>
+                            <tr><td>CMN1TDE009</td><td>CMN1CKB009</td><td>CMN1CKB041</td><td>CMN1GTT023</td><td>CMN1GTT039</td></tr>
+                            <tr><td>CMN1TDE010</td><td>CMN1CKB010</td><td>CMN1CKB042</td><td>CMN1GTT024</td><td>CMN1GTT040</td></tr>
+                            <tr><td>CMN1TDE011</td><td>CMN1CKB011</td><td>CMN1CKB043</td><td>CMN1GTT025</td><td>CMN1GTT041</td></tr>
+                            <tr><td></td><td>CMN1CKB012</td><td>CMN1CKB044</td><td>CMN1GTT026</td><td>CMN1GTT042</td></tr>
+                            <tr><td></td><td>CMN1CKB013</td><td>CMN1CKB045</td><td>CMN1GTT027</td><td>CMN1GTT043</td></tr>
+                            <tr><td></td><td>CMN1CKB014</td><td>CMN1CKB046</td><td>CMN1GTT028</td><td>CMN1GTT044</td></tr>
+                            <tr><td></td><td>CMN1CKB015</td><td>CMN1CKB047</td><td>CMN1GTT029</td><td>CMN1GTT045</td></tr>
+                            <tr><td></td><td>CMN1CKB016</td><td>CMN1CKB048</td><td>CMN1GTT030</td><td></td></tr>
+                            <tr><td></td><td>CMN1CKB017</td><td>CMN1CKB049</td><td></td><td></td></tr>
+                            <tr><td></td><td>CMN1CKB018</td><td>CMN1CKB050</td><td></td><td></td></tr>
+                            <tr><td></td><td>CMN1CKB019</td><td>CMN1CKB051</td><td></td><td></td></tr>
+                            <tr><td></td><td>CMN1CKB020</td><td>CMN1CKB052</td><td></td><td></td></tr>
+                            <tr><td></td><td>CMN1CKB021</td><td>CMN1CKB053</td><td></td><td></td></tr>
+                            <tr><td></td><td>CMN1CKB022</td><td>CMN1CKB054</td><td></td><td></td></tr>
+                            <tr><td></td><td>CMN1CKB023</td><td>CMN1CKB055</td><td></td><td></td></tr>
+                            <tr><td></td><td>CMN1CKB024</td><td>CMN1CKB056</td><td></td><td></td></tr>
+                            <tr><td></td><td>CMN1CKB025</td><td>CMN1CKB057</td><td></td><td></td></tr>
+                            <tr><td></td><td>CMN1CKB026</td><td>CMN1CKB058</td><td></td><td></td></tr>
+                            <tr><td></td><td>CMN1CKB027</td><td>CMN1CKB059</td><td></td><td>CMN1CKB076</td></tr>
+                            <tr><td></td><td>CMN1CKB028</td><td>CMN1CKB060</td><td>CMN1CKB068</td><td>CMN1CKB077</td></tr>
+                            <tr><td></td><td>CMN1CKB029</td><td>CMN1CKB061</td><td>CMN1CKB069</td><td>CMN1CKB078</td></tr>
+                            <tr><td></td><td>CMN1CKB030</td><td>CMN1CKB062</td><td>CMN1CKB070</td><td>CMN1CKB079</td></tr>
+                            <tr><td></td><td>CMN1CKB031</td><td>CMN1CKB063</td><td>CMN1CKB071</td><td>CMN1CKB080</td></tr>
+                            <tr><td></td><td>CMN1CKB032</td><td>CMN1CKB064</td><td>CMN1CKB072</td><td>CMN1CKB081</td></tr>
+                            <tr><td class="bg-emerald-800 text-white">Hors Gabari</td><td>CMN1CKB085</td><td>CMN1CKB065</td><td>CMN1CKB073</td><td>CMN1CKB082</td></tr>
+                            <tr><td></td><td></td><td>CMN1CKB066</td><td>CMN1CKB074</td><td>CMN1CKB083</td></tr>
+                            <tr><td></td><td></td><td>CMN1CKB067</td><td>CMN1CKB075</td><td>CMN1CKB084</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- CMN-T2 Tab -->
+                <div id="tab-cmn-t2" class="pc-tab-content hidden">
+                   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <table class="pc-positions-table w-full text-left text-xs">
+                           <thead class="sub-header"><tr><th>domistique</th></tr></thead>
+                           <tbody class="text-gray-300">
+                                <tr><td>CMN2GTT001</td></tr><tr><td>CMN2GTT002</td></tr><tr><td>CMN2GTT003</td></tr>
+                                <tr><td>CMN2GTT004</td></tr><tr><td>CMN2GTT005</td></tr><tr><td>CMN2GTT006</td></tr>
+                                <tr><td>CMN2GTT007</td></tr><tr><td>CMN2GTT008</td></tr><tr><td>CMN2GTT009</td></tr>
+                                <tr><td>CMN2GTT010</td></tr><tr><td>CMN2GTT011</td></tr><tr><td>CMN2GTT012</td></tr>
+                                <tr><td>CMN2GTT013</td></tr><tr><td>CMN2GTT014</td></tr>
+                           </tbody>
+                        </table>
+                        <table class="pc-positions-table w-full text-left text-xs">
+                           <thead class="sub-header"><tr><th>enregistrement</th></tr></thead>
+                           <tbody class="text-gray-300">
+                                <tr><td>CMN2TDE001</td></tr><tr><td>CMN2TDE002</td></tr><tr><td>CMN2TDE003</td></tr>
+                                <tr><td>CMN2TDE004</td></tr><tr><td>CMN2TDE005</td></tr><tr><td>CMN2TDE006</td></tr>
+                           </tbody>
+                        </table>
+                        <table class="pc-positions-table w-full text-left text-xs">
+                           <thead class="sub-header"><tr><th class="text-center">Nivo 1</th></tr></thead>
+                           <thead class="sub-header"><tr><th>enregistrement</th></tr></thead>
+                           <tbody class="text-gray-300">
+                                <tr><td>CMN2CKB001</td></tr><tr><td>CMN2CKB002</td></tr><tr><td>CMN2CKB003</td></tr>
+                                <tr><td>CMN2CKB004</td></tr><tr><td>CMN2CKB005</td></tr><tr><td>CMN2CKB006</td></tr>
+                                <tr><td>CMN2CKB007</td></tr><tr><td>CMN2CKB008</td></tr><tr><td>CMN2CKB009</td></tr>
+                                <tr><td>CMN2CKB010</td></tr><tr><td>CMN2CKB011</td></tr><tr><td>CMN2CKB012</td></tr>
+                                <tr><td>CMN2CKB013</td></tr><tr><td>CMN2CKB014</td></tr><tr><td>CMN2CKB015</td></tr>
+                                <tr><td>CMN2CKB016</td></tr><tr><td>CMN2CKB017</td></tr><tr><td>CMN2CKB018</td></tr>
+                                <tr><td>CMN2CKB019</td></tr><tr><td>CMN2CKB020</td></tr><tr><td>CMN2CKB021</td></tr>
+                                <tr><td>CMN2CKB022</td></tr><tr><td>CMN2CKB023</td></tr><tr><td>CMN2CKB024</td></tr>
+                                <tr><td>CMN2CKB025</td></tr><tr><td>CMN2CKB026</td></tr><tr><td>CMN2CKB027</td></tr>
+                                <tr><td>CMN2CKB028</td></tr><tr><td>CMN2CKB029</td></tr><tr><td>CMN2CKB030</td></tr>
+                                <tr><td>CMN2CKB031</td></tr><tr><td>CMN2CKB032</td></tr><tr><td>CMN2CKB033</td></tr>
+                                <tr><td>CMN2CKB034</td></tr><tr><td>CMN2CKB035</td></tr><tr><td>CMN2CKB036</td></tr>
+                                <tr><td>CMN2CKB037</td></tr><tr><td>CMN2CKB038</td></tr><tr><td>CMN2CKB039</td></tr>
+                                <tr><td>CMN2CKB040</td></tr><tr><td>CMN2CKB041</td></tr>
+                           </tbody>
+                        </table>
+                        <table class="pc-positions-table w-full text-left text-xs">
+                           <thead class="sub-header"><tr><th>embarquement A</th></tr></thead>
+                           <tbody class="text-gray-300">
+                                <tr><td>CMN2GTT011</td></tr><tr><td>CMN2GTT012</td></tr><tr><td>CMN2GTT013</td></tr>
+                                <tr><td>CMN2GTT014</td></tr><tr><td>CMN2GTT015</td></tr><tr><td>CMN2GTT016</td></tr>
+                                <tr><td>CMN2GTT017</td></tr><tr><td>CMN2GTT018</td></tr><tr><td>CMN2GTT019</td></tr>
+                                <tr><td>CMN2GTT020</td></tr>
+                           </tbody>
+                        </table>
+                         <table class="pc-positions-table w-full text-left text-xs">
+                           <thead class="sub-header"><tr><th>embarquement B</th></tr></thead>
+                           <tbody class="text-gray-300">
+                                <tr><td>CMN2GTT021</td></tr><tr><td>CMN2GTT022</td></tr><tr><td>CMN2GTT023</td></tr>
+                           </tbody>
+                        </table>
+                        <table class="pc-positions-table w-full text-left text-xs">
+                           <thead class="sub-header"><tr><th class="text-center">T3</th></tr></thead>
+                           <thead class="sub-header"><tr><th>enregistrement</th></tr></thead>
+                           <tbody class="text-gray-300">
+                                <tr><td>CMN3CKB001</td></tr><tr><td>CMN3CKB002</td></tr><tr><td>CMN3CKB006</td></tr>
+                                <tr><td>CMN3CKB007</td></tr><tr><td>CMN3CKB008</td></tr><tr><td>CMN3CKB009</td></tr>
+                           </tbody>
+                        </table>
+                   </div>
+                </div>
+
+                <!-- CMN-T3 Tab -->
+                <div id="tab-cmn-t3" class="pc-tab-content hidden">
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                         <table class="pc-positions-table w-full text-left text-xs">
+                            <thead class="sub-header"><tr><th>enregistrement</th></tr></thead>
+                            <tbody class="text-gray-300">
+                                <tr><td>CMN3CKB001</td></tr><tr><td>CMN3CKB002</td></tr><tr><td>CMN3CKB003</td></tr>
+                                <tr><td>CMN3CKB004</td></tr><tr><td>CMN3CKB005</td></tr><tr><td>CMN3CKB006</td></tr>
+                                <tr><td>CMN3CKB007</td></tr><tr><td>CMN3CKB008</td></tr><tr><td>CMN3CKB009</td></tr>
+                            </tbody>
+                         </table>
+                         <table class="pc-positions-table w-full text-left text-xs">
+                            <thead class="sub-header"><tr><th>embarquement</th></tr></thead>
+                            <tbody class="text-gray-300">
+                                <tr><td>CMN3GTT001</td></tr><tr><td>CMN3GTT002</td></tr>
+                            </tbody>
+                         </table>
+                    </div>
+                </div>
+                
+                <!-- OPE/ADM/EGATE/BLS Tab -->
+                <div id="tab-ope-adm" class="pc-tab-content hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <table class="pc-positions-table w-full text-left text-xs">
+                            <thead class="sub-header"><tr class="bg-cyan-700"><th colspan="2">load control RAM</th></tr></thead>
+                            <tbody class="text-gray-300">
+                                <tr><td>CMN2OPM003</td><td>CMN2OPM004</td></tr>
+                                <tr><td>CMN2OPM007</td><td>CMN2OPM009</td></tr>
+                                <tr><td>CMN2OPM011</td><td>CMN2OPM012</td></tr>
+                                <tr><td>CMN2OPM013</td><td></td></tr>
+                            </tbody>
+                             <thead class="sub-header"><tr class="bg-cyan-700"><th colspan="2">litige RAM</th></tr></thead>
+                            <tbody class="text-gray-300">
+                                <tr><td>CMN2BMI001</td><td>CMN2BMI002</td></tr>
+                            </tbody>
+                             <thead class="sub-header"><tr class="bg-cyan-700"><th colspan="2">POLICE</th></tr></thead>
+                            <tbody class="text-gray-300">
+                                <tr><td>CMN2GTT024</td><td>CMN2GTT025</td></tr>
+                            </tbody>
+                        </table>
+
+                         <table class="pc-positions-table w-full text-left text-xs">
+                            <thead class="sub-header"><tr class="bg-fuchsia-700"><th colspan="2">litige swissport</th></tr></thead>
+                            <tbody class="text-gray-300">
+                                <tr><td colspan="2">CMN2BMI005</td></tr>
+                            </tbody>
+                            <thead class="sub-header"><tr class="bg-fuchsia-700"><th colspan="2">load control SWISS</th></tr></thead>
+                            <tbody class="text-gray-300">
+                                <tr><td>CMN2OPM001</td><td>CMN2OPM002</td></tr>
+                            </tbody>
+                            <thead class="sub-header"><tr class="bg-fuchsia-700"><th colspan="2">ADMIN</th></tr></thead>
+                            <tbody class="text-gray-300">
+                                <tr><td>CMN1XST041</td><td>CMN1XST042</td></tr>
+                                <tr><td colspan="2">CMN1ADM001</td></tr>
+                            </tbody>
+                        </table>
+                        
+                        <table class="pc-positions-table w-full text-left text-xs">
+                            <thead class="sub-header"><tr class="bg-teal-700"><th colspan="2">litige DOUANE</th></tr></thead>
+                             <tbody class="text-gray-300">
+                                <tr><td colspan="2">CMN2BMI006</td></tr>
+                            </tbody>
+                             <thead class="sub-header"><tr class="bg-teal-700"><th colspan="2">litige airarabia</th></tr></thead>
+                             <tbody class="text-gray-300">
+                                <tr><td colspan="2">CMN2BOM004</td></tr>
+                            </tbody>
+                        </table>
+
+                        <table class="pc-positions-table w-full text-left text-xs col-span-1 md:col-span-2 lg:col-span-3">
+                             <thead class="sub-header"><tr class="bg-stone-700"><th colspan="2">FLEX</th></tr></thead>
+                             <tbody class="text-gray-300">
+                                <tr><td>CMNFLEX-DC01</td><td>57.236.113.44</td></tr>
+                                <tr><td>CMNFLEX-DC02</td><td>57.236.113.45</td></tr>
+                                <tr><td>CMNFLEX-NAS01</td><td>57.236.113.39</td></tr>
+                                <tr><td>CMNFLEX-SMPSSO1</td><td>57.234.181.27</td></tr>
+                            </tbody>
+                        </table>
+                        
+                        <table class="pc-positions-table w-full text-left text-xs">
+                            <thead class="sub-header"><tr class="bg-orange-700"><th colspan="2">EGATE</th></tr></thead>
+                            <tbody class="text-gray-300">
+                                <tr><th>T1</th><th>T2</th></tr>
+                                <tr><td>CMN3PFX001</td><td>CMN3PFX004</td></tr>
+                                <tr><td>CMN3PFX002</td><td>CMN3PFX005</td></tr>
+                                <tr><td>CMN3PFX003</td><td>CMN3PFX006</td></tr>
+                                <tr><td>CMN3PFX008</td><td>CMN3PFX007</td></tr>
+                            </tbody>
+                        </table>
+                        <table class="pc-positions-table w-full text-left text-xs">
+                            <thead class="sub-header"><tr class="bg-lime-700"><th>BLS</th></tr></thead>
+                            <tbody class="text-gray-300">
+                                <tr><td>CMN1NGK001</td></tr>
+                                <tr><td>CMN1NGK002</td></tr>
+                                <tr><td>CMN1NGK003</td></tr>
+                            </tbody>
+                        </table>
+                        <table class="pc-positions-table w-full text-left text-xs">
+                            <thead class="sub-header"><tr class="bg-green-700"><th>BRS</th></tr></thead>
+                            <tbody class="text-gray-300">
+                                <tr><td>CMN1BDM001</td></tr><tr><td>CMN1BDM002</td></tr>
+                                <tr><td>CMN1BDM003</td></tr><tr><td>CMN1BDM004</td></tr>
+                                <tr><td>CMN1BDM005</td></tr><tr><td>CMN1BDM020</td></tr>
+                                <tr><td>CMN1BDM021</td></tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -2395,7 +2602,28 @@
                 });
             } 
             if (pmZonesButton) pmZonesButton.addEventListener('click', () => openModal(pmZonesModal));
-            if (pcPositionsButton) pcPositionsButton.addEventListener('click', () => openModal(pcPositionsModal));
+            if (pcPositionsButton) {
+                pcPositionsButton.addEventListener('click', () => {
+                    openModal(pcPositionsModal);
+                    // Add tab logic here
+                    const tabButtons = pcPositionsModal.querySelectorAll('.pc-tab-btn');
+                    const tabContents = pcPositionsModal.querySelectorAll('.pc-tab-content');
+                    tabButtons.forEach(button => {
+                        button.addEventListener('click', () => {
+                            tabButtons.forEach(btn => btn.classList.remove('active'));
+                            button.classList.add('active');
+                            const tabId = button.dataset.tab;
+                            tabContents.forEach(content => {
+                                if (content.id === `tab-${tabId}`) {
+                                    content.classList.remove('hidden');
+                                } else {
+                                    content.classList.add('hidden');
+                                }
+                            });
+                        });
+                    });
+                });
+            }
             if(onLeaveButton) onLeaveButton.addEventListener('click', () => {
                 populateOnLeaveModal();
                 openModal(onLeaveModal);
